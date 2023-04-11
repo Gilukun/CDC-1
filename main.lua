@@ -45,7 +45,8 @@ function love.load()
 
     LargeurTankH = tankH:getWidth()
     HauteurTankH = tankH:getHeight()
-
+    
+    cartes.Load()
     
 
 end
