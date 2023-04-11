@@ -50,11 +50,11 @@ Maps.TileTypes[1] = "grass"
 Maps.TileTypes[169] = "Road"
 
 function Maps.Load()
-    Maps.TilesheetBack = love.graphics.newImage("Images/TileSet.png")
+    Maps.TilesheetBack = love.graphics.newImage("TileSet.png")
     Largeurtilesheet = Maps.TilesheetBack:getWidth()
     HauteurTilesheet = Maps.TilesheetBack:getHeight()
 
-    local nbcol = Largeurtilesheet/ TILE_WIDTH
+    local nbcol = Largeurtilesheet / TILE_WIDTH
     local nbline = HauteurTilesheet/ TILE_HEIGHT
 
     Maps.TileTextures[0] = nil 
@@ -62,7 +62,7 @@ function Maps.Load()
     local c,l
     local id = 1
     for l = 1, nbline do 
-        for c = 1, ncol do
+        for c = 1, nbcol do
             Maps.TileTextures[id] = love.graphics.newQuad( (c-1)* TILE_WIDTH, (l-1) * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, Largeurtilesheet, HauteurTilesheet)
            id = id + 1
         end
