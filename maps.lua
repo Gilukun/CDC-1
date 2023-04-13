@@ -50,7 +50,7 @@ Maps.TileTypes[1] = "grass"
 Maps.TileTypes[169] = "Road"
 
 function Maps.Load()
-    Maps.TilesheetBack = love.graphics.newImage("TileSet.png")
+    Maps.TilesheetBack = love.graphics.newImage("Images/TileSet.png")
     Largeurtilesheet = Maps.TilesheetBack:getWidth()
     HauteurTilesheet = Maps.TilesheetBack:getHeight()
 
@@ -80,7 +80,7 @@ function Maps.draw()
             local textures = Maps.TileTextures[id]
             if textures~= nil then 
                 love.graphics.draw(Maps.TilesheetBack, textures,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
-                love.graphics.print(tostring(CaseNb),(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
+               --  love.graphics.print(tostring(CaseNb),(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
             end
         end
     end
@@ -90,10 +90,10 @@ function Maps.draw()
     local col = math.floor(x / TILE_WIDTH) + 1
     local lig = math.floor(y / TILE_HEIGHT) + 1
     
-    if col > 0 and col<= MAP_WIDTH and lig> 0 and lig <= MAP_WIDTH then
-        local id = Maps.background[lig][col]
-        love.graphics.print("id=" .. tostring(Maps.TileTypes[id]))
-    end
+    -- if col > 0 and col<= MAP_WIDTH and lig> 0 and lig <= MAP_WIDTH then
+       -- local id = Maps.background[lig][col]
+        --love.graphics.print("id=" .. tostring(Maps.TileTypes[id]))
+    --end
 
 end
 
