@@ -37,10 +37,9 @@ function Hero.Load()
     obusImg = love.graphics.newImage("Images/Obus.png")
     largeurObusImg = obusImg:getWidth()
     hauteurObusImg = obusImg:getHeight()
-
 end
 
-function Hero.Update(dt)
+function Hero.Move(dt)
     local vitessex = 100 * math.cos(tankHero.angle) * dt
     local vitessey = 100 * math.sin(tankHero.angle) * dt
 
@@ -58,11 +57,15 @@ function Hero.Update(dt)
     if love.keyboard.isDown('right') then
         tankHero.angle = tankHero.angle + 1 * dt
     end
+end
 
+function Hero.Canon()
     local mousex = love.mouse.getX()
     local mousey = love.mouse.getY()
     angleCanon = math.angle(tankHero.x, tankHero.y, mousex, mousey)
+end
 
+function Hero.Obus(dt)
     local n
     for n=#listObus,1, -1 do
         local Obouge = listObus[n] 
@@ -82,7 +85,7 @@ function Hero.Draw()
     love.graphics.draw(canonHeroImg, tankHero.x, tankHero.y, tankHero.angle, 1,1,largeurCanonHeroImg /2 , hauteurCanonHeroImg / 2 )
 end
 
-function Hero.keypressed(key)
+function Hero.Shoot(key)
     if key == "space" then 
         CreerObus(tankHero.x, tankHero.y, tankHero.angle, 300)
     end

@@ -363,7 +363,7 @@ Maps.TileTypes[1] = "grass"
 Maps.TileTypes[169] = "Road"
 
 function Maps.Load()
-    Maps.Tilesheet = love.graphics.newImage("TileSet.png")
+    Maps.Tilesheet = love.graphics.newImage("Images/TileSet.png")
     Largeurtilesheet = Maps.Tilesheet:getWidth()
     HauteurTilesheet = Maps.Tilesheet:getHeight()
 
@@ -384,6 +384,7 @@ end
 
 
 function Maps.draw()
+
     local l,c
     local CaseNb = 0
     for l= 1, MAP_HEIGHT do 
@@ -426,7 +427,7 @@ function Maps.draw()
             if texturesBuildings ~= nil then 
                 love.graphics.draw(Maps.Tilesheet, texturesBuildings,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
             end
-
+            
             if texturestrees ~= nil then 
             love.graphics.draw(Maps.Tilesheet, texturestrees,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
             end
@@ -447,17 +448,18 @@ function Maps.draw()
                 love.graphics.draw(Maps.Tilesheet, texturesFrontTrees,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
             end
         end
+   
     end
 
-    local x = love.mouse.getX()
-    local  y = love.mouse.getY()
-    local col = math.floor(x / TILE_WIDTH) + 1
-    local lig = math.floor(y / TILE_HEIGHT) + 1
+   -- local x = love.mouse.getX()
+    ---local  y = love.mouse.getY()
+   --- local col = math.floor(x / TILE_WIDTH) + 1
+    --local lig = math.floor(y / TILE_HEIGHT) + 1
     
-    if col > 0 and col<= MAP_WIDTH and lig> 0 and lig <= MAP_WIDTH then
-        local id = Maps.background[lig][col]
-        love.graphics.print("id=" .. tostring(Maps.TileTypes[id]))
-    end
+   -- if col > 0 and col<= MAP_WIDTH and lig> 0 and lig <= MAP_WIDTH then
+       -- local id = Maps.background[lig][col]
+       -- love.graphics.print("id=" .. tostring(Maps.TileTypes[id]))
+   --- end
 
 end
 
