@@ -13,6 +13,7 @@ tankHero.vy = 0
 tankHero.angle = 0
 
 listObus = {}
+
 function CreerObus(pX, pY, pAngle, pVitesse)
     local Obus = {}
     Obus.x = pX
@@ -68,14 +69,15 @@ end
 function Hero.Obus(dt)
     local n
     for n=#listObus,1, -1 do
-        local Obouge = listObus[n] 
-        Obouge.x = Obouge.x + (Obouge.vitesse * dt ) * math.cos(Obouge.angle) 
-        Obouge.y = Obouge.y + (Obouge.vitesse * dt ) * math.sin(Obouge.angle) 
-        if Obouge.x > lScreen or Obouge.x <0 or Obouge.y> hScreen or Obouge.y<0 then
+        local o = listObus[n] 
+        o.x = o.x + (o.vitesse * dt ) * math.cos(o.angle) 
+        o.y = o.y + (o.vitesse * dt ) * math.sin(o.angle) 
+        if o.x > lScreen or o.x <0 or o.y> hScreen or o.y<0 then
             table.remove(listObus, n)
         end
     end
 end
+
 
 function Hero.Draw()
     for k,v in ipairs (listObus) do 

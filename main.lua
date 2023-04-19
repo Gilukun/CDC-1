@@ -12,6 +12,8 @@ local cartes = require("maps")
 local TankJoueur = require("Hero")
 local ennemy = require("Ennemies")
 
+
+
 function love.load()
     cartes.Load()
     TankJoueur.Load()
@@ -22,22 +24,8 @@ function love.update(dt)
     TankJoueur.Move(dt)
     TankJoueur.Canon(dt)
     TankJoueur.Obus(dt)
-    ennemy.Timer(dt)
     ennemy.Spawn(dt)
-
-    local n
-    for n=#listObus,1,-1 do 
-        local o = listObus[n]
-        for n= #listTankEnmy, -1, 1 do 
-        local t = #listTankEnmy[n]
-            if math.dist(o.x, o.y, t.x, t.y) < largeurTankEnemyImg/2 then
-              table.remove(listTankEnmy, t)
-             table.remove(listObus, o)
-            end
-        end
-    end
-
-    
+    ennemy.Dead()
 end
 
 function love.draw()
