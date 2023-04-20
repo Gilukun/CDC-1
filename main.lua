@@ -32,6 +32,7 @@ function love.draw()
     cartes.draw()
     TankJoueur.Draw() 
     ennemy.Draw()
+    HUD.Draw()
 end
 
 function love.keypressed(key)

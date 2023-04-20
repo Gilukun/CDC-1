@@ -4,6 +4,7 @@ end
 io.stdout:setvbuf("no")
 
 local TankJoueur= require("Hero")
+local HUD = require ("HUD")
 
 local Ennemies = {}
 
@@ -16,13 +17,13 @@ listEtatTankEnnemy.ETAT_IDLE = "IDLE"
 listEtatTankEnnemy.ETAT_CHASE = "CHASE"
 listEtatTankEnnemy.ETAT_SHOOT = "SHOOT"
 
-
 function CreerEnnemy()
     local tankEnmy = {}
     tankEnmy.x = 0
-    tankEnmy.y = love.math.random(0,400)
+    tankEnmy.y = love.math.random(0,200)
     tankEnmy.vitesse = 150
     tankEnmy.angle = 0
+    tankEnmy.life = 5
     tankEnmy.etat = "IDLE"
     table.insert(listTankEnmy, tankEnmy)
 end
@@ -57,23 +58,30 @@ function Ennemies.Dead()
         local t = listTankEnmy[nt]
         local dist = math.dist(t.x, t.y, o.x, o.y)
             if  dist < largeurTankEnemyImg/2 then
-                table.remove(listTankEnmy, nt)
                 table.remove(listObus, no)
+                t.life = t.life - 1
+                if t.life == 0 then 
+                    table.remove(listTankEnmy, nt)
+                    HUD.AddScore()
+                end
             end
         end
     end
 end
 
 function Ennemies.Draw()
-    --love.graphics.print(timer)
-    --love.graphics.print(#listTankEnmy, 300, 300)
     love.graphics.print(tostring(#listObus), 400,400)
-    love.graphics.print(tostring(dist), 500,400)
-
+    for nt = #listTankEnmy, 1, -1 do 
+        local t = listTankEnmy[nt]
+        love.graphics.print(tostring(listTankEnmy[nt].life), 500,400)
+    end
 
     for n=1, #listTankEnmy do 
         local t = listTankEnmy[n]
         love.graphics.draw(tankEnmyImg,t.x, t.y)
+        love.graphics.setColor(love.math.colorFromBytes(231,50,36))
+        love.graphics.rectangle("fill", t.x, t.y - hauteurTankEnemyImg/8, t.life * 10, 4)
+        love.graphics.setColor(1,1,1)
     end 
 end
 

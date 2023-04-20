@@ -12,6 +12,9 @@ tankHero.vx = 0
 tankHero.vy = 0
 tankHero.angle = 0
 
+local vitessex = 200  
+local vitessey = 200  
+
 listObus = {}
 
 function CreerObus(pX, pY, pAngle, pVitesse)
@@ -41,16 +44,13 @@ function Hero.Load()
 end
 
 function Hero.Move(dt)
-    local vitessex = 100 * math.cos(tankHero.angle) * dt
-    local vitessey = 100 * math.sin(tankHero.angle) * dt
-
     if love.keyboard.isDown('up') then
-        tankHero.x = tankHero.x + vitessex
-        tankHero.y = tankHero.y + vitessey
+        tankHero.x = tankHero.x + vitessex * math.cos(tankHero.angle) * dt
+        tankHero.y = tankHero.y + vitessey * math.sin(tankHero.angle) * dt
     end
     if love.keyboard.isDown('down') then
-        tankHero.x = tankHero.x - vitessex
-        tankHero.y = tankHero.y - vitessey
+        tankHero.x = tankHero.x - vitessex * math.cos(tankHero.angle) * dt
+        tankHero.y = tankHero.y - vitessey * math.sin(tankHero.angle) * dt
     end
     if love.keyboard.isDown('left') then
         tankHero.angle = tankHero.angle - 1 * dt
@@ -58,6 +58,11 @@ function Hero.Move(dt)
     if love.keyboard.isDown('right') then
         tankHero.angle = tankHero.angle + 1 * dt
     end
+
+    if tankHero.x + largeurTankHeroImg/2 >= lScreen or tankHero.x - largeurTankHeroImg/2 <= 0 then
+        
+    end
+
 end
 
 function Hero.Canon()
