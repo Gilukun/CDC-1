@@ -104,28 +104,27 @@ function Hero.Draw()
     end
     love.graphics.draw(tankHeroImg, tankHero.x, tankHero.y, tankHero.angle, 1,1,largeurTankHeroImg /2 , hauteurTankHeroImg / 2 )
     love.graphics.draw(canonHeroImg, tankHero.x, tankHero.y, angleCanon, 1,1,largeurCanonHeroImg /2 , hauteurCanonHeroImg / 2 )
-    love.graphics.circle("fill", tankHero.x, tankHero.y, 3 )
-    love.graphics.rectangle("line", tankHero.x - largeurTankHeroImg/2 , tankHero.y - hauteurTankHeroImg/2,largeurTankHeroImg, hauteurTankHeroImg )
-
+    --love.graphics.circle("fill", tankHero.x, tankHero.y, 3 )
+    ---love.graphics.rectangle("line", tankHero.x - largeurTankHeroImg/2 , tankHero.y - hauteurTankHeroImg/2,largeurTankHeroImg, hauteurTankHeroImg )
 end
 
 function Hero.MouseShootCanon()
     function love.mousepressed(x, y, button)
-        x = tankHero.x
-        y = tankHero.y 
+        x = largeurCanonHeroImg
+        y = hauteurCanonHeroImg / 2
         if button == 1 then 
             CreerObus(tankHero.x, tankHero.y, angleCanon, 500)
         end
     end
 end
 
-function Hero.keypressed(key)
-    if hasMissile == true then 
-        if key == " " then 
-            CreerObus(tankHero.x, tankHero.y, angleCanon, 500)
-        end
-    end
-end
+--function Hero.keypressed(key)
+    --if hasMissile == true then 
+        --if key == " " then 
+           --- CreerObus(tankHero.x, tankHero.y, angleCanon, 500)
+       -- end
+    --end
+--end
 
 --function Hero.Shoot(key)
     --if key == "space" then 
