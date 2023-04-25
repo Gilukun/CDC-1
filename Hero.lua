@@ -5,26 +5,20 @@ io.stdout:setvbuf("no")
 
 Hero = {}
 
-local tankHero = {}
+local Weapons = require ("WeaponsHero")
+local HUD = require ("HUD")
+local loot = require ("Loot")
+
+tankHero = {}
 tankHero.x = 200
 tankHero.y = 200
 tankHero.vx = 0
 tankHero.vy = 0
 tankHero.angle = 0
+tankHero.life = 100
 
 local vitessex = 200  
 local vitessey = 200  
-
-listObus = {}
-
-function CreerObus(pX, pY, pAngle, pVitesse)
-    local Obus = {}
-    Obus.x = pX
-    Obus.y = pY
-    Obus.angle = pAngle
-    Obus.vitesse = pVitesse
-    table.insert(listObus, Obus)
-end
 
 function Hero.Load()
     lScreen = love.graphics.getWidth()
@@ -44,31 +38,46 @@ function Hero.Load()
 end
 
 function Hero.Move(dt)
-    if love.keyboard.isDown('up') then
+    if love.keyboard.isDown('z') then
         tankHero.x = tankHero.x + vitessex * math.cos(tankHero.angle) * dt
         tankHero.y = tankHero.y + vitessey * math.sin(tankHero.angle) * dt
     end
-    if love.keyboard.isDown('down') then
+    if love.keyboard.isDown('s') then
         tankHero.x = tankHero.x - vitessex * math.cos(tankHero.angle) * dt
         tankHero.y = tankHero.y - vitessey * math.sin(tankHero.angle) * dt
     end
-    if love.keyboard.isDown('left') then
-        tankHero.angle = tankHero.angle - 1 * dt
+    if love.keyboard.isDown('q') then
+        tankHero.angle = tankHero.angle - 3 * dt
     end
-    if love.keyboard.isDown('right') then
-        tankHero.angle = tankHero.angle + 1 * dt
-    end
-
-    if tankHero.x + largeurTankHeroImg/2 >= lScreen or tankHero.x - largeurTankHeroImg/2 <= 0 then
-        
+    if love.keyboard.isDown('d') then
+        tankHero.angle = tankHero.angle + 3 * dt
     end
 
+    if tankHero.x + largeurTankHeroImg/2 >= lScreen then
+        tankHero.x = lScreen - largeurTankHeroImg/2
+    end
+
+    if tankHero.x - largeurTankHeroImg/2 <= 0  then 
+        tankHero.x = largeurTankHeroImg/2
+    end
+
+    if tankHero.y + hauteurTankHeroImg/2 >= hScreen then
+        tankHero.y = hScreen - hauteurTankHeroImg/2
+    end
+
+    if tankHero.y - hauteurTankHeroImg/2 <= 0  then 
+        tankHero.y = hauteurTankHeroImg/2
+    end
 end
 
-function Hero.Canon()
-    local mousex = love.mouse.getX()
-    local mousey = love.mouse.getY()
-    angleCanon = math.angle(tankHero.x, tankHero.y, mousex, mousey)
+listObus = {}
+function CreerObus(pX, pY, pAngle, pVitesse)
+    local Obus = {}
+    Obus.x = pX
+    Obus.y = pY
+    Obus.angle = pAngle
+    Obus.vitesse = pVitesse
+    table.insert(listObus, Obus)
 end
 
 function Hero.Obus(dt)
@@ -83,19 +92,46 @@ function Hero.Obus(dt)
     end
 end
 
+function Hero.Canon()
+    local mousex = love.mouse.getX()
+    local mousey = love.mouse.getY()
+    angleCanon = math.angle(tankHero.x, tankHero.y, mousex, mousey)
+end
 
 function Hero.Draw()
     for k,v in ipairs (listObus) do 
         love.graphics.draw(obusImg, v.x, v.y, v.angle, 1/2, 1/2, largeurObusImg/2, hauteurObusImg/2 )
     end
     love.graphics.draw(tankHeroImg, tankHero.x, tankHero.y, tankHero.angle, 1,1,largeurTankHeroImg /2 , hauteurTankHeroImg / 2 )
-    love.graphics.draw(canonHeroImg, tankHero.x, tankHero.y, tankHero.angle, 1,1,largeurCanonHeroImg /2 , hauteurCanonHeroImg / 2 )
+    love.graphics.draw(canonHeroImg, tankHero.x, tankHero.y, angleCanon, 1,1,largeurCanonHeroImg /2 , hauteurCanonHeroImg / 2 )
+    love.graphics.circle("fill", tankHero.x, tankHero.y, 3 )
+    love.graphics.rectangle("line", tankHero.x - largeurTankHeroImg/2 , tankHero.y - hauteurTankHeroImg/2,largeurTankHeroImg, hauteurTankHeroImg )
+
 end
 
-function Hero.Shoot(key)
-    if key == "space" then 
-        CreerObus(tankHero.x, tankHero.y, tankHero.angle, 300)
+function Hero.MouseShootCanon()
+    function love.mousepressed(x, y, button)
+        x = tankHero.x
+        y = tankHero.y 
+        if button == 1 then 
+            CreerObus(tankHero.x, tankHero.y, angleCanon, 500)
+        end
     end
 end
+
+function Hero.keypressed(key)
+    if hasMissile == true then 
+        if key == " " then 
+            CreerObus(tankHero.x, tankHero.y, angleCanon, 500)
+        end
+    end
+end
+
+--function Hero.Shoot(key)
+    --if key == "space" then 
+        --CreerObus(tankHero.x, tankHero.y, tankHero.angle, 300)
+    --end
+--end
+
 
 return Hero

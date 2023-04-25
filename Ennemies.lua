@@ -5,6 +5,7 @@ io.stdout:setvbuf("no")
 
 local TankJoueur= require("Hero")
 local HUD = require ("HUD")
+local loot = require ("Loot")
 
 local Ennemies = {}
 
@@ -57,12 +58,13 @@ function Ennemies.Dead()
         for nt = #listTankEnmy, 1, -1 do 
         local t = listTankEnmy[nt]
         local dist = math.dist(t.x, t.y, o.x, o.y)
-            if  dist < largeurTankEnemyImg/2 then
+            if  dist < largeurTankEnemyImg then
                 table.remove(listObus, no)
                 t.life = t.life - 1
                 if t.life == 0 then 
                     table.remove(listTankEnmy, nt)
                     HUD.AddScore()
+                    loot.DropLoot()
                 end
             end
         end
@@ -70,10 +72,10 @@ function Ennemies.Dead()
 end
 
 function Ennemies.Draw()
-    love.graphics.print(tostring(#listObus), 400,400)
+    love.graphics.print(tostring(#listObus), 400,10)
     for nt = #listTankEnmy, 1, -1 do 
         local t = listTankEnmy[nt]
-        love.graphics.print(tostring(listTankEnmy[nt].life), 500,400)
+        love.graphics.print(tostring(listTankEnmy[nt].life), 500,10)
     end
 
     for n=1, #listTankEnmy do 
@@ -82,7 +84,9 @@ function Ennemies.Draw()
         love.graphics.setColor(love.math.colorFromBytes(231,50,36))
         love.graphics.rectangle("fill", t.x, t.y - hauteurTankEnemyImg/8, t.life * 10, 4)
         love.graphics.setColor(1,1,1)
+        love.graphics.rectangle("line",t.x , t.y, tankEnmyImg:getWidth(), tankEnmyImg:getHeight())
     end 
+    
 end
 
 return Ennemies
