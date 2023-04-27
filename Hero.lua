@@ -9,7 +9,6 @@ local Weapons = require ("WeaponsHero")
 local HUD = require ("HUD")
 local loot = require ("Loot")
 
-
 tankHero = {}
 tankHero.x = 200
 tankHero.y = 200
@@ -20,12 +19,6 @@ tankHero.life = 100
 
 local vitessex = 200  
 local vitessey = 200  
-
-TH_STATUS = {}
-TH_STATUS.IDLE = "IDLE"
-TH_STATUS.MOVE = "MOVE"
-TH_STATUS.SHOOT = "SHOOT"
-TH_STATUS.DEAD = "DEAD"
 
 function Hero.Load()
     lScreen = love.graphics.getWidth()
@@ -43,8 +36,6 @@ function Hero.Load()
     largeurObusImg = obusImg:getWidth()
     hauteurObusImg = obusImg:getHeight()
 end
-
-
 
 function Hero.Move(dt)
     if love.keyboard.isDown('z') then
