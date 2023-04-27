@@ -40,6 +40,8 @@ function Ennemies.Load()
     tankEnmyImg = love.graphics.newImage("Images/Badtank.png")
     largeurTankEnemyImg = tankEnmyImg:getWidth()
     hauteurTankEnemyImg = tankEnmyImg:getHeight()
+
+    spawnSFX = love.audio.newSource("Sounds/mooing-cow-122255.mp3", "static")
 end
 
 
@@ -72,6 +74,7 @@ function Ennemies.Spawn(dt)
     if timerSpawn <= 0 then
         CreerEnnemy()
         timerSpawn = E_SPAWN_T
+        spawnSFX:play()
     end
     local n
     for n =#listTankEnmy, 1, -1 do 
@@ -118,7 +121,7 @@ function Ennemies.Spawn(dt)
         end
 
 
--- Suppression des tanks hors de l'écranzz
+-- Suppression des tanks hors de l'écran
         if t.x > lScreen then
             table.remove(listTankEnmy, n)
         end
@@ -161,9 +164,9 @@ function Ennemies.Draw()
         love.graphics.setColor(love.math.colorFromBytes(231,50,36))
         love.graphics.rectangle("fill", t.x, t.y - hauteurTankEnemyImg/8, t.life * 10, 4)
         love.graphics.setColor(1,1,1)
-        love.graphics.print(t.etat, t.x, t.y-10)
+        --love.graphics.print(t.etat, t.x, t.y-10)
         --love.graphics.circle("line", t.x , t.y  , 200)
-        love.graphics.print(tostring(timerShoot), 400, 400)
+        --love.graphics.print(tostring(timerShoot), 400, 400)
     end 
     for k,v in ipairs (listObusEnnemy) do 
         love.graphics.draw(obusImg, v.x, v.y, v.angle, 1/2, 1/2, largeurObusImg/2, hauteurObusImg/2 )

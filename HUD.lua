@@ -9,6 +9,7 @@ function HUD.AddScore()
 end
 
 function HUD.RemoveHeroLife(dt)
+    heroLife = heroLife - 10
 end
 
 function HUD.Draw()

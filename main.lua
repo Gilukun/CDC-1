@@ -15,27 +15,62 @@ local weaponHero = require("WeaponsHero")
 local HUD = require ("HUD")
 local loot = require("Loot")
 
+GameState = {}
+GameState.Menu = "MENU"
+GameState.level1 = "LEVEL1"
+GameState.Boss = "BOSS"
+GameState.Pause = "PAUSE"
+GameState.Inventaire = "INVENTAIRE"
+GameState.Quit = "QUIT"
 
+GameState = GameState.Menu
 
 function love.load()
-    love.window.setMode(1024,700)
+   -- love.window.setMode(1024,700)
     cartes.Load()
     TankJoueur.Load()
     ennemy.Load()
 end
 
-function love.update(dt)
+function UpdateMenu()
+end
+
+function UpdateLevel1(dt)
     TankJoueur.Move(dt)
     TankJoueur.Canon(dt)
     TankJoueur.Obus(dt)
     TankJoueur.MouseShootCanon(dt)
+    TankJoueur.Hit(dt)
     ennemy.Spawn(dt)
     ennemy.Touch(dt)
     ennemy.Shoot(dt)
     loot.DropLoot(dt)
 end
 
-function love.draw()
+function UpdatePause()
+end
+
+function UpdateBoss()
+end
+
+function UpdateInventaire()
+end
+
+function love.update(dt)
+    if GameState == "MENU" then 
+        UpdateMenu(dt)
+    elseif GameState == "LEVEL1" then
+        UpdateLevel1(dt)
+    elseif GameState == "INVENTAIRE" then
+        UpdateInventaire(dt) 
+    end
+end
+
+function DrawMenu()
+    love.graphics.print("Menu")
+end
+
+function DrawLevel1()
     cartes.draw()
     TankJoueur.Draw() 
     ennemy.Draw()
@@ -43,6 +78,54 @@ function love.draw()
     loot.Draw()
 end
 
---function love.keypressed(key)
-    --TankJoueur.Shoot(key)
--- end
+function DrawInventaire()
+    love.graphics.print("INVENTAIRE", lScreen/2, hScreen/2)
+end
+
+
+function DrawBoss()
+end
+
+function love.draw()
+    if GameState == "MENU" then 
+        DrawMenu()
+    elseif GameState == "LEVEL1" then
+       DrawLevel1()
+    elseif GameState == "PAUSE" then
+        DrawLevel1()
+    elseif GameState == "BOSS" then
+        DrawLevel1()
+    elseif GameState == "INVENTAIRE" then
+        DrawInventaire()
+    end
+end
+
+function love.keypressed(key)
+    if GameState == "MENU" then
+        if key == "return" then
+            GameState = "LEVEL1"
+        end
+    elseif GameState == "LEVEL1" then
+        if key == "p" then
+            GameState = "PAUSE"
+        end
+        if key == "i" then
+            GameState = "INVENTAIRE"
+        end
+
+    elseif GameState == "PAUSE" then
+        if key == "p" then
+            GameState = "LEVEL1"
+        end
+    
+    elseif GameState == "INVENTAIRE" then
+        if key == "i" then
+            GameState = "LEVEL1"
+        end
+     
+    elseif GameState == "LEVEL1" then
+        if key == "escape" then
+            GameState = "QUIT"
+        end
+    end
+end

@@ -9,6 +9,7 @@ local Weapons = require ("WeaponsHero")
 local HUD = require ("HUD")
 local loot = require ("Loot")
 
+
 tankHero = {}
 tankHero.x = 200
 tankHero.y = 200
@@ -19,6 +20,12 @@ tankHero.life = 100
 
 local vitessex = 200  
 local vitessey = 200  
+
+TH_STATUS = {}
+TH_STATUS.IDLE = "IDLE"
+TH_STATUS.MOVE = "MOVE"
+TH_STATUS.SHOOT = "SHOOT"
+TH_STATUS.DEAD = "DEAD"
 
 function Hero.Load()
     lScreen = love.graphics.getWidth()
@@ -97,6 +104,19 @@ function Hero.Canon()
     local mousey = love.mouse.getY()
     angleCanon = math.angle(tankHero.x, tankHero.y, mousex, mousey)
 end
+
+function Hero.Hit()
+    local no
+    for no = #listObusEnnemy, 1, -1 do 
+        local o = listObusEnnemy[no]
+        local dist = math.dist(tankHero.x, tankHero.y, o.x, o.y)
+        if  dist < largeurTankHeroImg/2 then
+            table.remove(listObusEnnemy, no)
+            HUD.RemoveHeroLife(dt)
+        end
+    end
+end
+
 
 function Hero.Draw()
     for k,v in ipairs (listObus) do 
