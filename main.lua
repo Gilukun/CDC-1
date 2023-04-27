@@ -21,7 +21,9 @@ GameState.level1 = "LEVEL1"
 GameState.Boss = "BOSS"
 GameState.Pause = "PAUSE"
 GameState.Inventaire = "INVENTAIRE"
+GameState.GameOver = "GAMEOVER"
 GameState.Quit = "QUIT"
+
 
 GameState = GameState.Menu
 
@@ -56,6 +58,9 @@ end
 function UpdateInventaire()
 end
 
+function UpdateGameOver()
+end
+
 function love.update(dt)
     if GameState == "MENU" then 
         UpdateMenu(dt)
@@ -86,6 +91,11 @@ end
 function DrawBoss()
 end
 
+function DrawGameOver()
+    love.graphics.print("GAMEOVER", lScreen/2, hScreen/2)
+end
+
+
 function love.draw()
     if GameState == "MENU" then 
         DrawMenu()
@@ -97,6 +107,8 @@ function love.draw()
         DrawLevel1()
     elseif GameState == "INVENTAIRE" then
         DrawInventaire()
+    elseif GameState == "GAMEOVER" then
+        DrawGameOver()
     end
 end
 
@@ -126,6 +138,11 @@ function love.keypressed(key)
     elseif GameState == "LEVEL1" then
         if key == "escape" then
             GameState = "QUIT"
+        end
+    
+    elseif GameState == "GAMEOVER" then
+        if key == "return" then 
+            GameState = "MENU"
         end
     end
 end

@@ -9,7 +9,14 @@ function HUD.AddScore()
 end
 
 function HUD.RemoveHeroLife(dt)
-    heroLife = heroLife - 10
+    if heroLife > 0 then 
+     heroLife = heroLife - 10
+    end
+
+    if heroLife == 0 then 
+        GameState = "GAMEOVER"
+    end
+
 end
 
 function HUD.Draw()
