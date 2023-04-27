@@ -107,7 +107,7 @@ function Hero.Canon()
     angleCanon = math.angle(tankHero.x, tankHero.y, mousex, mousey)
 end
 
-function Hero.Hit()
+function Hero.IsHit()
     local no
     for no = #listObusEnnemy, 1, -1 do 
         local o = listObusEnnemy[no]
