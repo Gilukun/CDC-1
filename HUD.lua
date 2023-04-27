@@ -15,6 +15,7 @@ function HUD.RemoveHeroLife(dt)
 
     if heroLife == 0 then 
         GameState = "GAMEOVER"
+        heroLife = 100
     end
 
 end

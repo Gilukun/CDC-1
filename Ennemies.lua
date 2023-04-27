@@ -81,6 +81,8 @@ function Ennemies.Spawn(dt)
         local t = listTankEnmy[n]
 
 -- Machine à ETATS
+        chase_Dist = 250
+        shoot_Dist = 200
         t.dist = math.dist(t.x,t.y, tankHero.x,tankHero.y)
 
         if t.etat == ET_Tank_E.ETAT_IDLE then
@@ -90,7 +92,7 @@ function Ennemies.Spawn(dt)
             t.x = t.x + t.vitesse * math.cos(t.angle) * dt
             t.y = t.y + t.vitesse * math.sin(t.angle) * dt
             
-            if t.dist <= 200 then
+            if t.dist <= chase_Dist then
                 t.etat = ET_Tank_E.ETAT_CHASE
             end
 
@@ -99,11 +101,11 @@ function Ennemies.Spawn(dt)
             t.x = t.x + t.vitesse * math.cos(t.angle) * dt
             t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
-            if t.dist >= 200 then
+            if t.dist >= chase_Dist then
                 t.etat = ET_Tank_E.ETAT_MOVE
             end
             
-            if t.dist <= 150 then 
+            if t.dist <= shoot_Dist then 
             t.etat = ET_Tank_E.ETAT_SHOOT
             end
         elseif t.etat == ET_Tank_E.ETAT_SHOOT then 
@@ -113,7 +115,7 @@ function Ennemies.Spawn(dt)
 
             timerShoot = timerShoot - dt
             if timerShoot < 0 then 
-                CreerObusEnnemy(t.x, t.y, t.angle, 300)
+                CreerObusEnnemy(t.x, t.y, t.angle, 500)
                 timerShoot = E_SHOOT
             end
 
