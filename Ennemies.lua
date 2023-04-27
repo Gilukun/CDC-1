@@ -9,16 +9,21 @@ local loot = require ("Loot")
 
 local Ennemies = {}
 
+
+local E_SPAWN_T = 5
+local timerSpawn = E_SPAWN_T 
+local E_SHOOT = 2
+local timerShoot = E_SHOOT
+
+
+ET_Tank_E = {}
+ET_Tank_E.ETAT_IDLE = "IDLE"
+ET_Tank_E.ETAT_MOVE = "MOVE"
+ET_Tank_E.ETAT_CHASE = "CHASE"
+ET_Tank_E.ETAT_SHOOT = "SHOOT"
+ET_Tank_E.ETAT_DEAD = "DEAD"
+
 listTankEnmy = {}
-local timerEnnemy = 5
-local timer = timerEnnemy
-
-listEtatTankEnnemy = {}
-listEtatTankEnnemy.ETAT_IDLE = "IDLE"
-listEtatTankEnnemy.ETAT_MOVE = "MOVE"
-listEtatTankEnnemy.ETAT_CHASE = "CHASE"
-listEtatTankEnnemy.ETAT_SHOOT = "SHOOT"
-
 function CreerEnnemy()
     local tankEnmy = {}
     tankEnmy.x = 0
@@ -26,7 +31,8 @@ function CreerEnnemy()
     tankEnmy.vitesse = 100
     tankEnmy.angle = 0
     tankEnmy.life = 5
-    tankEnmy.etat = listEtatTankEnnemy.ETAT_IDLE
+    tankEnmy.etat = ET_Tank_E.ETAT_IDLE
+    tankEnmy.dist = 0
     table.insert(listTankEnmy, tankEnmy)
 end
 
@@ -36,43 +42,83 @@ function Ennemies.Load()
     hauteurTankEnemyImg = tankEnmyImg:getHeight()
 end
 
+
+listObusEnnemy = {}
+function CreerObusEnnemy(pX, pY, pAngle, pVitesse)
+    local Obus = {}
+    Obus.x = pX
+    Obus.y = pY
+    Obus.angle = pAngle
+    Obus.vitesse = pVitesse
+    table.insert(listObusEnnemy, Obus)
+end
+
+function Ennemies.Shoot(dt)
+    local n
+    for n=#listObusEnnemy,1, -1 do
+        local s = listObusEnnemy[n] 
+        s.x = s.x + (s.vitesse * dt ) * math.cos(s.angle) 
+        s.y = s.y + (s.vitesse * dt ) * math.sin(s.angle) 
+        if s.x > lScreen or s.x <0 or s.y> hScreen or s.y<0 then
+            table.remove(listObusEnnemy, n)
+        end
+    end
+end
+
+
+
 function Ennemies.Spawn(dt)
-    timer = timer - dt
-    if timer <= 0 then
+    timerSpawn = timerSpawn - dt
+    if timerSpawn <= 0 then
         CreerEnnemy()
-        timer = timerEnnemy
+        timerSpawn = E_SPAWN_T
     end
     local n
     for n =#listTankEnmy, 1, -1 do 
         local t = listTankEnmy[n]
 
 -- Machine à ETATS
-        if t.etat == listEtatTankEnnemy.ETAT_IDLE then
-            t.etat = listEtatTankEnnemy.ETAT_MOVE
+        t.dist = math.dist(t.x,t.y, tankHero.x,tankHero.y)
 
-        elseif t.etat == listEtatTankEnnemy.ETAT_MOVE then 
+        if t.etat == ET_Tank_E.ETAT_IDLE then
+            t.etat = ET_Tank_E.ETAT_MOVE
+
+        elseif t.etat == ET_Tank_E.ETAT_MOVE then 
             t.x = t.x + t.vitesse * math.cos(t.angle) * dt
             t.y = t.y + t.vitesse * math.sin(t.angle) * dt
-            distance = math.dist(t.x,t.y, tankHero.x,tankHero.y)
-            if distance <= 200 then
-                t.etat = listEtatTankEnnemy.ETAT_CHASE
+            
+            if t.dist <= 200 then
+                t.etat = ET_Tank_E.ETAT_CHASE
             end
 
-        elseif t.etat == listEtatTankEnnemy.ETAT_CHASE then
+        elseif t.etat == ET_Tank_E.ETAT_CHASE then
             t.angle = math.angle(t.x,t.y, tankHero.x,tankHero.y)
             t.x = t.x + t.vitesse * math.cos(t.angle) * dt
             t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
-            if distance <= 100 then 
-
+            if t.dist >= 200 then
+                t.etat = ET_Tank_E.ETAT_MOVE
             end
             
-            if distance >= 200 then
-                t.etat = listEtatTankEnnemy.ETAT_MOVE
+            if t.dist <= 150 then 
+            t.etat = ET_Tank_E.ETAT_SHOOT
+            end
+        elseif t.etat == ET_Tank_E.ETAT_SHOOT then 
+            t.angle = math.angle(t.x,t.y, tankHero.x,tankHero.y)
+            t.x = t.x + t.vitesse * math.cos(t.angle) * dt
+            t.y = t.y + t.vitesse * math.sin(t.angle) * dt
+
+            timerShoot = timerShoot - dt
+            if timerShoot < 0 then 
+                CreerObusEnnemy(t.x, t.y, t.angle, 300)
+                timerShoot = E_SHOOT
             end
 
+        elseif t.etat == ET_Tank_E.ETAT_DEAD then 
         end
--- Suppression des tanks hors de l'écran
+
+
+-- Suppression des tanks hors de l'écranzz
         if t.x > lScreen then
             table.remove(listTankEnmy, n)
         end
@@ -81,14 +127,14 @@ end
 
 
 
-function Ennemies.Dead()
+function Ennemies.Touch()
     local n
     for no = #listObus, 1, -1 do 
         local o = listObus[no]
         for nt = #listTankEnmy, 1, -1 do 
         local t = listTankEnmy[nt]
         local dist = math.dist(t.x, t.y, o.x, o.y)
-            if  dist < largeurTankEnemyImg then
+            if  dist < largeurTankEnemyImg/2 then
                 table.remove(listObus, no)
                 t.life = t.life - 1
                 if t.life == 0 then 
@@ -115,10 +161,13 @@ function Ennemies.Draw()
         love.graphics.setColor(love.math.colorFromBytes(231,50,36))
         love.graphics.rectangle("fill", t.x, t.y - hauteurTankEnemyImg/8, t.life * 10, 4)
         love.graphics.setColor(1,1,1)
-        --love.graphics.print(t.etat, t.x, t.y-10)
+        love.graphics.print(t.etat, t.x, t.y-10)
         --love.graphics.circle("line", t.x , t.y  , 200)
-        --love.graphics.print(tostring(distance), 400, 400)
+        love.graphics.print(tostring(timerShoot), 400, 400)
     end 
+    for k,v in ipairs (listObusEnnemy) do 
+        love.graphics.draw(obusImg, v.x, v.y, v.angle, 1/2, 1/2, largeurObusImg/2, hauteurObusImg/2 )
+    end
     
 end
 
