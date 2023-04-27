@@ -44,6 +44,8 @@ function Hero.Load()
     hauteurObusImg = obusImg:getHeight()
 end
 
+
+
 function Hero.Move(dt)
     if love.keyboard.isDown('z') then
         tankHero.x = tankHero.x + vitessex * math.cos(tankHero.angle) * dt

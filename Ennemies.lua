@@ -21,6 +21,7 @@ ET_Tank_E.ETAT_IDLE = "IDLE"
 ET_Tank_E.ETAT_MOVE = "MOVE"
 ET_Tank_E.ETAT_CHASE = "CHASE"
 ET_Tank_E.ETAT_SHOOT = "SHOOT"
+ET_Tank_E.ETAT_COLLISION = "COLLISION"
 ET_Tank_E.ETAT_DEAD = "DEAD"
 
 listTankEnmy = {}
@@ -67,8 +68,6 @@ function Ennemies.Shoot(dt)
     end
 end
 
-
-
 function Ennemies.Spawn(dt)
     timerSpawn = timerSpawn - dt
     if timerSpawn <= 0 then
@@ -83,6 +82,7 @@ function Ennemies.Spawn(dt)
 -- Machine à ETATS
         chase_Dist = 250
         shoot_Dist = 200
+        col_dist = largeurTankEnemyImg
         t.dist = math.dist(t.x,t.y, tankHero.x,tankHero.y)
 
         if t.etat == ET_Tank_E.ETAT_IDLE then
@@ -106,8 +106,9 @@ function Ennemies.Spawn(dt)
             end
             
             if t.dist <= shoot_Dist then 
-            t.etat = ET_Tank_E.ETAT_SHOOT
+                t.etat = ET_Tank_E.ETAT_SHOOT
             end
+
         elseif t.etat == ET_Tank_E.ETAT_SHOOT then 
             t.angle = math.angle(t.x,t.y, tankHero.x,tankHero.y)
             t.x = t.x + t.vitesse * math.cos(t.angle) * dt
@@ -119,15 +120,35 @@ function Ennemies.Spawn(dt)
                 timerShoot = E_SHOOT
             end
 
+            if t.dist <= col_dist then
+                t.etat= ET_Tank_E.ETAT_COLLISION
+            end
+
+        elseif t.etat == ET_Tank_E.ETAT_COLLISION then
+            t.angle = math.angle(t.x,t.y, tankHero.x,tankHero.y)
+            t.x = t.x 
+            t.y = t.y 
+
+            timerShoot = timerShoot - dt
+            if timerShoot < 0 then 
+                CreerObusEnnemy(t.x, t.y, t.angle, 500)
+                timerShoot = E_SHOOT
+            end
+
+            if t.dist > col_dist then
+                t.etat= ET_Tank_E.ETAT_CHASE
+            end
         elseif t.etat == ET_Tank_E.ETAT_DEAD then 
         end
 
-
+        -- Collisions
+       -- Collision(t.x + largeurTankEnemyImg/2 , t.y + hauteurCanonHeroImg/2, tankHero.x, tankHero.y)
 -- Suppression des tanks hors de l'écran
         if t.x > lScreen then
             table.remove(listTankEnmy, n)
         end
     end
+
 end
 
 
@@ -166,14 +187,17 @@ function Ennemies.Draw()
         love.graphics.setColor(love.math.colorFromBytes(231,50,36))
         love.graphics.rectangle("fill", t.x, t.y - hauteurTankEnemyImg/8, t.life * 10, 4)
         love.graphics.setColor(1,1,1)
-        --love.graphics.print(t.etat, t.x, t.y-10)
-        --love.graphics.circle("line", t.x , t.y  , 200)
-        --love.graphics.print(tostring(timerShoot), 400, 400)
+        love.graphics.print(t.etat, t.x, t.y-10)
+        love.graphics.circle("line", t.x, t.y, col_dist)
+        love.graphics.print(tostring(t.x), 400, 400)
+        love.graphics.rectangle("line", t.x - largeurTankEnemyImg / 2, t.y- hauteurTankEnemyImg/2, largeurTankEnemyImg, hauteurTankEnemyImg )
+
     end 
     for k,v in ipairs (listObusEnnemy) do 
         love.graphics.draw(obusImg, v.x, v.y, v.angle, 1/2, 1/2, largeurObusImg/2, hauteurObusImg/2 )
     end
     
 end
+
 
 return Ennemies

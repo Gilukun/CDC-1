@@ -8,6 +8,7 @@ io.stdout:setvbuf("no")
 function math.angle(x1,y1, x2,y2) return math.atan2(y2-y1, x2-x1) end
 function math.dist(x1,y1, x2,y2) return ((x2-x1)^2+(y2-y1)^2)^0.5 end
 
+local Menu = require("Menu")
 local cartes = require("maps")
 local TankJoueur = require("Hero")
 local ennemy = require("Ennemies")
@@ -32,9 +33,11 @@ function love.load()
     cartes.Load()
     TankJoueur.Load()
     ennemy.Load()
+    Menu.Load()
 end
 
-function UpdateMenu()
+function UpdateMenu(dt)
+    Menu.Update(dt)
 end
 
 function UpdateLevel1(dt)
@@ -72,7 +75,7 @@ function love.update(dt)
 end
 
 function DrawMenu()
-    love.graphics.print("Menu")
+    Menu.Draw()
 end
 
 function DrawLevel1()
