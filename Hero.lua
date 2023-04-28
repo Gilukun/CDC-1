@@ -5,7 +5,7 @@ io.stdout:setvbuf("no")
 
 Hero = {}
 
-local Weapons = require ("WeaponsHero")
+local Weapons = require ("Weapons")
 local HUD = require ("HUD")
 local loot = require ("Loot")
 
@@ -99,6 +99,8 @@ function Hero.Draw()
     end
     love.graphics.draw(tankHeroImg, tankHero.x, tankHero.y, tankHero.angle, 1,1,largeurTankHeroImg /2 , hauteurTankHeroImg / 2 )
     love.graphics.draw(canonHeroImg, tankHero.x, tankHero.y, angleCanon, 1,1,largeurCanonHeroImg /2 , hauteurCanonHeroImg / 2 )
+    
+
     --love.graphics.circle("fill", tankHero.x, tankHero.y, 3 )
     ---love.graphics.rectangle("line", tankHero.x - largeurTankHeroImg/2 , tankHero.y - hauteurTankHeroImg/2,largeurTankHeroImg, hauteurTankHeroImg )
     -- love.graphics.print(tostring(NomObusHero))
@@ -106,8 +108,16 @@ end
 
 function Hero.MouseShootCanon()
     function love.mousepressed(x, y, button)
-        if button == 1 then 
-            Weapons.CreerObus(NomObusHero, tankHero.x, tankHero.y, angleCanon, 500)
+        if WeaponTypes == W_Types.Basic then 
+            if button == 1 then 
+                Weapons.CreerObus(NomObusHero, tankHero.x, tankHero.y, angleCanon, 500)
+            end
+        end
+
+        if WeaponTypes == W_Types.Heavy then 
+            if button == 1 then 
+                Weapons.CreerObus(NomObusHero, tankHero.x, tankHero.y, angleCanon, 1000)
+            end
         end
     end
 end

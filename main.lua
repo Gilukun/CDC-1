@@ -12,7 +12,7 @@ local Menu = require("Menu")
 local cartes = require("maps")
 local TankJoueur = require("Hero")
 local ennemy = require("Ennemies")
-local Weapons = require("WeaponsHero")
+local Weapons = require("Weapons")
 local HUD = require ("HUD")
 local loot = require("Loot")
 
@@ -50,7 +50,7 @@ function UpdateLevel1(dt)
     ennemy.IsHit(dt)
     
     Weapons.Obus(dt)
-    Weapons.Type()
+    Weapons.EMI(dt)
 end
 
 function UpdatePause()
@@ -85,6 +85,7 @@ function DrawLevel1()
     ennemy.Draw()
     HUD.Draw()
     loot.Draw()
+    Weapons.Draw()
 end
 
 function DrawInventaire()
@@ -114,7 +115,6 @@ function love.draw()
     elseif GameState == "GAMEOVER" then
         DrawGameOver()
     end
-    love.graphics.print(tostring(W_Types))
 end
 
 function love.keypressed(key)
@@ -126,6 +126,7 @@ function love.keypressed(key)
         if key == "p" then
             GameState = "PAUSE"
         end
+
         if key == "i" then
             GameState = "INVENTAIRE"
         end

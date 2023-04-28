@@ -3,7 +3,7 @@ if pcall(require, "lldebugger") then
 end
 io.stdout:setvbuf("no")
 
-local Weapons = require ("WeaponsHero")
+local Weapons = require ("Weapons")
 local TankJoueur= require("Hero")
 local HUD = require ("HUD")
 local loot = require ("Loot")
@@ -52,7 +52,7 @@ function Ennemies.Spawn(dt)
     if timerSpawn <= 0 then
         CreerEnnemy()
         timerSpawn = E_SPAWN_T
-        spawnSFX:play()
+        -- spawnSFX:play()
     end
     local n
     for n =#listTankEnmy, 1, -1 do 
@@ -120,8 +120,8 @@ function Ennemies.Spawn(dt)
         elseif t.etat == ET_Tank_E.ETAT_DEAD then 
         end
 
-        -- Collisions
-       -- Collision(t.x + largeurTankEnemyImg/2 , t.y + hauteurCanonHeroImg/2, tankHero.x, tankHero.y)
+-- COLLISIONS
+
 -- Suppression des tanks hors de l'écran
         if t.x > lScreen then
             table.remove(listTankEnmy, n)
@@ -154,11 +154,10 @@ function Ennemies.IsHit()
 end
 
 function Ennemies.Draw()
-    love.graphics.print(tostring(#listObus), 400,10)
-    for nt = #listTankEnmy, 1, -1 do 
-        local t = listTankEnmy[nt]
-        love.graphics.print(tostring(listTankEnmy[nt].life), 500,10)
-    end
+   -- for nt = #listTankEnmy, 1, -1 do 
+       -- local t = listTankEnmy[nt]
+        --love.graphics.print(tostring(listTankEnmy[nt].life), 500,10)
+    --end
 
     for n=1, #listTankEnmy do 
         local t = listTankEnmy[n]
