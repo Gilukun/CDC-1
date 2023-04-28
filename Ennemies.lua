@@ -153,6 +153,23 @@ function Ennemies.IsHit()
     end
 end
 
+function Ennemies.IsHitHeavy()
+    local nt
+    for nt = #listTankEnmy, 1, -1 do 
+        local t = listTankEnmy[nt]
+        local distImpact = EMI_Radius_Init
+        local distImpact = math.dist(t.x, t.y,tankHero.x,tankHero.y )
+        if distImpact <= EMI_Radius_Init then 
+            t.life = t.life - 1
+            if t.life == 0 then 
+                table.remove(listTankEnmy, nt)
+                HUD.AddScore()
+                loot.DropLoot()
+            end
+        end
+    end
+end
+
 function Ennemies.Draw()
    -- for nt = #listTankEnmy, 1, -1 do 
        -- local t = listTankEnmy[nt]
@@ -168,7 +185,7 @@ function Ennemies.Draw()
         love.graphics.setColor(1,1,1)
         --love.graphics.print(t.etat, t.x, t.y-10)
         --love.graphics.circle("line", t.x, t.y, col_dist)
-        --love.graphics.print(tostring(t.x), 400, 400)
+        love.graphics.print(tostring(distImpact), 400, 400)
         --love.graphics.rectangle("line", t.x - largeurTankEnemyImg / 2, t.y- hauteurTankEnemyImg/2, largeurTankEnemyImg, hauteurTankEnemyImg )
         
     end 

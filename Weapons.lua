@@ -9,10 +9,10 @@ W_Types.Heavy = "MISSILE"
 
 WeaponTypes = W_Types.Basic
 
-local EMI_Duration = 5
-local EMI_Timer = EMI_Duration
-local EMI_Radius = 0
-local EMI_Radius_Init = EMI_Radius
+EMI_Duration = 5
+EMI_Timer = EMI_Duration
+EMI_Radius = 0
+EMI_Radius_Init = EMI_Radius
 
 function Weapons.Type()
     if WeaponTypes == W_Types.Basic then 
@@ -67,16 +67,6 @@ function Weapons.EMI(dt)
         end
     end
     -- timer(WeaponTypes, W_Types.Heavy, W_Types.Basic, EMI_Timer, EMI_Duration, dt)
-
-    local radius = 0 
-    local radiusInit = 0
-    local radiuxMAx = 100
-        if radiusInit == 0 then 
-        radiusInit = radiusInit + dt
-        end
-        if radiusInit == radiusMax then 
-            radiusInit = radius
-        end
 end
 
 function Weapons.Draw()
