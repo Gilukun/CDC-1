@@ -38,6 +38,7 @@ function Hero.Load()
 end
 
 function Hero.Move(dt)
+    -- Mouvements 
     if love.keyboard.isDown('z') then
         tankHero.x = tankHero.x + vitessex * math.cos(tankHero.angle) * dt
         tankHero.y = tankHero.y + vitessey * math.sin(tankHero.angle) * dt
@@ -53,6 +54,7 @@ function Hero.Move(dt)
         tankHero.angle = tankHero.angle + 3 * dt
     end
 
+    -- Collisions
     if tankHero.x + largeurTankHeroImg/2 >= lScreen then
         tankHero.x = lScreen - largeurTankHeroImg/2
     end
@@ -70,28 +72,6 @@ function Hero.Move(dt)
     end
 end
 
-listObus = {}
-function CreerObus(pX, pY, pAngle, pVitesse)
-    local Obus = {}
-    Obus.x = pX
-    Obus.y = pY
-    Obus.angle = pAngle
-    Obus.vitesse = pVitesse
-    table.insert(listObus, Obus)
-end
-
-function Hero.Obus(dt)
-    local n
-    for n=#listObus,1, -1 do
-        local o = listObus[n] 
-        o.x = o.x + (o.vitesse * dt ) * math.cos(o.angle) 
-        o.y = o.y + (o.vitesse * dt ) * math.sin(o.angle) 
-        if o.x > lScreen or o.x <0 or o.y> hScreen or o.y<0 then
-            table.remove(listObus, n)
-        end
-    end
-end
-
 function Hero.Canon()
     local mousex = love.mouse.getX()
     local mousey = love.mouse.getY()
@@ -100,14 +80,16 @@ end
 
 function Hero.IsHit()
     local no
-    for no = #listObusEnnemy, 1, -1 do 
-        local o = listObusEnnemy[no]
-        local dist = math.dist(tankHero.x, tankHero.y, o.x, o.y)
-        if  dist < largeurTankHeroImg/2 then
-            table.remove(listObusEnnemy, no)
-            HUD.RemoveHeroLife(dt)
+        for no = #listObus, 1, -1 do 
+            local o = listObus[no]
+            if o.nom == NomObusEnnemy then 
+                local dist = math.dist(tankHero.x, tankHero.y, o.x, o.y)
+                if  dist < largeurTankHeroImg/2 then
+                    table.remove(listObus, no)
+                    HUD.RemoveHeroLife(dt)
+                end
+            end
         end
-    end
 end
 
 
@@ -119,25 +101,17 @@ function Hero.Draw()
     love.graphics.draw(canonHeroImg, tankHero.x, tankHero.y, angleCanon, 1,1,largeurCanonHeroImg /2 , hauteurCanonHeroImg / 2 )
     --love.graphics.circle("fill", tankHero.x, tankHero.y, 3 )
     ---love.graphics.rectangle("line", tankHero.x - largeurTankHeroImg/2 , tankHero.y - hauteurTankHeroImg/2,largeurTankHeroImg, hauteurTankHeroImg )
+    -- love.graphics.print(tostring(NomObusHero))
 end
 
 function Hero.MouseShootCanon()
     function love.mousepressed(x, y, button)
-        x = largeurCanonHeroImg
-        y = hauteurCanonHeroImg / 2
         if button == 1 then 
-            CreerObus(tankHero.x, tankHero.y, angleCanon, 500)
+            Weapons.CreerObus(NomObusHero, tankHero.x, tankHero.y, angleCanon, 500)
         end
     end
 end
 
---function Hero.keypressed(key)
-    --if hasMissile == true then 
-        --if key == " " then 
-           --- CreerObus(tankHero.x, tankHero.y, angleCanon, 500)
-       -- end
-    --end
---end
 
 --function Hero.Shoot(key)
     --if key == "space" then 

@@ -4,8 +4,8 @@ missile = 0
 hasMissile = false
 
 function loot.DropLoot()
-    missile = missile + 10 
     hasMissile = true
+    missile = missile + 10 
     if missile >= 20 then 
         missile = 20 
     end
