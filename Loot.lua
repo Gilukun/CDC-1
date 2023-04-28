@@ -11,7 +11,6 @@ function loot.DropLoot()
     end
 end
 
-
 function loot.Draw()
     love.graphics.print(tostring(missile))
     --love.graphics.print(tostring(hasMissile), 100, 100)

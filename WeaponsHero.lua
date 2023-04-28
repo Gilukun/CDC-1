@@ -3,6 +3,16 @@ Weapons = {}
 NomObusHero = "HERO"
 NomObusEnnemy = "ENNEMY"
 
+W_Types = {}
+W_Types.Basic = "CANON"
+W_Types.Heavy = "MISSILE"
+
+function Weapons.Type()
+    if W_Types == W_Types.Basic then 
+        W_Types = W_Types.Heavy
+    end
+end
+
 listObus = {}
 function Weapons.CreerObus(pNom, pX, pY, pAngle, pVitesse)
     local Obus = {}
