@@ -48,6 +48,7 @@ function UpdateLevel1(dt)
 
     ennemy.Spawn(dt)
     ennemy.IsHit(dt)
+    ennemy.IsHitHeavy(dt)
     
     Weapons.Obus(dt)
     Weapons.EMI(dt)

@@ -9,7 +9,7 @@ W_Types.Heavy = "MISSILE"
 
 WeaponTypes = W_Types.Basic
 
-EMI_Duration = 5
+EMI_Duration = 3
 EMI_Timer = EMI_Duration
 EMI_Radius = 0
 EMI_Radius_Init = EMI_Radius
@@ -58,7 +58,7 @@ function Weapons.EMI(dt)
     if WeaponTypes == W_Types.Heavy then 
         if EMI_Timer >= 0 then 
             EMI_Timer = EMI_Timer - dt
-            EMI_Radius_Init = EMI_Radius_Init + 200 * dt
+            EMI_Radius_Init = EMI_Radius_Init + 50 * dt
         end
         if EMI_Timer <= 0 then 
             WeaponTypes = W_Types.Basic
@@ -72,7 +72,9 @@ end
 function Weapons.Draw()
     love.graphics.print(tostring(EMI_Radius_Init), 100, 200)
     if WeaponTypes == W_Types.Heavy then
-        love.graphics.circle("line", tankHero.x, tankHero.y,EMI_Radius_Init)
+        love.graphics.setColor(love.math.colorFromBytes(158, 26, 11, 100))
+        love.graphics.circle("fill", tankHero.x, tankHero.y,EMI_Radius_Init)
+        love.graphics.setColor(1,1,1,1)
     end
 end
 
