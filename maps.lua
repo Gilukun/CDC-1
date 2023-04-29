@@ -416,37 +416,37 @@ function Maps.draw()
                 love.graphics.draw(Maps.Tilesheet, texturesFond,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
             end
 
-            -- if texturesShadowTrees ~= nil then 
-               --  love.graphics.draw(Maps.Tilesheet, texturesShadowTrees,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
-            -- end
+            if texturesShadowTrees ~= nil then 
+                love.graphics.draw(Maps.Tilesheet, texturesShadowTrees,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
+            end
 
-            --if texturesRoofs ~= nil then 
-              --  love.graphics.draw(Maps.Tilesheet, texturesRoofs,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
-            -- end
+            if texturesRoofs ~= nil then 
+              love.graphics.draw(Maps.Tilesheet, texturesRoofs,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
+            end
 
-            --if texturesBuildings ~= nil then 
-               -- love.graphics.draw(Maps.Tilesheet, texturesBuildings,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
-            --end
+            if texturesBuildings ~= nil then 
+               love.graphics.draw(Maps.Tilesheet, texturesBuildings,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
+            end
             
-            --if texturestrees ~= nil then 
-            --love.graphics.draw(Maps.Tilesheet, texturestrees,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
-            --end
-            --if texturesShadowObjects ~= nil then 
-               -- love.graphics.draw(Maps.Tilesheet, texturesShadowObjects,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
-            --end
-            --if texturesObjects ~= nil then 
-                --love.graphics.draw(Maps.Tilesheet, texturesObjects,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
-            --end
+            if texturestrees ~= nil then 
+            love.graphics.draw(Maps.Tilesheet, texturestrees,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
+            end
+            if texturesShadowObjects ~= nil then 
+               love.graphics.draw(Maps.Tilesheet, texturesShadowObjects,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
+            end
+            if texturesObjects ~= nil then 
+                love.graphics.draw(Maps.Tilesheet, texturesObjects,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
+            end
 
-           -- if texturesObjects2 ~= nil then 
-               -- love.graphics.draw(Maps.Tilesheet, texturesObjects2,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
-           -- end
-            --if texturesMiddleTrees ~= nil then 
-               -- love.graphics.draw(Maps.Tilesheet, texturesMiddleTrees,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
-            --end
-            --if texturesFrontTrees ~= nil then 
-                --love.graphics.draw(Maps.Tilesheet, texturesFrontTrees,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
-            --end
+            if texturesObjects2 ~= nil then 
+               love.graphics.draw(Maps.Tilesheet, texturesObjects2,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
+            end
+            if texturesMiddleTrees ~= nil then 
+               love.graphics.draw(Maps.Tilesheet, texturesMiddleTrees,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
+            end
+            if texturesFrontTrees ~= nil then 
+                love.graphics.draw(Maps.Tilesheet, texturesFrontTrees,(c-1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
+            end
         end
    
     end

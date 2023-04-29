@@ -21,12 +21,12 @@ GameState.Menu = "MENU"
 GameState.level1 = "LEVEL1"
 GameState.Boss = "BOSS"
 GameState.Pause = "PAUSE"
-GameState.Inventaire = "INVENTAIRE"
+GameState.Inventaire = "PAUSE"
 GameState.GameOver = "GAMEOVER"
 GameState.Quit = "QUIT"
 
 
-GameState = GameState.Menu
+G_State = GameState.Menu
 
 function love.load()
    -- love.window.setMode(1024,700)
@@ -52,6 +52,9 @@ function UpdateLevel1(dt)
     
     Weapons.Obus(dt)
     Weapons.EMI(dt)
+    Weapons.Shield(dt)
+
+    HUD.Updates(dt)
 end
 
 function UpdatePause()
@@ -67,11 +70,11 @@ function UpdateGameOver()
 end
 
 function love.update(dt)
-    if GameState == "MENU" then 
+    if G_State == GameState.Menu then 
         UpdateMenu(dt)
-    elseif GameState == "LEVEL1" then
+    elseif G_State == GameState.level1 then
         UpdateLevel1(dt)
-    elseif GameState == "INVENTAIRE" then
+    elseif G_State ==GameState.Inventaire  then
         UpdateInventaire(dt) 
     end
 end
@@ -98,62 +101,64 @@ function DrawBoss()
 end
 
 function DrawGameOver()
-    love.graphics.print("GAMEOVER", lScreen/2, hScreen/2)
+    love.graphics.print(GameState.GameOver, lScreen/2, hScreen/2)
 end
 
 
 function love.draw()
-    if GameState == "MENU" then 
+    if G_State == GameState.Menu then 
         DrawMenu()
-    elseif GameState == "LEVEL1" then
+    elseif G_State == GameState.level1 then
        DrawLevel1()
-    elseif GameState == "PAUSE" then
+    elseif G_State == GameState.Pause then
         DrawLevel1()
-    elseif GameState == "BOSS" then
+    elseif G_State == GameState.Boss then
         DrawLevel1()
-    elseif GameState == "INVENTAIRE" then
+    elseif G_State == GameState.Inventaire  then
         DrawInventaire()
-    elseif GameState == "GAMEOVER" then
+    elseif G_State == GameState.GameOver then
         DrawGameOver()
     end
 end
 
 function love.keypressed(key)
-    if GameState == "MENU" then
+    if G_State == GameState.Menu then
         if key == "return" then
-            GameState = "LEVEL1"
+            G_State = GameState.level1
         end
-    elseif GameState == "LEVEL1" then
+    elseif G_State == GameState.level1 then
         if key == "p" then
-            GameState = "PAUSE"
+            G_State = GameState.Pause
         end
 
         if key == "i" then
-            GameState = "INVENTAIRE"
+            G_State = GameState.Inventaire 
         end
 
         if key == "t" then
-            Weapons.Type()
+            Weapons.Type(W_Style.ATTACK)
+        end
+        if key == "b" then
+            Weapons.Type(W_Style.SHIELD)
         end
 
-    elseif GameState == "PAUSE" then
-        if key == "p" then
-            GameState = "LEVEL1"
-        end
-    
-    elseif GameState == "INVENTAIRE" then
-        if key == "i" then
-            GameState = "LEVEL1"
-        end
-     
-    elseif GameState == "LEVEL1" then
         if key == "escape" then
-            GameState = "QUIT"
+            G_State = GameState.Menu
+        end
+
+    elseif G_State == GameState.Pause then
+        if key == "p" then
+            G_State = GameState.level1
         end
     
-    elseif GameState == "GAMEOVER" then
+    elseif G_State == GameState.Inventaire then
+        if key == "i" then
+            G_State = GameState.Inventaire
+        end
+    
+    elseif G_State == GameState.GameOver then
         if key == "return" then 
-            GameState = "MENU"
+            G_State = GameState.Menu
         end
     end
     

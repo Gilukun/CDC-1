@@ -84,9 +84,16 @@ function Hero.IsHit()
             local o = listObus[no]
             if o.nom == NomObusEnnemy then 
                 local dist = math.dist(tankHero.x, tankHero.y, o.x, o.y)
-                if  dist < largeurTankHeroImg/2 then
-                    table.remove(listObus, no)
-                    HUD.RemoveHeroLife(dt)
+                if Shield_ON == false then
+                    if  dist < largeurTankHeroImg/2 then
+                        table.remove(listObus, no)
+                        HUD.RemoveHeroLife(dt)
+                    end
+                end
+                if Shield_ON == true then 
+                    if  dist <= Shield_Radius then
+                        table.remove(listObus, no)
+                    end
                 end
             end
         end
