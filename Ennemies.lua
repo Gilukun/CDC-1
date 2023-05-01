@@ -38,6 +38,15 @@ function CreerEnnemy()
     table.insert(listTankEnmy, tankEnmy)
 end
 
+function Collision(px1,py1, px2, py2, pangle)
+    pangle = math.angle(px1,py1,px2,py2)
+    px1 = px1
+    py1 = py1
+    px2 = px2 
+    py2 = py2
+
+end
+
 function Ennemies.Load()
     tankEnmyImg = love.graphics.newImage("Images/Badtank.png")
     largeurTankEnemyImg = tankEnmyImg:getWidth()
@@ -61,7 +70,7 @@ function Ennemies.Spawn(dt)
 -- Machine à ETATS
         chase_Dist = 250
         shoot_Dist = 200
-        col_dist = largeurTankEnemyImg
+        col_dist = 150
         t.dist = math.dist(t.x,t.y, tankHero.x,tankHero.y)
 
         if t.etat == ET_Tank_E.ETAT_IDLE then
@@ -105,9 +114,6 @@ function Ennemies.Spawn(dt)
 
         elseif t.etat == ET_Tank_E.ETAT_COLLISION then
             t.angle = math.angle(t.x,t.y, tankHero.x,tankHero.y)
-            t.x = t.x 
-            t.y = t.y 
-
             timerShoot = timerShoot - dt
             if timerShoot < 0 then 
                 Weapons.CreerObus(NomObusEnnemy,t.x, t.y, t.angle, 500)
@@ -119,8 +125,6 @@ function Ennemies.Spawn(dt)
             end
         elseif t.etat == ET_Tank_E.ETAT_DEAD then 
         end
-
--- COLLISIONS
 
 -- Suppression des tanks hors de l'écran
         if t.x > lScreen then
@@ -171,23 +175,12 @@ function Ennemies.IsHitHeavy()
 end
 
 function Ennemies.Draw()
-   -- for nt = #listTankEnmy, 1, -1 do 
-       -- local t = listTankEnmy[nt]
-        --love.graphics.print(tostring(listTankEnmy[nt].life), 500,10)
-    --end
-
     for n=1, #listTankEnmy do 
         local t = listTankEnmy[n]
         love.graphics.draw(tankEnmyImg,t.x, t.y, t.angle, 1,1, largeurTankEnemyImg /2 , hauteurTankEnemyImg / 2)
-        
         love.graphics.setColor(love.math.colorFromBytes(231,50,36))
         love.graphics.rectangle("fill", t.x, t.y - hauteurTankEnemyImg/8, t.life * 10, 4)
-        love.graphics.setColor(1,1,1)
-        --love.graphics.print(t.etat, t.x, t.y-10)
-        --love.graphics.circle("line", t.x, t.y, col_dist)
-        love.graphics.print(tostring(distImpact), 400, 400)
-        --love.graphics.rectangle("line", t.x - largeurTankEnemyImg / 2, t.y- hauteurTankEnemyImg/2, largeurTankEnemyImg, hauteurTankEnemyImg )
-        
+        love.graphics.setColor(1,1,1) 
     end 
     for k,v in ipairs (listObus) do 
         love.graphics.draw(obusImg, v.x, v.y, v.angle, 1/2, 1/2, largeurObusImg/2, hauteurObusImg/2 )

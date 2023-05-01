@@ -22,7 +22,7 @@ local ShieldActive = {}
 ShieldActive.x = 10
 ShieldActive.y = 22
 ShieldActive.Width = 100
-ShieldActive.Height = 20
+ShieldActive.Height = 10
 ShieldActiveWidth = ShieldActive.Width
 
 local EMIActive= {}
@@ -54,7 +54,7 @@ end
 function HUD.Updates(dt)
     if EMI_ON == true then 
         if EMIActiveWidth >= 0 then 
-            EMIActiveWidth = math.ceil(EMIActiveWidth - (EMI_Timer * 1/ratio * dt ))
+            EMIActiveWidth = math.ceil(EMIActiveWidth - (EMI_Timer * 3/ratio * dt ))
         end
         if EMIActiveWidth <= 0 then 
             EMIActiveWidth = EMIActive.Width
@@ -63,7 +63,7 @@ function HUD.Updates(dt)
 
     if Shield_ON == true then 
         if ShieldActiveWidth >= 0 then 
-            ShieldActiveWidth = math.ceil(ShieldActiveWidth - (Shield_Timer * 1/ratio * dt))
+            ShieldActiveWidth = math.ceil(ShieldActiveWidth - (Shield_Timer * 0.895/ratio * dt))
         end
         if ShieldActiveWidth <= 0 then 
             ShieldActiveWidth = ShieldActive.Width
@@ -72,7 +72,6 @@ function HUD.Updates(dt)
 end
 
 function HUD.Draw()
-    love.graphics.print("Score" .. " " .. tostring(HLInlay.Width), 300, 10)
     love.graphics.setColor(love.math.colorFromBytes(255, 18, 0))
     love.graphics.rectangle("fill", HLInlay.x, HLInlay.y, HLInlay.Width, HLInlay.Height)
     love.graphics.setColor(1,1,1)
@@ -85,10 +84,10 @@ function HUD.Draw()
     end
 
     if EMI_ON == true then 
-        love.graphics.setColor(love.math.colorFromBytes(27, 175, 173))
+        love.graphics.setColor(love.math.colorFromBytes(27, 255, 173))
         love.graphics.rectangle("fill", EMIActive.x, EMIActive.y, EMIActiveWidth, EMIActive.Height)
         love.graphics.setColor(1,1,1)
-        love.graphics.print("Score" .. " " .. tostring(EMIActiveWidth), 400, 10)
+
     end
     
 end

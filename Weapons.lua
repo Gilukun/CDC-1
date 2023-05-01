@@ -110,7 +110,6 @@ function Weapons.Shield(dt)
 end
 
 function Weapons.Draw()
-    love.graphics.print(tostring(Shield_Radius_Init), 100, 200)
     if WeaponTypes == W_Types.Heavy then
         love.graphics.setColor(love.math.colorFromBytes(158, 26, 11, 100))
         love.graphics.circle("fill", tankHero.x, tankHero.y,EMI_Radius_Init)

@@ -37,6 +37,11 @@ function Hero.Load()
     hauteurObusImg = obusImg:getHeight()
 end
 
+
+
+
+
+
 function Hero.Move(dt)
     -- Mouvements 
     if love.keyboard.isDown('z') then
@@ -69,6 +74,11 @@ function Hero.Move(dt)
 
     if tankHero.y - hauteurTankHeroImg/2 <= 0  then 
         tankHero.y = hauteurTankHeroImg/2
+    end
+
+    for k,v in ipairs (listTankEnmy) do 
+        if CheckCollision(tankHero.x, tankHero.y, largeurTankHeroImg, hauteurTankHeroImg, v.x, v.y, largeurTankEnemyImg, hauteurTankEnemyImg) == true then 
+        end
     end
 end
 
@@ -104,13 +114,12 @@ function Hero.Draw()
     for k,v in ipairs (listObus) do 
         love.graphics.draw(obusImg, v.x, v.y, v.angle, 1/2, 1/2, largeurObusImg/2, hauteurObusImg/2 )
     end
-    love.graphics.draw(tankHeroImg, tankHero.x, tankHero.y, tankHero.angle, 1,1,largeurTankHeroImg /2 , hauteurTankHeroImg / 2 )
+    love.graphics.draw(tankHeroImg, tankHero.x, tankHero.y, tankHero.angle, 1,1, largeurTankHeroImg /2 , hauteurTankHeroImg / 2 )
     love.graphics.draw(canonHeroImg, tankHero.x, tankHero.y, angleCanon, 1,1,largeurCanonHeroImg /2 , hauteurCanonHeroImg / 2 )
     
-
-    --love.graphics.circle("fill", tankHero.x, tankHero.y, 3 )
-    ---love.graphics.rectangle("line", tankHero.x - largeurTankHeroImg/2 , tankHero.y - hauteurTankHeroImg/2,largeurTankHeroImg, hauteurTankHeroImg )
-    -- love.graphics.print(tostring(NomObusHero))
+    for k,v in ipairs (listTankEnmy) do 
+        love.graphics.print(tostring(CheckCollision(tankHero.x, tankHero.y, largeurTankHeroImg, hauteurTankHeroImg, v.x, v.y, largeurTankEnemyImg, hauteurTankEnemyImg)), 300, 10)
+    end
 end
 
 function Hero.MouseShootCanon()
@@ -128,13 +137,6 @@ function Hero.MouseShootCanon()
         end
     end
 end
-
-
---function Hero.Shoot(key)
-    --if key == "space" then 
-        --CreerObus(tankHero.x, tankHero.y, tankHero.angle, 300)
-    --end
---end
 
 
 return Hero
