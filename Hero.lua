@@ -38,8 +38,17 @@ end
 function Hero.Move(dt)
     -- Mouvements 
     if love.keyboard.isDown('z') then
+        local oldx = Player.x
+        local oldy = Player.y 
         Player.x = Player.x + (vitessex * dt) * math.cos(Player.angle)
         Player.y = Player.y + (vitessey * dt) * math.sin(Player.angle) 
+        for k,v in ipairs(list_tank_E) do 
+            
+            if CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, v.x, v.y, largeurImg_tank_E, hauteurImg_tank_E) == true then 
+                Player.x = oldx
+                Player.y = oldy
+            end 
+        end
     end
     if love.keyboard.isDown('s') then
         Player.x = Player.x - (vitessex * dt) * math.cos(Player.angle)
@@ -68,17 +77,6 @@ function Hero.Move(dt)
     if Player.y - hauteurImg_Player/2 <= 0  then 
         Player.y = hauteurImg_Player/2
     end
-    
-    for k,v in ipairs (list_tank_E) do 
-        if Player.y + hauteurImg_Player/2 > v.y - hauteurImg_tank_E/2 and 
-            Player.y - hauteurImg_Player/2 < v.y + hauteurImg_tank_E/2 then
-                if Player.x - largeurImg_Player/2 <= v.x + largeurImg_tank_E / 2  then 
-                    Player.x  = v.x + largeurImg_tank_E/2 + largeurImg_Player/2
-                end
-        end
-    end
-    -- if CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, v.x, v.y, largeurImg_tank_E, hauteurImg_tank_E) == true then 
-    -- end
 end
 
 function Hero.Canon()

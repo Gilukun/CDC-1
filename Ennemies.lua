@@ -60,9 +60,9 @@ function Ennemis.Spawn(dt)
     local n
     for n =#list_tank_E, 1, -1 do 
         local t = list_tank_E[n]
-        chase_Dist = 250
-        shoot_Dist = 200
-        col_Dist = 150
+        chase_Dist = 150
+        shoot_Dist = 90
+        col_Dist = 90
         t.dist = math.dist(t.x,t.y, Player.x,Player.y)
 
         if t.etat == ET_Tank_E.ETAT_IDLE then
@@ -74,6 +74,7 @@ function Ennemis.Spawn(dt)
             
             if t.dist <= chase_Dist then
                 t.etat = ET_Tank_E.ETAT_CHASE
+                oldangle = t.angle
             end
 
         elseif t.etat == ET_Tank_E.ETAT_CHASE then
@@ -83,6 +84,7 @@ function Ennemis.Spawn(dt)
 
             if t.dist >= chase_Dist then
                 t.etat = ET_Tank_E.ETAT_MOVE
+                t.angle = oldangle
             end
             
             if t.dist <= shoot_Dist then 
