@@ -9,13 +9,11 @@ local Weapons = require ("Weapons")
 local HUD = require ("HUD")
 local loot = require ("Loot")
 
-tankHero = {}
-tankHero.x = 200
-tankHero.y = 200
-tankHero.vx = 0
-tankHero.vy = 0
-tankHero.angle = 0
-tankHero.life = 100
+Player = {}
+Player.x = 200
+Player.y = 200
+Player.angle = 0
+Player.life = 100
 
 local vitessex = 200  
 local vitessey = 200  
@@ -24,60 +22,64 @@ function Hero.Load()
     lScreen = love.graphics.getWidth()
     hScreen = love.graphics.getHeight()
 
-    tankHeroImg = love.graphics.newImage("Images/tank.png")
-    largeurTankHeroImg = tankHeroImg:getWidth()
-    hauteurTankHeroImg = tankHeroImg:getHeight()
+    Img_Player = love.graphics.newImage("Images/tank.png")
+    largeurImg_Player = Img_Player:getWidth()
+    hauteurImg_Player = Img_Player:getHeight()
 
-    canonHeroImg = love.graphics.newImage("Images/Canon.png")
-    largeurCanonHeroImg = canonHeroImg:getWidth()
-    hauteurCanonHeroImg = canonHeroImg:getHeight()
+    Img_Canon = love.graphics.newImage("Images/Canon.png")
+    largeurImg_Canon = Img_Canon:getWidth()
+    hauteurImg_Canon = Img_Canon:getHeight()
 
-    obusImg = love.graphics.newImage("Images/Obus.png")
-    largeurObusImg = obusImg:getWidth()
-    hauteurObusImg = obusImg:getHeight()
+    Img_Obus = love.graphics.newImage("Images/Obus.png")
+    largeurImg_Obus = Img_Obus:getWidth()
+    hauteurImg_Obus = Img_Obus:getHeight()
 end
-
-
-
-
-
 
 function Hero.Move(dt)
     -- Mouvements 
     if love.keyboard.isDown('z') then
-        tankHero.x = tankHero.x + vitessex * math.cos(tankHero.angle) * dt
-        tankHero.y = tankHero.y + vitessey * math.sin(tankHero.angle) * dt
+        Player.x = Player.x + vitessex * math.cos(Player.angle) * dt
+        Player.y = Player.y + vitessey * math.sin(Player.angle) * dt
     end
     if love.keyboard.isDown('s') then
-        tankHero.x = tankHero.x - vitessex * math.cos(tankHero.angle) * dt
-        tankHero.y = tankHero.y - vitessey * math.sin(tankHero.angle) * dt
+        Player.x = Player.x - vitessex * math.cos(Player.angle) * dt
+        Player.y = Player.y - vitessey * math.sin(Player.angle) * dt
     end
     if love.keyboard.isDown('q') then
-        tankHero.angle = tankHero.angle - 3 * dt
+        Player.angle = Player.angle - 3 * dt
     end
     if love.keyboard.isDown('d') then
-        tankHero.angle = tankHero.angle + 3 * dt
+        Player.angle = Player.angle + 3 * dt
     end
 
     -- Collisions
-    if tankHero.x + largeurTankHeroImg/2 >= lScreen then
-        tankHero.x = lScreen - largeurTankHeroImg/2
+    if Player.x + largeurImg_Player/2 >= lScreen then
+        Player.x = lScreen - largeurImg_Player/2
     end
 
-    if tankHero.x - largeurTankHeroImg/2 <= 0  then 
-        tankHero.x = largeurTankHeroImg/2
+    if Player.x - largeurImg_Player/2 <= 0  then 
+        Player.x = largeurImg_Player/2
     end
 
-    if tankHero.y + hauteurTankHeroImg/2 >= hScreen then
-        tankHero.y = hScreen - hauteurTankHeroImg/2
+    if Player.y + hauteurImg_Player/2 >= hScreen then
+        Player.y = hScreen - hauteurImg_Player/2
     end
 
-    if tankHero.y - hauteurTankHeroImg/2 <= 0  then 
-        tankHero.y = hauteurTankHeroImg/2
+    if Player.y - hauteurImg_Player/2 <= 0  then 
+        Player.y = hauteurImg_Player/2
     end
+    
+    for k,v in ipairs (list_tank_E) do 
+        if CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, v.x, v.y, largeurImg_tank_E, hauteurImg_tank_E) == true then 
+           
+            if Player.x - largeurImg_Player/2 < v.x + largeurImg_tank_E / 2  then 
+                Player.x  = v.x + largeurImg_tank_E/2 + largeurImg_Player/2
+            end
+            if Player.x + largeurImg_Player/2 < v.x - largeurImg_tank_E / 2  then 
+                Player.x  = v.x - largeurImg_tank_E/2 - largeurImg_Player/2
+            end
 
-    for k,v in ipairs (listTankEnmy) do 
-        if CheckCollision(tankHero.x, tankHero.y, largeurTankHeroImg, hauteurTankHeroImg, v.x, v.y, largeurTankEnemyImg, hauteurTankEnemyImg) == true then 
+        
         end
     end
 end
@@ -85,7 +87,7 @@ end
 function Hero.Canon()
     local mousex = love.mouse.getX()
     local mousey = love.mouse.getY()
-    angleCanon = math.angle(tankHero.x, tankHero.y, mousex, mousey)
+    angle_Canon = math.angle(Player.x, Player.y, mousex, mousey)
 end
 
 function Hero.IsHit()
@@ -93,9 +95,9 @@ function Hero.IsHit()
         for no = #listObus, 1, -1 do 
             local o = listObus[no]
             if o.nom == NomObusEnnemy then 
-                local dist = math.dist(tankHero.x, tankHero.y, o.x, o.y)
+                local dist = math.dist(Player.x, Player.y, o.x, o.y)
                 if Shield_ON == false then
-                    if  dist < largeurTankHeroImg/2 then
+                    if  dist < largeurImg_Player/2 then
                         table.remove(listObus, no)
                         HUD.RemoveHeroLife(dt)
                     end
@@ -112,13 +114,17 @@ end
 
 function Hero.Draw()
     for k,v in ipairs (listObus) do 
-        love.graphics.draw(obusImg, v.x, v.y, v.angle, 1/2, 1/2, largeurObusImg/2, hauteurObusImg/2 )
+        love.graphics.draw (Img_Obus, v.x, v.y, v.angle, 1/2, 1/2, largeurImg_Obus /2, hauteurImg_Obus /2 )
     end
-    love.graphics.draw(tankHeroImg, tankHero.x, tankHero.y, tankHero.angle, 1,1, largeurTankHeroImg /2 , hauteurTankHeroImg / 2 )
-    love.graphics.draw(canonHeroImg, tankHero.x, tankHero.y, angleCanon, 1,1,largeurCanonHeroImg /2 , hauteurCanonHeroImg / 2 )
-    
-    for k,v in ipairs (listTankEnmy) do 
-        love.graphics.print(tostring(CheckCollision(tankHero.x, tankHero.y, largeurTankHeroImg, hauteurTankHeroImg, v.x, v.y, largeurTankEnemyImg, hauteurTankEnemyImg)), 300, 10)
+    love.graphics.draw(Img_Player, Player.x, Player.y, Player.angle, 1,1, largeurImg_Player /2 , hauteurImg_Player /2 )
+    love.graphics.draw(Img_Canon, Player.x, Player.y, angle_Canon, 1,1,largeurImg_Canon /2 , hauteurImg_Canon /2 )
+    love.graphics.circle('fill', Player.x - largeurImg_Player/2, Player.y, 4)
+    love.graphics.setColor(1,0,1)
+    love.graphics.circle('fill', Player.x + largeurImg_Player/2, Player.y, 4)
+    love.graphics.setColor(1,1,1)
+
+    for k,v in ipairs (list_tank_E) do 
+        love.graphics.print(tostring(CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, v.x, v.y, largeurImg_tank_E, hauteurImg_tank_E)), 300, 10)
     end
 end
 
@@ -126,13 +132,13 @@ function Hero.MouseShootCanon()
     function love.mousepressed(x, y, button)
         if WeaponTypes == W_Types.Basic then 
             if button == 1 then 
-                Weapons.CreerObus(NomObusHero, tankHero.x, tankHero.y, angleCanon, 500)
+                Weapons.CreerObus(NomObusHero, Player.x, Player.y, angle_Canon, 500)
             end
         end
 
         if WeaponTypes == W_Types.Heavy then 
             if button == 1 then 
-                Weapons.CreerObus(NomObusHero, tankHero.x, tankHero.y, angleCanon, 1000)
+                Weapons.CreerObus(NomObusHero, Player.x, Player.y, angle_Canon, 1000)
             end
         end
     end

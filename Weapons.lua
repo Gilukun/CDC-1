@@ -14,15 +14,17 @@ W_Style = {}
 W_Style.ATTACK = "ATTAQUE"
 W_Style.SHIELD = "BOUCLIER"
 
+-- Super Pouvoir
 EMI_Duration = 1
 EMI_Timer = EMI_Duration
 EMI_Radius = 0
 EMI_Radius_Init = EMI_Radius
 EMI_ON = false
 
+-- Bouclier
 Shield_Duration = 2
 Shield_Timer = Shield_Duration
-Shield_Radius = 100 
+Shield_Radius = 50 
 Shield_ON = false
 
 function Weapons.Type(pNom)
@@ -112,13 +114,13 @@ end
 function Weapons.Draw()
     if WeaponTypes == W_Types.Heavy then
         love.graphics.setColor(love.math.colorFromBytes(158, 26, 11, 100))
-        love.graphics.circle("fill", tankHero.x, tankHero.y,EMI_Radius_Init)
+        love.graphics.circle("fill", Player.x, Player.y,EMI_Radius_Init)
         love.graphics.setColor(1,1,1,1)
     end
 
     if WeaponTypes == W_Types.Shield then
         love.graphics.setColor(love.math.colorFromBytes(158, 255, 11, 100))
-        love.graphics.circle("line", tankHero.x, tankHero.y,Shield_Radius)
+        love.graphics.circle("line", Player.x, Player.y,Shield_Radius)
         love.graphics.setColor(1,1,1,1)
     end
 
