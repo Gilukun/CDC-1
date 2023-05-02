@@ -38,12 +38,12 @@ end
 function Hero.Move(dt)
     -- Mouvements 
     if love.keyboard.isDown('z') then
-        Player.x = Player.x + vitessex * math.cos(Player.angle) * dt
-        Player.y = Player.y + vitessey * math.sin(Player.angle) * dt
+        Player.x = Player.x + (vitessex * dt) * math.cos(Player.angle)
+        Player.y = Player.y + (vitessey * dt) * math.sin(Player.angle) 
     end
     if love.keyboard.isDown('s') then
-        Player.x = Player.x - vitessex * math.cos(Player.angle) * dt
-        Player.y = Player.y - vitessey * math.sin(Player.angle) * dt
+        Player.x = Player.x - (vitessex * dt) * math.cos(Player.angle)
+        Player.y = Player.y - (vitessey * dt) * math.sin(Player.angle)
     end
     if love.keyboard.isDown('q') then
         Player.angle = Player.angle - 3 * dt
@@ -70,18 +70,15 @@ function Hero.Move(dt)
     end
     
     for k,v in ipairs (list_tank_E) do 
-        if CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, v.x, v.y, largeurImg_tank_E, hauteurImg_tank_E) == true then 
-           
-            if Player.x - largeurImg_Player/2 < v.x + largeurImg_tank_E / 2  then 
-                Player.x  = v.x + largeurImg_tank_E/2 + largeurImg_Player/2
-            end
-            if Player.x + largeurImg_Player/2 < v.x - largeurImg_tank_E / 2  then 
-                Player.x  = v.x - largeurImg_tank_E/2 - largeurImg_Player/2
-            end
-
-        
+        if Player.y + hauteurImg_Player/2 > v.y - hauteurImg_tank_E/2 and 
+            Player.y - hauteurImg_Player/2 < v.y + hauteurImg_tank_E/2 then
+                if Player.x - largeurImg_Player/2 <= v.x + largeurImg_tank_E / 2  then 
+                    Player.x  = v.x + largeurImg_tank_E/2 + largeurImg_Player/2
+                end
         end
     end
+    -- if CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, v.x, v.y, largeurImg_tank_E, hauteurImg_tank_E) == true then 
+    -- end
 end
 
 function Hero.Canon()
@@ -120,7 +117,7 @@ function Hero.Draw()
     love.graphics.draw(Img_Canon, Player.x, Player.y, angle_Canon, 1,1,largeurImg_Canon /2 , hauteurImg_Canon /2 )
     love.graphics.circle('fill', Player.x - largeurImg_Player/2, Player.y, 4)
     love.graphics.setColor(1,0,1)
-    love.graphics.circle('fill', Player.x + largeurImg_Player/2, Player.y, 4)
+    love.graphics.circle('fill', Player.x, Player.y - hauteurImg_Player/2 , 4)
     love.graphics.setColor(1,1,1)
 
     for k,v in ipairs (list_tank_E) do 

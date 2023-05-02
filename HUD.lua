@@ -70,6 +70,13 @@ function HUD.Draw()
         love.graphics.rectangle("fill", EMIActive.x, EMIActive.y, EMIActive.Width, EMIActive.Height)
         love.graphics.setColor(1,1,1)
     end
+
+    for k,v in ipairs(list_tank_E) do 
+        love.graphics.setColor(love.math.colorFromBytes(231,50,36))
+        love.graphics.rectangle("fill", v.x - largeurImg_tank_E/2 , v.y - hauteurImg_tank_E/2, v.life * 10, 4)
+        love.graphics.setColor(1,1,1) 
+    end
+
 end
 
 return HUD

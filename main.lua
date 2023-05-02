@@ -24,6 +24,7 @@ local Weapons = require("Weapons")
 local HUD = require ("HUD")
 local Loot = require("Loot")
 local Pause = require("Pause")
+local GameOver = require ("GameOver")
 
 -- ETATS DU JEU
 GameState = {}
@@ -45,6 +46,7 @@ function love.load()
     Ennemy.Load()
     Menu.Load()
     Pause.Load()
+    GameOver.Load()
 end
 
 function UpdateMenu(dt)
@@ -76,7 +78,8 @@ end
 function UpdateInventaire()
 end
 
-function UpdateGameOver()
+function UpdateGameOver(dt)
+    GameOver.Update(dt)
 end
 
 function love.update(dt)
@@ -84,6 +87,8 @@ function love.update(dt)
         UpdateMenu(dt)
     elseif G_State == GameState.level1 then
         UpdateLevel1(dt)
+    elseif G_State == GameState.GameOver then 
+        UpdateGameOver(dt)
     end
 end
 
@@ -110,7 +115,7 @@ function DrawBoss()
 end
 
 function DrawGameOver()
-    love.graphics.print(GameState.GameOver, lScreen/2, hScreen/2)
+    GameOver.Draw()
 end
 
 function DrawPause()
@@ -130,6 +135,7 @@ function love.draw()
     elseif G_State == GameState.Inventaire  then
         DrawInventaire()
     elseif G_State == GameState.GameOver then
+        DrawLevel1()
         DrawGameOver()
     end
 end

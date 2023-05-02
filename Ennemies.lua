@@ -34,13 +34,6 @@ function CreerEnnemy()
     table.insert(list_tank_E, tank_E)
 end
 
-function Collision(px1,py1, px2, py2, pangle)
-    pangle = math.angle(px1,py1,px2,py2)
-    px1 = px1
-    py1 = py1
-    px2 = px2 
-    py2 = py2
-end
 
 function Ennemis.Load()
     Img_tank_E = love.graphics.newImage("Images/Badtank.png")
@@ -54,7 +47,7 @@ end
 -- Timers
 local E_SPAWN_T = 5
 local timer_Spawn = E_SPAWN_T 
-local E_SHOOT = 2
+local E_SHOOT = 1
 local timer_Shoot = E_SHOOT
 
 function Ennemis.Spawn(dt)
@@ -177,9 +170,6 @@ function Ennemis.Draw()
     for n=1, #list_tank_E do 
         local t = list_tank_E[n]
         love.graphics.draw(Img_tank_E,t.x, t.y, t.angle, 1,1, largeurImg_tank_E /2 , hauteurImg_tank_E / 2)
-        love.graphics.setColor(love.math.colorFromBytes(231,50,36))
-        love.graphics.rectangle("fill", t.x, t.y - hauteurImg_tank_E/8, t.life * 10, 4)
-        love.graphics.setColor(1,1,1) 
     end 
     for k,v in ipairs (listObus) do 
         love.graphics.draw(Img_Obus, v.x, v.y, v.angle, 1/2, 1/2, largeurImg_Obus/2, hauteurImg_Obus/2 )
