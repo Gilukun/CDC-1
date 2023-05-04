@@ -1,6 +1,5 @@
 GameOver = {}
 
-
 local flash= 2
 local timer = flash
 local flashGameOver = true

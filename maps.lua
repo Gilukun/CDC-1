@@ -1,9 +1,9 @@
 local Maps={}
 
-local tiled = require("Map")
+local tiled = require("Map_Data")
 
-local MAP_WIDTH= 32 -- nombre de colonne
-local MAP_HEIGHT = 20 -- nombre de ligne
+MAP_WIDTH= 32 -- nombre de colonne
+MAP_HEIGHT = 20 -- nombre de ligne
 TILE_WIDTH= 32 -- largeur de la tile
 TILE_HEIGHT = 32 -- Hauteur de la tile
 
@@ -83,6 +83,5 @@ function Maps.draw()
    --- end
 
 end
-
 
 return Maps

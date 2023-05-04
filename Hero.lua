@@ -8,7 +8,7 @@ Hero = {}
 local Weapons = require ("Weapons")
 local HUD = require ("HUD")
 local loot = require ("Loot")
-local Carte = require("maps")
+local Carte = require("Maps")
 
 Player = {}
 Player.x = 200
@@ -40,9 +40,8 @@ function Hero.Load()
 end
 
 
-
 function Hero.Move(dt)
-    -- Mouvements 
+    -- MOUVEMENT 
     local oldx = Player.x
     local oldy = Player.y 
     local oldligne = Player.ligne
@@ -51,35 +50,28 @@ function Hero.Move(dt)
     if love.keyboard.isDown("z", "s", "q", "d") then 
             if love.keyboard.isDown('z') then        
                 Player.x = Player.x + (vitessex * dt) * math.cos(Player.angle)
-                Player.y = Player.y + (vitessey * dt) * math.sin(Player.angle)
-                Player.ligne = Player.ligne + 1
-                    
+                Player.y = Player.y + (vitessey * dt) * math.sin(Player.angle)  
             end
             if love.keyboard.isDown('s') then
                 Player.x = Player.x - (vitessex * dt) * math.cos(Player.angle)
                 Player.y = Player.y - (vitessey * dt) * math.sin(Player.angle)
-                Player.ligne = Player.ligne - 1
             end
             if love.keyboard.isDown('q') then
                 Player.angle = Player.angle - 3 * dt
-                Player.colonne = Player.colonne - 1
             end
             if love.keyboard.isDown('d') then
                 Player.angle = Player.angle + 3 * dt
-                Player.colonne = Player.colonne + 1
             end
 
+    -- COLLISIONS AVEC LES TANK ENNEMIS
     for k,v in ipairs(list_tank_E) do 
-    -- if CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, v.x, v.y, largeurImg_tank_E, hauteurImg_tank_E) == true then 
-        -- Player.x = oldx
-        -- Player.y = oldy
-        -- end 
         if math.dist(Player.x, Player.y, v.x, v.y) < largeurImg_Player/1.5 then 
             Player.x = oldx
             Player.y = oldy
         end
     end
     
+    -- COLLISIONS AVEC LES TILES DES LAYERS
     local nbligne = #decor/TILE_WIDTH
     local nbcol = TILE_HEIGHT 
     local l,c
@@ -88,13 +80,8 @@ function Hero.Move(dt)
         for c = 1, nbcol do 
             local tuile = decor[((l-1)* TILE_HEIGHT) + c]
             if tuile > 0 then 
-                ---if CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, c * TILE_WIDTH, l * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT) == true then 
-                    --Collision= true 
-                    --Player.x = oldx
-                    --Player.y = oldy
-                --end
-                if math.dist(Player.x, Player.y, (c-1) * TILE_WIDTH, (l-1) * TILE_HEIGHT)<= largeurImg_Player then
-                Collision= true  
+                if CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, c * TILE_WIDTH, l * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT) == true then 
+                    Collision= true 
                     Player.x = oldx
                     Player.y = oldy
                 end
@@ -104,7 +91,7 @@ function Hero.Move(dt)
 
 end
 
-    -- Collisions
+    -- COLLISIONS AVEC LES BORDS DE L'ECRAN
     if Player.x + largeurImg_Player/2 >= lScreen then
         Player.x = lScreen - largeurImg_Player/2
     end
@@ -122,12 +109,14 @@ end
     end
 end
 
+-- VISEE AVEC LE CANON
 function Hero.Canon()
     local mousex = love.mouse.getX()
     local mousey = love.mouse.getY()
     angle_Canon = math.angle(Player.x, Player.y, mousex, mousey)
 end
 
+-- PLAYER EST TOUCHE
 function Hero.IsHit()
     local no
         for no = #listObus, 1, -1 do 
@@ -157,29 +146,21 @@ function Hero.Draw()
     love.graphics.draw(Img_Player, Player.x, Player.y, Player.angle, 1,1, largeurImg_Player /2 , hauteurImg_Player /2 )
     love.graphics.draw(Img_Canon, Player.x, Player.y, angle_Canon, 1,1,largeurImg_Canon /2 , hauteurImg_Canon /2 )
     
-    -- if Collision == true then 
-       -- love.graphics.setColor(1,0,1)
-        -- love.graphics.rectangle("line",Player.x - largeurImg_Player/2,Player.y - hauteurImg_Player/2,largeurImg_Player, hauteurImg_Player)
-        -- love.graphics.setColor(1,1,1)
-    -- else
-        -- love.graphics.rectangle("line",Player.x - largeurImg_Player/2,Player.y - hauteurImg_Player/2,largeurImg_Player, hauteurImg_Player)
-    -- end
-
     if Collision == true then 
        love.graphics.setColor(1,0,1)
-        love.graphics.circle('line', Player.x, Player.y,largeurImg_Player/2.5)
+        love.graphics.rectangle("line",Player.x - largeurImg_Player/2,Player.y - hauteurImg_Player/2,largeurImg_Player, hauteurImg_Player)
         love.graphics.setColor(1,1,1)
-    else 
-        love.graphics.circle('line', Player.x, Player.y,largeurImg_Player/2.5)
+    else
+        love.graphics.rectangle("line",Player.x - largeurImg_Player/2,Player.y - hauteurImg_Player/2,largeurImg_Player, hauteurImg_Player)
     end
 
+    for k,v in ipairs (list_tank_E) do 
+        love.graphics.print (tostring(v.IsAlive) )
+    end
     --love.graphics.circle('line', Player.x - largeurImg_Player/2, Player.y, 4)
     --love.graphics.setColor(1,0,1)
     --love.graphics.circle('fill', Player.x, Player.y - hauteurImg_Player/2 , 4)
     --love.graphics.setColor(1,1,1)
-   
-    love.graphics.print(tostring(Player.ligne), 500, 10)
-    
 end
 
 
