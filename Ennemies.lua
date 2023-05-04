@@ -25,7 +25,7 @@ list_tank_E = {}
 function CreerEnnemy()
     local tank_E = {}
     tank_E.x = 0
-    tank_E.y = love.math.random(0,400)
+    tank_E.y = love.math.random(200,600)
     tank_E.vitesse = 100
     tank_E.angle = 0
     tank_E.life = 5
@@ -162,6 +162,7 @@ function Ennemis.IsHitHeavy()
             if t.life == 0 then 
                 table.remove(list_tank_E, nt)
                 HUD.AddScore()
+                HUD.AddLife()
                 Loot.DropLoot()
             end
         end

@@ -40,11 +40,11 @@ G_State = GameState.Menu
 
 
 function love.load()
-    love.window.setMode(1024,700)
+    love.window.setMode(1024,640)
+    Menu.Load()
     Cartes.Load()
     Player.Load()
     Ennemy.Load()
-    Menu.Load()
     Pause.Load()
     GameOver.Load()
 end

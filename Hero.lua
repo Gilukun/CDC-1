@@ -8,15 +8,19 @@ Hero = {}
 local Weapons = require ("Weapons")
 local HUD = require ("HUD")
 local loot = require ("Loot")
+local Carte = require("maps")
 
 Player = {}
 Player.x = 200
 Player.y = 200
 Player.angle = 0
-Player.life = 100
+--Player.life = 100
+Player.ligne = 0
+Player.colonne = 0
+Player.KeyPressed = false
 
-local vitessex = 200  
-local vitessey = 200  
+local vitessex = 200
+local vitessey = 200 
 
 function Hero.Load()
     lScreen = love.graphics.getWidth()
@@ -35,31 +39,70 @@ function Hero.Load()
     hauteurImg_Obus = Img_Obus:getHeight()
 end
 
+
+
 function Hero.Move(dt)
     -- Mouvements 
-    if love.keyboard.isDown('z') then
-        local oldx = Player.x
-        local oldy = Player.y 
-        Player.x = Player.x + (vitessex * dt) * math.cos(Player.angle)
-        Player.y = Player.y + (vitessey * dt) * math.sin(Player.angle) 
-        for k,v in ipairs(list_tank_E) do 
-            
-            if CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, v.x, v.y, largeurImg_tank_E, hauteurImg_tank_E) == true then 
-                Player.x = oldx
-                Player.y = oldy
-            end 
+    local oldx = Player.x
+    local oldy = Player.y 
+    local oldligne = Player.ligne
+    local oldcolonne = Player.colonne
+
+    if love.keyboard.isDown("z", "s", "q", "d") then 
+            if love.keyboard.isDown('z') then        
+                Player.x = Player.x + (vitessex * dt) * math.cos(Player.angle)
+                Player.y = Player.y + (vitessey * dt) * math.sin(Player.angle)
+                Player.ligne = Player.ligne + 1
+                    
+            end
+            if love.keyboard.isDown('s') then
+                Player.x = Player.x - (vitessex * dt) * math.cos(Player.angle)
+                Player.y = Player.y - (vitessey * dt) * math.sin(Player.angle)
+                Player.ligne = Player.ligne - 1
+            end
+            if love.keyboard.isDown('q') then
+                Player.angle = Player.angle - 3 * dt
+                Player.colonne = Player.colonne - 1
+            end
+            if love.keyboard.isDown('d') then
+                Player.angle = Player.angle + 3 * dt
+                Player.colonne = Player.colonne + 1
+            end
+
+    for k,v in ipairs(list_tank_E) do 
+    -- if CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, v.x, v.y, largeurImg_tank_E, hauteurImg_tank_E) == true then 
+        -- Player.x = oldx
+        -- Player.y = oldy
+        -- end 
+        if math.dist(Player.x, Player.y, v.x, v.y) < largeurImg_Player/1.5 then 
+            Player.x = oldx
+            Player.y = oldy
         end
     end
-    if love.keyboard.isDown('s') then
-        Player.x = Player.x - (vitessex * dt) * math.cos(Player.angle)
-        Player.y = Player.y - (vitessey * dt) * math.sin(Player.angle)
+    
+    local nbligne = #decor/TILE_WIDTH
+    local nbcol = TILE_HEIGHT 
+    local l,c
+    Collision = false
+    for l= nbligne, 1, -1 do 
+        for c = 1, nbcol do 
+            local tuile = decor[((l-1)* TILE_HEIGHT) + c]
+            if tuile > 0 then 
+                ---if CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, c * TILE_WIDTH, l * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT) == true then 
+                    --Collision= true 
+                    --Player.x = oldx
+                    --Player.y = oldy
+                --end
+                if math.dist(Player.x, Player.y, (c-1) * TILE_WIDTH, (l-1) * TILE_HEIGHT)<= largeurImg_Player then
+                Collision= true  
+                    Player.x = oldx
+                    Player.y = oldy
+                end
+            end
+        end
     end
-    if love.keyboard.isDown('q') then
-        Player.angle = Player.angle - 3 * dt
-    end
-    if love.keyboard.isDown('d') then
-        Player.angle = Player.angle + 3 * dt
-    end
+
+end
 
     -- Collisions
     if Player.x + largeurImg_Player/2 >= lScreen then
@@ -113,15 +156,33 @@ function Hero.Draw()
     end
     love.graphics.draw(Img_Player, Player.x, Player.y, Player.angle, 1,1, largeurImg_Player /2 , hauteurImg_Player /2 )
     love.graphics.draw(Img_Canon, Player.x, Player.y, angle_Canon, 1,1,largeurImg_Canon /2 , hauteurImg_Canon /2 )
-    love.graphics.circle('fill', Player.x - largeurImg_Player/2, Player.y, 4)
-    love.graphics.setColor(1,0,1)
-    love.graphics.circle('fill', Player.x, Player.y - hauteurImg_Player/2 , 4)
-    love.graphics.setColor(1,1,1)
+    
+    -- if Collision == true then 
+       -- love.graphics.setColor(1,0,1)
+        -- love.graphics.rectangle("line",Player.x - largeurImg_Player/2,Player.y - hauteurImg_Player/2,largeurImg_Player, hauteurImg_Player)
+        -- love.graphics.setColor(1,1,1)
+    -- else
+        -- love.graphics.rectangle("line",Player.x - largeurImg_Player/2,Player.y - hauteurImg_Player/2,largeurImg_Player, hauteurImg_Player)
+    -- end
 
-    for k,v in ipairs (list_tank_E) do 
-        love.graphics.print(tostring(CheckCollision(Player.x, Player.y, largeurImg_Player, hauteurImg_Player, v.x, v.y, largeurImg_tank_E, hauteurImg_tank_E)), 300, 10)
+    if Collision == true then 
+       love.graphics.setColor(1,0,1)
+        love.graphics.circle('line', Player.x, Player.y,largeurImg_Player/2.5)
+        love.graphics.setColor(1,1,1)
+    else 
+        love.graphics.circle('line', Player.x, Player.y,largeurImg_Player/2.5)
     end
+
+    --love.graphics.circle('line', Player.x - largeurImg_Player/2, Player.y, 4)
+    --love.graphics.setColor(1,0,1)
+    --love.graphics.circle('fill', Player.x, Player.y - hauteurImg_Player/2 , 4)
+    --love.graphics.setColor(1,1,1)
+   
+    love.graphics.print(tostring(Player.ligne), 500, 10)
+    
 end
+
+
 
 function Hero.MouseShootCanon()
     function love.mousepressed(x, y, button)

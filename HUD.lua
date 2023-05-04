@@ -36,6 +36,12 @@ function HUD.AddScore()
     Player_Score = Player_Score + AddScore
 end
 
+function HUD.AddLife()
+    if Player_life < Player_LifeInit then 
+        Player_life = Player_life + 5
+    end
+end
+
 function HUD.RemoveHeroLife(dt)
     if Player_life > 0 then 
         Player_life = Player_life - RemoveLife
@@ -46,6 +52,8 @@ function HUD.RemoveHeroLife(dt)
         Player_life = Player_LifeInit
     end
 end
+
+
 
 function HUD.Draw()
     local ratio_Life =  Player_life / Player_LifeInit
