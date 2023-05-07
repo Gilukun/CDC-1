@@ -9,7 +9,6 @@ TILE_HEIGHT = 32 -- Hauteur de la tile
 
 background = tiled.layers[1].data
 trees1 = tiled.layers[2].data
-
 background = tiled.layers[1].data
 trees1 = tiled.layers[2].data
 floor = tiled.layers[3].data
