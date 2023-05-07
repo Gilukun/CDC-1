@@ -39,7 +39,7 @@ GameState.Quit = "QUIT"
 G_State = GameState.Menu
 
 function love.load()
-    love.window.setMode(1024, 1024)
+    love.window.setMode(1024,1024))
     Menu.Load()
     Cartes.Load()
     Player.Load()
@@ -138,6 +138,7 @@ function love.draw()
     end
 end
 
+
 function love.keypressed(key)
     if G_State == GameState.Menu then
         if key == "return" then
@@ -176,3 +177,5 @@ function love.keypressed(key)
         end
     end
 end
+
+
