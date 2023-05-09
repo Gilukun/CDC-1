@@ -45,82 +45,93 @@ function Hero.Move(dt)
     local oldligne = Player.ligne
     local oldcolonne = Player.colonne
 
-    if love.keyboard.isDown("z", "s", "q", "d") then
-        if love.keyboard.isDown("z") then
-            Player.x = Player.x + (vitessex * dt) * math.cos(Player.angle)
-            Player.y = Player.y + (vitessey * dt) * math.sin(Player.angle)
-        end
-        if love.keyboard.isDown("s") then
-            Player.x = Player.x - (vitessex * dt) * math.cos(Player.angle)
-            Player.y = Player.y - (vitessey * dt) * math.sin(Player.angle)
-        end
-        if love.keyboard.isDown("q") then
-            Player.angle = Player.angle - 3 * dt
-        end
-        if love.keyboard.isDown("d") then
-            Player.angle = Player.angle + 3 * dt
-        end
+    if love.keyboard.isDown("z") then
+        Player.x = Player.x + (vitessex * dt) * math.cos(Player.angle)
+        Player.y = Player.y + (vitessey * dt) * math.sin(Player.angle)
+    end
+    if love.keyboard.isDown("s") then
+        Player.x = Player.x - (vitessex * dt) * math.cos(Player.angle)
+        Player.y = Player.y - (vitessey * dt) * math.sin(Player.angle)
+    end
+    if love.keyboard.isDown("q") then
+        Player.angle = Player.angle - 3 * dt
+    end
+    if love.keyboard.isDown("d") then
+        Player.angle = Player.angle + 3 * dt
+    end
 
-        -- COLLISIONS AVEC LES TANK ENNEMIS
-        for k, v in ipairs(list_tank_E) do
-            if math.dist(Player.x, Player.y, v.x, v.y) < largeurImg_Player / 1.5 then
-                Player.x = oldx
-                Player.y = oldy
-            end
+    -- COLLISIONS AVEC LES TANK ENNEMIS
+    for k, v in ipairs(list_tank_E) do
+        if math.dist(Player.x, Player.y, v.x, v.y) < largeurImg_Player / 1.5 then
+            Player.x = oldx
+            Player.y = oldy
         end
+    end
 
-        -- COLLISIONS AVEC LES TILES DES LAYERS
-        local nbligne = #walls / TILE_WIDTH
-        local nbcol = TILE_HEIGHT
-        local l, c
-        Collision = false
-        for l = nbligne, 1, -1 do
-            for c = 1, nbcol do
-                local tuile = walls[((l - 1) * TILE_HEIGHT) + c]
-                if tuile > 0 then
-                    if
-                        CheckCollision(
-                            Player.x,
-                            Player.y,
-                            largeurImg_Player,
-                            hauteurImg_Player,
-                            c * TILE_WIDTH,
-                            l * TILE_HEIGHT,
-                            TILE_WIDTH,
-                            TILE_HEIGHT
-                        ) == true
-                     then
-                        Collision = true
-                        Player.x = oldx
-                        Player.y = oldy
-                    end
-                end
-            end
+    -- CHECK COLLISION AVEC LES LOOTS
+
+    for n = #list_Loot, 1, -1 do
+        local l = list_Loot[n]
+        if math.dist(Player.x, Player.y, l.x, l.y) < largeurImg_Player then
+            HUD.AddLife()
+            HUD.AddShield()
+            table.remove(list_Loot, n)
         end
-        for l = nbligne, 1, -1 do
-            for c = 1, nbcol do
-                local tuile = deco[((l - 1) * TILE_HEIGHT) + c]
-                if tuile > 0 then
-                    if
-                        CheckCollision(
-                            Player.x,
-                            Player.y,
-                            largeurImg_Player,
-                            hauteurImg_Player,
-                            c * TILE_WIDTH,
-                            l * TILE_HEIGHT,
-                            TILE_WIDTH,
-                            TILE_HEIGHT
-                        ) == true
-                     then
-                        Collision = true
-                        Player.x = oldx
-                        Player.y = oldy
-                    end
+    end
+
+    -- COLLISIONS AVEC LES TILES DES LAYERS
+    local nbligne = #Walls / TILE_WIDTH
+    local nbcol = TILE_HEIGHT
+    local l, c
+    Collision = false
+    for l = nbligne, 1, -1 do
+        for c = 1, nbcol do
+            local tuile = Walls[((l - 1) * TILE_HEIGHT) + c]
+            if tuile > 0 then
+                if
+                    CheckCollision(
+                        Player.x,
+                        Player.y,
+                        largeurImg_Player,
+                        hauteurImg_Player,
+                        c * TILE_WIDTH,
+                        l * TILE_HEIGHT,
+                        TILE_WIDTH,
+                        TILE_HEIGHT
+                    ) == true
+                 then
+                    Collision = true
+                    Player.x = oldx
+                    Player.y = oldy
                 end
             end
         end
     end
+    for l = nbligne, 1, -1 do
+        for c = 1, nbcol do
+            local tuile = Deco[((l - 1) * TILE_HEIGHT) + c]
+            if tuile > 0 then
+                if
+                    CheckCollision(
+                        Player.x,
+                        Player.y,
+                        largeurImg_Player,
+                        hauteurImg_Player,
+                        c * TILE_WIDTH,
+                        l * TILE_HEIGHT,
+                        TILE_WIDTH,
+                        TILE_HEIGHT
+                    ) == true
+                 then
+                    Collision = true
+                    Player.x = oldx
+                    Player.y = oldy
+                end
+            end
+        end
+    end
+
+    -- COLLISION AVEC LES LOOTS
 
     -- COLLISIONS AVEC LES BORDS DE L'ECRAN
     if Player.x + largeurImg_Player / 2 >= lScreen then
@@ -175,34 +186,6 @@ function Hero.Draw()
     end
     love.graphics.draw(Img_Player, Player.x, Player.y, Player.angle, 1, 1, largeurImg_Player / 2, hauteurImg_Player / 2)
     love.graphics.draw(Img_Canon, Player.x, Player.y, angle_Canon, 1, 1, largeurImg_Canon / 2, hauteurImg_Canon / 2)
-
-    if Collision == true then
-        love.graphics.setColor(1, 0, 1)
-        love.graphics.rectangle(
-            "line",
-            Player.x - largeurImg_Player / 2,
-            Player.y - hauteurImg_Player / 2,
-            largeurImg_Player,
-            hauteurImg_Player
-        )
-        love.graphics.setColor(1, 1, 1)
-    else
-        love.graphics.rectangle(
-            "line",
-            Player.x - largeurImg_Player / 2,
-            Player.y - hauteurImg_Player / 2,
-            largeurImg_Player,
-            hauteurImg_Player
-        )
-    end
-
-    for k, v in ipairs(list_tank_E) do
-        love.graphics.print(tostring(v.IsAlive))
-    end
-    --love.graphics.circle('line', Player.x - largeurImg_Player/2, Player.y, 4)
-    --love.graphics.setColor(1,0,1)
-    --love.graphics.circle('fill', Player.x, Player.y - hauteurImg_Player/2 , 4)
-    --love.graphics.setColor(1,1,1)
 end
 
 function Hero.MouseShootCanon()

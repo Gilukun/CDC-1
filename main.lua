@@ -46,6 +46,8 @@ function love.load()
     Ennemy.Load()
     Pause.Load()
     GameOver.Load()
+    Loot.Load()
+    HUD.Load()
 end
 
 function UpdateMenu(dt)
@@ -175,4 +177,7 @@ function love.keypressed(key)
             G_State = GameState.Menu
         end
     end
+end
+
+function love.mouse.setVisible()
 end

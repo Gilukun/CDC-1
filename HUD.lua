@@ -19,10 +19,13 @@ Player_lifeInlay.Width = 300
 Player_lifeInlay.Height = 10
 
 local ShieldActive = {}
-ShieldActive.x = 10
-ShieldActive.y = 22
-ShieldActive.Width = 100
+ShieldActive.Iconx = 10
+ShieldActive.Icony = 50
+ShieldActive.x = 25
+ShieldActive.y = 28
+ShieldActive.Width = 0
 ShieldActive.Height = 10
+ShieldActiveWidthInit = 100
 ShieldActiveWidth = ShieldActive.Width
 
 local EMIActive = {}
@@ -36,8 +39,27 @@ function HUD.AddScore()
 end
 
 function HUD.AddLife()
-    if Player_life < Player_LifeInit then
-        Player_life = Player_life + 5
+    for k, v in ipairs(list_Loot) do
+        if v.nom == "SMALL" then
+            if Player_life < Player_LifeInit then
+                Player_life = Player_life + 5
+            end
+        end
+        if v.nom == "BIG" then
+            if Player_life < Player_LifeInit then
+                Player_life = Player_life + 10
+            end
+        end
+    end
+end
+
+function HUD.AddShield()
+    for k, v in ipairs(list_Loot) do
+        if v.nom == "SHIELD" then
+            if ShieldActiveWidth <= 100 then
+                ShieldActiveWidth = ShieldActiveWidth + 10
+            end
+        end
     end
 end
 
@@ -50,6 +72,17 @@ function HUD.RemoveHeroLife(dt)
         G_State = GameState.GameOver
         Player_life = Player_LifeInit
     end
+end
+
+function HUD.Load()
+    IMG_Shield = love.graphics.newImage("Images/forcefield.png")
+    largueurIMG_Shield = IMG_Shield:getWidth()
+    hauteurIMG_Shield = IMG_Shield:getHeight()
+
+    Icon_Shield = love.graphics.newImage("Images/Loot_Shield.png")
+    Img_Shield1 = love.graphics.newQuad(0, 0, 130, 128, largueurIMG_Shield, hauteurIMG_Shield)
+    Img_Shield2 = love.graphics.newQuad(140, 0, 130, 128, largueurIMG_Shield, hauteurIMG_Shield)
+    Img_Shield3 = love.graphics.newQuad(280, 0, 133, 128, largueurIMG_Shield, hauteurIMG_Shield)
 end
 
 function HUD.Draw()
@@ -71,14 +104,76 @@ function HUD.Draw()
         Player_lifeContour.Height
     )
 
-    if Shield_ON == true then
-        local ratio_Bouclier = Shield_Timer / Shield_Duration
+    love.graphics.draw(
+        Icon_Shield,
+        ShieldActive.Iconx,
+        ShieldActive.Icony,
+        0,
+        1 / 2,
+        1 / 2,
+        ShieldActive.Iconx,
+        ShieldActive.Icony
+    )
+    if Shield_ON == false then
         love.graphics.setColor(love.math.colorFromBytes(27, 175, 173))
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.rectangle("fill", ShieldActive.x, ShieldActive.y, ShieldActiveWidth, ShieldActive.Height)
+        love.graphics.setColor(1, 1, 1)
+    end
+
+    love.graphics.print(tostring(tostring(ShieldActiveWidth)))
+
+    if Shield_ON == true then
+        if Shield_Timer >= Shield_Duration * 0.7 then
+            love.graphics.draw(
+                IMG_Shield,
+                Img_Shield1,
+                Player.x,
+                Player.y,
+                0,
+                1,
+                1,
+                largeurImg_Player,
+                hauteurImg_Player
+            )
+        end
+
+        if Shield_Timer >= Shield_Duration * 0.3 and Shield_Timer <= Shield_Duration * 0.7 then
+            love.graphics.draw(
+                IMG_Shield,
+                Img_Shield2,
+                Player.x,
+                Player.y,
+                0,
+                1,
+                1,
+                largeurImg_Player,
+                hauteurImg_Player
+            )
+        end
+
+        if Shield_Timer <= Shield_Duration * 0.3 then
+            love.graphics.draw(
+                IMG_Shield,
+                Img_Shield3,
+                Player.x,
+                Player.y,
+                0,
+                1,
+                1,
+                largeurImg_Player,
+                hauteurImg_Player
+            )
+        end
+
+        local ratio_Shield = Shield_Timer / Shield_Duration
+        love.graphics.setColor(love.math.colorFromBytes(27, 175, 173))
+        love.graphics.setColor(1, 1, 1)
         love.graphics.rectangle(
             "fill",
             ShieldActive.x,
             ShieldActive.y,
-            ShieldActiveWidth * ratio_Bouclier,
+            ShieldActive.Width * ratio_Shield,
             ShieldActive.Height
         )
         love.graphics.setColor(1, 1, 1)
@@ -96,6 +191,8 @@ function HUD.Draw()
         love.graphics.rectangle("fill", v.x - largeurImg_tank_E / 2, v.y - hauteurImg_tank_E / 2, v.life * 10, 4)
         love.graphics.setColor(1, 1, 1)
     end
+
+    love.graphics.print(tostring(Shield_Timer), 400, 30)
 end
 
 return HUD
