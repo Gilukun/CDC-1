@@ -39,7 +39,7 @@ GameState.Quit = "QUIT"
 G_State = GameState.Menu
 
 function love.load()
-    love.window.setMode(1024, 1024)
+    love.window.setMode(1024, 640)
     Menu.Load()
     Cartes.Load()
     Player.Load()
