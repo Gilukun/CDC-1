@@ -5,7 +5,7 @@ io.stdout:setvbuf("no")
 
 local Weapons = require("Weapons")
 local TankJoueur = require("Hero")
-local HUD = require("HUD")
+local GUI = require("GUI")
 local Loot = require("Loot")
 
 local Ennemis = {}
@@ -37,12 +37,10 @@ function Ennemis.Load()
     Img_tank_E = love.graphics.newImage("Images/Badtank.png")
     largeurImg_tank_E = Img_tank_E:getWidth()
     hauteurImg_tank_E = Img_tank_E:getHeight()
-
-    spawnSFX = love.audio.newSource("Sounds/mooing-cow-122255.mp3", "static")
 end
 
 -- Timers
-local E_SPAWN_T = 5
+local E_SPAWN_T = 2
 local timer_Spawn = E_SPAWN_T
 local E_SHOOT = 1
 local timer_Shoot = E_SHOOT
@@ -52,7 +50,6 @@ function Ennemis.Spawn(dt)
     if timer_Spawn <= 0 then
         CreerEnnemy()
         timer_Spawn = E_SPAWN_T
-    -- spawnSFX:play()
     end
 
     local n
@@ -203,7 +200,7 @@ function Ennemis.IsHit()
                             Loot.CreerLoot("BIG", t.x, t.y)
                         end
 
-                        HUD.AddScore()
+                        GUI.AddScore()
                         table.remove(list_tank_E, nt)
                     end
                 end
@@ -221,7 +218,7 @@ function Ennemis.IsHitHeavy()
         if Impact_dist <= EMI_Radius_Init then
             t.life = t.life - 1
             if t.life == 0 then
-                HUD.AddScore()
+                GUI.AddScore()
                 table.remove(list_tank_E, nt)
             end
         end

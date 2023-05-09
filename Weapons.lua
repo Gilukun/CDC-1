@@ -22,7 +22,7 @@ EMI_Radius_Init = EMI_Radius
 EMI_ON = false
 
 -- Bouclier
-Shield_Duration = 2
+Shield_Duration = 5
 Shield_Timer = Shield_Duration
 Shield_Radius = 50
 Shield_ON = false
@@ -95,6 +95,10 @@ function Weapons.EMI(dt)
     end
 end
 
+function Weapons.Load()
+    Sd_Shield = love.audio.newSource("Sounds/Shield.wav", "static")
+end
+
 function Weapons.Shield(dt)
     if WeaponTypes == W_Types.Shield then
         if Shield_Timer >= 0 then
@@ -115,12 +119,6 @@ function Weapons.Draw()
     if WeaponTypes == W_Types.Heavy then
         love.graphics.setColor(love.math.colorFromBytes(158, 26, 11, 100))
         love.graphics.circle("fill", Player.x, Player.y, EMI_Radius_Init)
-        love.graphics.setColor(1, 1, 1, 1)
-    end
-
-    if WeaponTypes == W_Types.Shield then
-        love.graphics.setColor(love.math.colorFromBytes(158, 255, 11, 100))
-        love.graphics.circle("line", Player.x, Player.y, Shield_Radius)
         love.graphics.setColor(1, 1, 1, 1)
     end
 end

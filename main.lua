@@ -21,10 +21,11 @@ local Cartes = require("Maps")
 local Player = require("Hero")
 local Ennemy = require("Ennemies")
 local Weapons = require("Weapons")
-local HUD = require("HUD")
+local GUI = require("GUI")
 local Loot = require("Loot")
 local Pause = require("Pause")
 local GameOver = require("GameOver")
+local Sounds = require("Sounds")
 
 -- ETATS DU JEU
 GameState = {}
@@ -39,7 +40,7 @@ GameState.Quit = "QUIT"
 G_State = GameState.Menu
 
 function love.load()
-    love.window.setMode(1024, 640)
+    love.window.setMode(1024, 1024)
     Menu.Load()
     Cartes.Load()
     Player.Load()
@@ -47,7 +48,8 @@ function love.load()
     Pause.Load()
     GameOver.Load()
     Loot.Load()
-    HUD.Load()
+    GUI.Load()
+    Sounds.Load()
 end
 
 function UpdateMenu(dt)
@@ -104,7 +106,7 @@ function DrawLevel1()
     Ennemy.Draw()
     Loot.Draw()
     Weapons.Draw()
-    HUD.Draw()
+    GUI.Draw()
 end
 
 function DrawInventaire()
@@ -157,10 +159,12 @@ function love.keypressed(key)
         if key == "t" then
             Weapons.Type(W_Style.ATTACK)
         end
-        if key == "b" then
-            Weapons.Type(W_Style.SHIELD)
+        if ShieldActiveWidth >= 50 then
+            if key == "b" then
+                Weapons.Type(W_Style.SHIELD)
+                Sd_Shield:play()
+            end
         end
-
         if key == "escape" then
             G_State = GameState.Menu
         end

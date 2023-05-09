@@ -6,7 +6,7 @@ io.stdout:setvbuf("no")
 Hero = {}
 
 local Weapons = require("Weapons")
-local HUD = require("HUD")
+local GUI = require("GUI")
 local loot = require("Loot")
 local Carte = require("Maps")
 
@@ -14,8 +14,6 @@ Player = {}
 Player.x = 400
 Player.y = 20
 Player.angle = 0
-Player.ligne = 0
-Player.colonne = 0
 Player.KeyPressed = false
 
 local vitessex = 200
@@ -42,8 +40,6 @@ function Hero.Move(dt)
     -- MOUVEMENT
     local oldx = Player.x
     local oldy = Player.y
-    local oldligne = Player.ligne
-    local oldcolonne = Player.colonne
 
     if love.keyboard.isDown("z") then
         Player.x = Player.x + (vitessex * dt) * math.cos(Player.angle)
@@ -69,24 +65,23 @@ function Hero.Move(dt)
     end
 
     -- CHECK COLLISION AVEC LES LOOTS
-
     for n = #list_Loot, 1, -1 do
         local l = list_Loot[n]
         if math.dist(Player.x, Player.y, l.x, l.y) < largeurImg_Player then
-            HUD.AddLife()
-            HUD.AddShield()
+            GUI.AddLife()
+            GUI.AddShield()
             table.remove(list_Loot, n)
         end
     end
 
     -- COLLISIONS AVEC LES TILES DES LAYERS
-    local nbligne = #Walls / TILE_WIDTH
+    local nbligne = #list_Layers.background / TILE_WIDTH
     local nbcol = TILE_HEIGHT
     local l, c
     Collision = false
     for l = nbligne, 1, -1 do
         for c = 1, nbcol do
-            local tuile = Walls[((l - 1) * TILE_HEIGHT) + c]
+            local tuile = list_Layers.Walls[((l - 1) * TILE_HEIGHT) + c]
             if tuile > 0 then
                 if
                     CheckCollision(
@@ -94,31 +89,8 @@ function Hero.Move(dt)
                         Player.y,
                         largeurImg_Player,
                         hauteurImg_Player,
-                        c * TILE_WIDTH,
-                        l * TILE_HEIGHT,
-                        TILE_WIDTH,
-                        TILE_HEIGHT
-                    ) == true
-                 then
-                    Collision = true
-                    Player.x = oldx
-                    Player.y = oldy
-                end
-            end
-        end
-    end
-    for l = nbligne, 1, -1 do
-        for c = 1, nbcol do
-            local tuile = Deco[((l - 1) * TILE_HEIGHT) + c]
-            if tuile > 0 then
-                if
-                    CheckCollision(
-                        Player.x,
-                        Player.y,
-                        largeurImg_Player,
-                        hauteurImg_Player,
-                        c * TILE_WIDTH,
-                        l * TILE_HEIGHT,
+                        (c - 1) * TILE_WIDTH,
+                        (l - 1) * TILE_HEIGHT,
                         TILE_WIDTH,
                         TILE_HEIGHT
                     ) == true
@@ -131,7 +103,29 @@ function Hero.Move(dt)
         end
     end
 
-    -- COLLISION AVEC LES LOOTS
+    for l = nbligne, 1, -1 do
+        for c = 1, nbcol do
+            local tuile = list_Layers.Deco[((l - 1) * TILE_HEIGHT) + c]
+            if tuile > 0 then
+                if
+                    CheckCollision(
+                        Player.x,
+                        Player.y,
+                        largeurImg_Player,
+                        hauteurImg_Player,
+                        c * TILE_WIDTH,
+                        l * TILE_HEIGHT,
+                        TILE_WIDTH,
+                        TILE_HEIGHT
+                    ) == true
+                 then
+                    Collision = true
+                    Player.x = oldx
+                    Player.y = oldy
+                end
+            end
+        end
+    end
 
     -- COLLISIONS AVEC LES BORDS DE L'ECRAN
     if Player.x + largeurImg_Player / 2 >= lScreen then
@@ -168,7 +162,7 @@ function Hero.IsHit()
             if Shield_ON == false then
                 if dist < largeurImg_Player / 2 then
                     table.remove(listObus, no)
-                    HUD.RemoveHeroLife(dt)
+                    GUI.RemoveHeroLife(dt)
                 end
             end
             if Shield_ON == true then

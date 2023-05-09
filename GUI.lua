@@ -1,4 +1,4 @@
-HUD = {}
+GUI = {}
 
 local Player_Score = 0
 local Player_LifeInit = 100
@@ -34,18 +34,17 @@ EMIActive.y = 44
 EMIActive.Width = 100
 EMIActive.Height = 10
 
-function HUD.AddScore()
+function GUI.AddScore()
     Player_Score = Player_Score + AddScore
 end
 
-function HUD.AddLife()
+function GUI.AddLife()
     for k, v in ipairs(list_Loot) do
         if v.nom == "SMALL" then
             if Player_life < Player_LifeInit then
                 Player_life = Player_life + 5
             end
-        end
-        if v.nom == "BIG" then
+        elseif v.nom == "BIG" then
             if Player_life < Player_LifeInit then
                 Player_life = Player_life + 10
             end
@@ -53,28 +52,26 @@ function HUD.AddLife()
     end
 end
 
-function HUD.AddShield()
+function GUI.AddShield()
     for k, v in ipairs(list_Loot) do
         if v.nom == "SHIELD" then
-            if ShieldActiveWidth <= 100 then
+            if ShieldActiveWidth < ShieldActiveWidthInit then
                 ShieldActiveWidth = ShieldActiveWidth + 10
             end
         end
     end
 end
 
-function HUD.RemoveHeroLife(dt)
+function GUI.RemoveHeroLife(dt)
     if Player_life > 0 then
         Player_life = Player_life - RemoveLife
-    end
-
-    if Player_life == 0 then
+    elseif Player_life == 0 then
         G_State = GameState.GameOver
         Player_life = Player_LifeInit
     end
 end
 
-function HUD.Load()
+function GUI.Load()
     IMG_Shield = love.graphics.newImage("Images/forcefield.png")
     largueurIMG_Shield = IMG_Shield:getWidth()
     hauteurIMG_Shield = IMG_Shield:getHeight()
@@ -85,7 +82,7 @@ function HUD.Load()
     Img_Shield3 = love.graphics.newQuad(280, 0, 133, 128, largueurIMG_Shield, hauteurIMG_Shield)
 end
 
-function HUD.Draw()
+function GUI.Draw()
     local ratio_Life = Player_life / Player_LifeInit
     love.graphics.setColor(love.math.colorFromBytes(255, 18, 0))
     love.graphics.rectangle(
@@ -114,16 +111,12 @@ function HUD.Draw()
         ShieldActive.Iconx,
         ShieldActive.Icony
     )
+
     if Shield_ON == false then
         love.graphics.setColor(love.math.colorFromBytes(27, 175, 173))
-        love.graphics.setColor(1, 1, 1)
         love.graphics.rectangle("fill", ShieldActive.x, ShieldActive.y, ShieldActiveWidth, ShieldActive.Height)
         love.graphics.setColor(1, 1, 1)
-    end
-
-    love.graphics.print(tostring(tostring(ShieldActiveWidth)))
-
-    if Shield_ON == true then
+    elseif Shield_ON == true then
         if Shield_Timer >= Shield_Duration * 0.7 then
             love.graphics.draw(
                 IMG_Shield,
@@ -136,9 +129,7 @@ function HUD.Draw()
                 largeurImg_Player,
                 hauteurImg_Player
             )
-        end
-
-        if Shield_Timer >= Shield_Duration * 0.3 and Shield_Timer <= Shield_Duration * 0.7 then
+        elseif Shield_Timer >= Shield_Duration * 0.3 and Shield_Timer <= Shield_Duration * 0.7 then
             love.graphics.draw(
                 IMG_Shield,
                 Img_Shield2,
@@ -150,9 +141,7 @@ function HUD.Draw()
                 largeurImg_Player,
                 hauteurImg_Player
             )
-        end
-
-        if Shield_Timer <= Shield_Duration * 0.3 then
+        elseif Shield_Timer <= Shield_Duration * 0.3 then
             love.graphics.draw(
                 IMG_Shield,
                 Img_Shield3,
@@ -168,12 +157,11 @@ function HUD.Draw()
 
         local ratio_Shield = Shield_Timer / Shield_Duration
         love.graphics.setColor(love.math.colorFromBytes(27, 175, 173))
-        love.graphics.setColor(1, 1, 1)
         love.graphics.rectangle(
             "fill",
             ShieldActive.x,
             ShieldActive.y,
-            ShieldActive.Width * ratio_Shield,
+            ShieldActiveWidth * ratio_Shield,
             ShieldActive.Height
         )
         love.graphics.setColor(1, 1, 1)
@@ -191,8 +179,6 @@ function HUD.Draw()
         love.graphics.rectangle("fill", v.x - largeurImg_tank_E / 2, v.y - hauteurImg_tank_E / 2, v.life * 10, 4)
         love.graphics.setColor(1, 1, 1)
     end
-
-    love.graphics.print(tostring(Shield_Timer), 400, 30)
 end
 
-return HUD
+return GUI
