@@ -44,6 +44,7 @@ function love.load()
     Menu.Load()
     Cartes.Load()
     Player.Load()
+    --Player.Start()
     Ennemy.Load()
     Pause.Load()
     GameOver.Load()
@@ -60,13 +61,9 @@ function UpdateLevel1(dt)
     Cartes.Update(dt)
 
     Player.Move(dt)
-    Player.Canon(dt)
     Player.MouseShootCanon()
-    Player.IsHit(dt)
 
-    Ennemy.Spawn(dt)
-    Ennemy.IsHit(dt)
-    Ennemy.IsHitHeavy(dt)
+    Ennemy.Update(dt)
 
     Weapons.Obus(dt)
     Weapons.EMI(dt)
@@ -145,6 +142,10 @@ end
 function love.keypressed(key)
     if G_State == GameState.Menu then
         if key == "return" then
+            Player.Start()
+            Ennemy.Start()
+            Weapons.Start()
+            Loot.Start()
             G_State = GameState.level1
         end
     elseif G_State == GameState.level1 then

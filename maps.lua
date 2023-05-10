@@ -1,6 +1,6 @@
 local Maps = {}
 
-local tiled = require("Maps_data")
+local tiled = require("Level1")
 
 MAP_WIDTH = 32 -- nombre de colonne
 MAP_HEIGHT = 20 -- nombre de ligne
@@ -9,17 +9,11 @@ TILE_HEIGHT = 32 -- Hauteur de la tile
 
 list_Layers = {
   background = tiled.layers[1].data,
-  trees1 = tiled.layers[2].data,
-  floor = tiled.layers[3].data,
-  Shadow = tiled.layers[4].data,
-  Grass = tiled.layers[5].data,
-  Cimetery = tiled.layers[6].data,
-  Cimetery2 = tiled.layers[7].data,
-  Walls = tiled.layers[8].data,
-  Trees2 = tiled.layers[9].data,
-  Deco = tiled.layers[10].data,
-  Animations = tiled.layers[11].data,
-  tems = tiled.layers[12].data
+  floor = tiled.layers[2].data,
+  walls = tiled.layers[3].data,
+  grass = tiled.layers[4].data,
+  trees = tiled.layers[5].data,
+  decor = tiled.layers[6].data
 }
 
 Tilesheet = {}
@@ -136,15 +130,11 @@ end
 
 function Maps.draw()
   AfficheLayers(list_Layers.background)
-  AfficheLayers(list_Layers.trees1)
   AfficheLayers(list_Layers.floor)
-  AfficheLayers(list_Layers.Shadow)
-  AfficheLayers(list_Layers.Grass)
-  AfficheLayers(list_Layers.Cimetery)
-  AfficheLayers(list_Layers.Cimetery2)
-  AfficheLayers(list_Layers.Walls)
-  AfficheLayers(list_Layers.Trees2)
-  AfficheLayers(list_Layers.Deco)
+  AfficheLayers(list_Layers.walls)
+  AfficheLayers(list_Layers.grass)
+  AfficheLayers(list_Layers.trees)
+  AfficheLayers(list_Layers.decor)
   -- local x = love.mouse.getX()
   ---local  y = love.mouse.getY()
   --- local col = math.floor(x / TILE_WIDTH) + 1

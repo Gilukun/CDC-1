@@ -65,8 +65,9 @@ end
 function GUI.RemoveHeroLife(dt)
     if Player_life > 0 then
         Player_life = Player_life - RemoveLife
-    elseif Player_life == 0 then
+    elseif Player_life <= 0 then
         G_State = GameState.GameOver
+        Player.etat = ETAT_PLAYER.DEAD
         Player_life = Player_LifeInit
     end
 end
@@ -76,10 +77,14 @@ function GUI.Load()
     largueurIMG_Shield = IMG_Shield:getWidth()
     hauteurIMG_Shield = IMG_Shield:getHeight()
 
+    IMG_HighScore = love.graphics.newImage("Images/HighScore.png")
+
     Icon_Shield = love.graphics.newImage("Images/Loot_Shield.png")
     Img_Shield1 = love.graphics.newQuad(0, 0, 130, 128, largueurIMG_Shield, hauteurIMG_Shield)
     Img_Shield2 = love.graphics.newQuad(140, 0, 130, 128, largueurIMG_Shield, hauteurIMG_Shield)
     Img_Shield3 = love.graphics.newQuad(280, 0, 133, 128, largueurIMG_Shield, hauteurIMG_Shield)
+
+    font = love.graphics.newFont(18)
 end
 
 function GUI.Draw()
@@ -118,6 +123,7 @@ function GUI.Draw()
         love.graphics.setColor(1, 1, 1)
     elseif Shield_ON == true then
         if Shield_Timer >= Shield_Duration * 0.7 then
+            love.graphics.setColor(1, 1, 1, 0.7)
             love.graphics.draw(
                 IMG_Shield,
                 Img_Shield1,
@@ -153,6 +159,7 @@ function GUI.Draw()
                 largeurImg_Player,
                 hauteurImg_Player
             )
+            love.graphics.setColor(1, 1, 1, 1)
         end
 
         local ratio_Shield = Shield_Timer / Shield_Duration
@@ -179,6 +186,10 @@ function GUI.Draw()
         love.graphics.rectangle("fill", v.x - largeurImg_tank_E / 2, v.y - hauteurImg_tank_E / 2, v.life * 10, 4)
         love.graphics.setColor(1, 1, 1)
     end
+
+    love.graphics.setFont(font)
+    love.graphics.print(tostring(Player_Score), lScreen - 100, 20)
+    love.graphics.draw(IMG_HighScore, lScreen - 400, 20, 0, 1 / 2, 1 / 2)
 end
 
 return GUI

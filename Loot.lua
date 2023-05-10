@@ -8,13 +8,15 @@ list_TypeLoot.AddLifeSmall = "LIFE++"
 list_TypeLoot.Shiel = "SHIELD"
 list_TypeLoot.IEM = "LIFE++"
 
-list_Loot = {}
-function Loot.CreerLoot(pNom, pX, pY)
-    local loot = {}
-    loot.nom = pNom
-    loot.x = pX
-    loot.y = pY
-    table.insert(list_Loot, loot)
+function Loot.Start()
+    list_Loot = {}
+    function Loot.CreerLoot(pNom, pX, pY)
+        local loot = {}
+        loot.nom = pNom
+        loot.x = pX
+        loot.y = pY
+        table.insert(list_Loot, loot)
+    end
 end
 
 function Loot.Load()

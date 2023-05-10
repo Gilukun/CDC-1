@@ -1,4 +1,4 @@
-function CreerEnnemy(pNom, pX, pY, pVitesse, pAngle, pLife, pEtat, pDist, )
+function CreerEnnemy(pNom, pX, pY, pVitesse, pAngle, pLife, pEtat, pDist)
     local tank_E = {}
     tank_E.nom = pNom
     tank_E.x = 0
