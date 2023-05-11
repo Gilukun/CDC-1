@@ -1,7 +1,9 @@
 Weapons = {}
 
-NomObusHero = "HERO"
-NomObusEnnemy = "ENNEMY"
+ObusHero = "HERO"
+ObusEnnemis = "ENNEMY"
+
+
 
 W_Types = {}
 W_Types.Basic = "CANON"
@@ -99,6 +101,9 @@ end
 
 function Weapons.Load()
     Sd_Shield = love.audio.newSource("Sounds/Shield.wav", "static")
+    Img_Laser = love.graphics.newImage("Images/Vortex.png")
+    largeurImg_Laser = Img_Laser:getWidth()
+    hauteurImg_Laser = Img_Laser:getHeight()
 end
 
 function Weapons.Shield(dt)
@@ -122,6 +127,14 @@ function Weapons.Draw()
         love.graphics.setColor(love.math.colorFromBytes(158, 26, 11, 100))
         love.graphics.circle("fill", Player.x, Player.y, EMI_Radius_Init)
         love.graphics.setColor(1, 1, 1, 1)
+    end
+
+    for k, v in ipairs(listObus) do
+        if v.nom == ObusHero or v.nom == ObusEnnemis then 
+            love.graphics.draw(Img_Obus, v.x, v.y, v.angle, 1 / 2, 1 / 2, largeurImg_Obus / 2, hauteurImg_Obus / 2)
+        elseif v.nom == LaserTower then 
+            love.graphics.draw(Img_Laser, v.x, v.y, v.angle, 1 / 2, 1 / 2, largeurImg_Obus / 2, hauteurImg_Obus / 2)
+        end
     end
 end
 
