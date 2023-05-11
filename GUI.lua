@@ -76,13 +76,14 @@ function GUI.Load()
     IMG_Shield = love.graphics.newImage("Images/forcefield.png")
     largueurIMG_Shield = IMG_Shield:getWidth()
     hauteurIMG_Shield = IMG_Shield:getHeight()
+    Img_Shield1 = love.graphics.newQuad(0, 0, 130, 128, largueurIMG_Shield, hauteurIMG_Shield)
+    Img_Shield2 = love.graphics.newQuad(140, 0, 130, 128, largueurIMG_Shield, hauteurIMG_Shield)
+    Img_Shield3 = love.graphics.newQuad(280, 0, 133, 128, largueurIMG_Shield, hauteurIMG_Shield)
 
     IMG_HighScore = love.graphics.newImage("Images/HighScore.png")
 
     Icon_Shield = love.graphics.newImage("Images/Loot_Shield.png")
-    Img_Shield1 = love.graphics.newQuad(0, 0, 130, 128, largueurIMG_Shield, hauteurIMG_Shield)
-    Img_Shield2 = love.graphics.newQuad(140, 0, 130, 128, largueurIMG_Shield, hauteurIMG_Shield)
-    Img_Shield3 = love.graphics.newQuad(280, 0, 133, 128, largueurIMG_Shield, hauteurIMG_Shield)
+    
 
     font = love.graphics.newFont(18)
 end
@@ -181,7 +182,7 @@ function GUI.Draw()
         love.graphics.setColor(1, 1, 1)
     end
 
-    for k, v in ipairs(list_tank_E) do
+    for k, v in ipairs(list_Ennemis) do
         love.graphics.setColor(love.math.colorFromBytes(231, 50, 36))
         love.graphics.rectangle("fill", v.x - largeurImg_tank_E / 2, v.y - hauteurImg_tank_E / 2, v.life * 10, 4)
         love.graphics.setColor(1, 1, 1)

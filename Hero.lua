@@ -98,7 +98,7 @@ function Hero.Etats(dt)
             Player.angle = Player.angle + 3 * dt
         end
 
-        for k, v in ipairs(list_tank_E) do
+        for k, v in ipairs(list_Ennemis) do
             if math.dist(Player.x, Player.y, v.x, v.y) < largeurImg_Player / 1.5 then
                 Player.x = oldx
                 Player.y = oldy
