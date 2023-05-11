@@ -99,13 +99,13 @@ function Hero.Etats(dt)
         end
 
         for k, v in ipairs(list_Ennemis) do
-            if v.nom == Ennemis_Types.TANK then 
+            if v.nom == Ennemis_Types.TANK then
                 if math.dist(Player.x, Player.y, v.x, v.y) < largeurImg_Player / 1.5 then
                     Player.x = oldx
                     Player.y = oldy
                 end
-            elseif v.nom == Ennemis_Types.TOWER then 
-                if math.dist(Player.x, Player.y, v.x - largeurImg_Tower/3, v.y) < largeurImg_Player / 1.5 then
+            elseif v.nom == Ennemis_Types.TOWER then
+                if math.dist(Player.x, Player.y, v.x - largeurImg_Tower / 3, v.y) < largeurImg_Player / 1.5 then
                     Player.x = oldx
                     Player.y = oldy
                 end
