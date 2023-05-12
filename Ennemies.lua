@@ -22,8 +22,9 @@ ET_TANK_E.IDLE = "IDLE"
 ET_TANK_E.MOVE = "MOVE"
 ET_TANK_E.CHASE = "CHASE"
 ET_TANK_E.SHOOT = "SHOOT"
-ET_TANK_E.COL_PLAYER = "COLLISIONP"
-ET_TANK_E.COL_ENNEMY = "COLLISIONE"
+ET_TANK_E.COL_PLAYER = "COLLISION_P"
+ET_TANK_E.COL_ENNEMY = "COLLISION_E"
+ET_TANK_E.COL_LAYERS = "COLLISION_L"
 ET_TANK_E.REPOSITION = "REPOSITION"
 ET_TANK_E.ETAT_DEAD = "DEAD"
 
@@ -54,30 +55,49 @@ end
 -- FONCTION INITIALISATION
 function Ennemis.Start()
     list_Ennemis = {}
-    function Ennemis.CreerEnnemy(pNom, pX, pY, pVit, pAng, pLif, pEta, pDis, pDic, pDect, pShoot)
+    function Ennemis.CreerEnnemy(
+        pNom,
+        pX,
+        pY,
+        pVitesse,
+        pAngle,
+        pLife,
+        pEtat,
+        pDistance,
+        pDice,
+        pDectection,
+        pShoot,
+        pTimer,
+        pSpeedShoot,
+        pTimerReloc,
+        pReloc)
         local tank_E = {}
         tank_E.nom = pNom
         tank_E.x = pX
         tank_E.y = pY
-        tank_E.vitesse = pVit
-        tank_E.angle = pAng
-        tank_E.life = pLif
-        tank_E.etat = pEta
-        tank_E.dist = pDis
-        tank_E.Dice = pDic
-        tank_E.Detection = pDect
+        tank_E.vitesse = pVitesse
+        tank_E.angle = pAngle
+        tank_E.life = pLife
+        tank_E.etat = pEtat
+        tank_E.dist = pDistance
+        tank_E.Dice = pDice
+        tank_E.Detection = pDectection
         tank_E.Shoot = pShoot
+        tank_E.Timer_Shoot = pTimer
+        tank_E.SpeedShoot = pSpeedShoot
+        tank_E.TimerReloc = pTimerReloc
+        tank_E.Relocation = pReloc
         table.insert(list_Ennemis, tank_E)
     end
-    Ennemis.CreerEnnemy(Ennemis_Types.TOWER, 200, 500, nil, 0, 10, TOWER_E.IDLE, 0, 0, false, false)
-    Ennemis.CreerEnnemy(Ennemis_Types.TOWER, 900, 500, nil, 0, 10, TOWER_E.IDLE, 0, 0, false, false)
+    Ennemis.CreerEnnemy(Ennemis_Types.TOWER, 200, 500, nil, 0, 10, TOWER_E.IDLE, 0, 0, false, false, 0, 0.5, nil, nil)
+    Ennemis.CreerEnnemy(Ennemis_Types.TOWER, 900, 500, nil, 0, 10, TOWER_E.IDLE, 0, 0, false, false, 0, 0.5, nil, nil)
 end
 
 -- TIMER
-local E_SPAWN_T = 2
-local timer_Spawn = E_SPAWN_T
-local E_SHOOT = 1
-local timer_Shoot = E_SHOOT
+local Ennemis_Spawn = 2
+local timer_Spawn = Ennemis_Spawn
+--local Ennemis_Shoot = 1
+--local timer_Shoot = Ennemis_Shoot
 
 -- MACHINE A ETATS
 function Ennemis.Etats(dt)
@@ -98,6 +118,35 @@ function Ennemis.Etats(dt)
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
+                local nbligne = #list_Layers.background / TILE_WIDTH
+                local nbcol = TILE_HEIGHT
+                local l, c
+                Collision = false
+                for l = nbligne, 1, -1 do
+                    for c = 1, nbcol do
+                        local tuile = list_Layers.walls[((l - 1) * TILE_HEIGHT) + c]
+                        if tuile > 0 then
+                            if
+                                CheckCollision(
+                                    t.x,
+                                    t.y,
+                                    largeurImg_Player,
+                                    hauteurImg_Player,
+                                    c * TILE_WIDTH,
+                                    l * TILE_HEIGHT,
+                                    TILE_WIDTH,
+                                    TILE_HEIGHT
+                                ) == true
+                             then
+                                Collision = true
+                                t.x = oldtx
+                                t.y = oldty
+                                t.etat = ET_TANK_E.COL_LAYERS
+                            end
+                        end
+                    end
+                end
+
                 for k, v in ipairs(list_Ennemis) do
                     local oldvx = v.x
                     local oldvy = v.y
@@ -108,6 +157,7 @@ function Ennemis.Etats(dt)
                             v.y = oldvy
                             t.x = oldtx
                             t.y = oldty
+                            t.etat = ET_TANK_E.COL_ENNEMY
                         end
                     end
                 end
@@ -128,6 +178,35 @@ function Ennemis.Etats(dt)
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
+                local nbligne = #list_Layers.background / TILE_WIDTH
+                local nbcol = TILE_HEIGHT
+                local l, c
+                Collision = false
+                for l = nbligne, 1, -1 do
+                    for c = 1, nbcol do
+                        local tuile = list_Layers.walls[((l - 1) * TILE_HEIGHT) + c]
+                        if tuile > 0 then
+                            if
+                                CheckCollision(
+                                    t.x,
+                                    t.y,
+                                    largeurImg_Player,
+                                    hauteurImg_Player,
+                                    c * TILE_WIDTH,
+                                    l * TILE_HEIGHT,
+                                    TILE_WIDTH,
+                                    TILE_HEIGHT
+                                ) == true
+                             then
+                                Collision = true
+                                t.x = oldtx
+                                t.y = oldty
+                                t.etat = ET_TANK_E.COL_LAYERS
+                            end
+                        end
+                    end
+                end
+
                 for k, v in ipairs(list_Ennemis) do
                     local oldvx = v.x
                     local oldvy = v.y
@@ -138,6 +217,7 @@ function Ennemis.Etats(dt)
                             v.y = oldvy
                             t.x = oldtx
                             t.y = oldty
+                            t.etat = ET_TANK_E.COL_ENNEMY
                         end
                     end
                 end
@@ -151,12 +231,42 @@ function Ennemis.Etats(dt)
                     t.etat = ET_TANK_E.SHOOT
                 end
             elseif t.etat == ET_TANK_E.SHOOT then
+                --
                 local oldtx = t.x
                 local oldty = t.y
 
                 t.angle = math.angle(t.x, t.y, Player.x, Player.y)
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
+
+                local nbligne = #list_Layers.background / TILE_WIDTH
+                local nbcol = TILE_HEIGHT
+                local l, c
+                Collision = false
+                for l = nbligne, 1, -1 do
+                    for c = 1, nbcol do
+                        local tuile = list_Layers.walls[((l - 1) * TILE_HEIGHT) + c]
+                        if tuile > 0 then
+                            if
+                                CheckCollision(
+                                    t.x,
+                                    t.y,
+                                    largeurImg_Player,
+                                    hauteurImg_Player,
+                                    c * TILE_WIDTH,
+                                    l * TILE_HEIGHT,
+                                    TILE_WIDTH,
+                                    TILE_HEIGHT
+                                ) == true
+                             then
+                                Collision = true
+                                t.x = oldtx
+                                t.y = oldty
+                                t.etat = ET_TANK_E.COL_LAYERS
+                            end
+                        end
+                    end
+                end
 
                 for k, v in ipairs(list_Ennemis) do
                     local oldvx = v.x
@@ -168,26 +278,46 @@ function Ennemis.Etats(dt)
                             v.y = oldvy
                             t.x = oldtx
                             t.y = oldty
+                            t.etat = ET_TANK_E.COL_ENNEMY
                         end
                     end
                 end
 
-                timer_Shoot = timer_Shoot - dt
-                if timer_Shoot < 0 then
+                t.Timer_Shoot = t.Timer_Shoot + dt
+                if t.Timer_Shoot > t.SpeedShoot then
                     Weapons.CreerObus(ObusEnnemis, t.x, t.y, t.angle, 500)
-                    timer_Shoot = E_SHOOT
+                    t.Timer_Shoot = 0
                 end
 
                 if t.dist <= col_Player_Dist then
                     t.etat = ET_TANK_E.COL_PLAYER
                 end
+            elseif t.etat == ET_TANK_E.COL_LAYERS then
+                t.etat = ET_TANK_E.REPOSITION
+            elseif t.etat == ET_TANK_E.REPOSITION then
+                OldAngle = t.angle
+                t.TimerReloc = t.TimerReloc + dt
+                t.angle = math.pi + 1
+                if t.TimerReloc <= t.Relocation then
+                    t.x = t.x + t.vitesse * math.cos(t.angle) * dt
+                    t.y = t.y + t.vitesse * math.sin(t.angle) * dt
+                elseif t.TimerReloc >= t.Relocation then
+                    t.angle = math.angle(t.x, t.y, Player.x, Player.y)
+                    t.TimerReloc = 0
+                    t.etat = ET_TANK_E.MOVE
+                end
+            elseif t.etat == ET_TANK_E.COL_ENNEMY then
+                t.angle = math.pi
+                t.x = t.x + t.vitesse * math.cos(t.angle) * dt
+                t.y = t.y + t.vitesse * math.sin(t.angle) * dt
+                t.etat = ET_TANK_E.MOVE
             elseif t.etat == ET_TANK_E.COL_PLAYER then
                 t.angle = math.angle(t.x, t.y, Player.x, Player.y)
-                timer_Shoot = timer_Shoot - dt
+                t.Timer_Shoot = t.Timer_Shoot + dt
 
-                if timer_Shoot < 0 then
+                if t.Timer_Shoot > t.SpeedShoot then
                     Weapons.CreerObus(ObusEnnemis, t.x, t.y, t.angle, 500)
-                    timer_Shoot = E_SHOOT
+                    t.Timer_Shoot = 0
                 end
 
                 if t.dist >= col_Player_Dist then
@@ -219,10 +349,10 @@ function Ennemis.Etats(dt)
             elseif t.etat == TOWER_E.SHOOT then
                 t.Shoot = true
                 t.angle = math.angle(t.x, t.y, Player.x, Player.y)
-                timer_Shoot = timer_Shoot - dt
-                if timer_Shoot < 0 then
+                t.Timer_Shoot = t.Timer_Shoot - dt
+                if t.Timer_Shoot < 0 then
                     Weapons.CreerObus(LaserTower, t.x, t.y, t.angle, 500)
-                    timer_Shoot = E_SHOOT
+                    t.Timer_Shoot = t.SpeedShoot
                 elseif t.dist > rayon_Shoot then
                     t.etat = TOWER_E.PLAYER_DETECTED
                     t.Shoot = false
@@ -307,8 +437,25 @@ function Ennemis.Update(dt)
     if timer_Spawn <= 0 then
         pX = 100
         pY = love.math.random(100, 1000)
-        Ennemis.CreerEnnemy(Ennemis_Types.TANK, pX, pY, 100, 0, 5, ET_TANK_E.IDLE, 0, 0, nil)
-        timer_Spawn = E_SPAWN_T
+
+        Ennemis.CreerEnnemy(
+            Ennemis_Types.TANK,
+            pX,
+            pY,
+            100,
+            2 * math.pi,
+            5,
+            ET_TANK_E.IDLE,
+            0,
+            0,
+            nil,
+            0,
+            0,
+            0.5,
+            0,
+            0.5
+        )
+        timer_Spawn = Ennemis_Spawn
     end
 
     Ennemis.Etats(dt)
@@ -327,9 +474,9 @@ function Ennemis.Draw()
     for n = 1, #list_Ennemis do
         local t = list_Ennemis[n]
         if t.nom == Ennemis_Types.TANK then
-            -- love.graphics.print(tostring(t.nom), t.x, t.y + 100)
+            love.graphics.print(tostring(t.etat), t.x, t.y + 100)
             -- love.graphics.print(tostring(t.Dice), t.x, t.y + 100)
-            --love.graphics.print(tostring(timerR), t.x, t.y + 200)
+            love.graphics.print(tostring(t.TimerReloc), t.x, t.y + 200)
             love.graphics.draw(Img_tank_E, t.x, t.y, t.angle, 1, 1, largeurImg_tank_E / 2, hauteurImg_tank_E / 2)
         elseif t.nom == Ennemis_Types.TOWER then
             if t.Detection == false then

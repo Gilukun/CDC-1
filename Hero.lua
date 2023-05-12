@@ -204,7 +204,7 @@ function Hero.Draw()
     end
     love.graphics.draw(Img_Player, Player.x, Player.y, Player.angle, 1, 1, largeurImg_Player / 2, hauteurImg_Player / 2)
     love.graphics.draw(Img_Canon, Player.x, Player.y, angle_Canon, 1, 1, largeurImg_Canon / 2, hauteurImg_Canon / 2)
-    love.graphics.print(tostring(Player.etat), Player.x, Player.y)
+    --love.graphics.print(tostring(Player.etat), Player.x, Player.y)
 end
 
 return Hero
