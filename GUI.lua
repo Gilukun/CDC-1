@@ -76,14 +76,13 @@ function GUI.Load()
     IMG_Shield = love.graphics.newImage("Images/forcefield.png")
     largueurIMG_Shield = IMG_Shield:getWidth()
     hauteurIMG_Shield = IMG_Shield:getHeight()
-    Img_Shield1 = love.graphics.newQuad(0, 0, 130, 128, largueurIMG_Shield, hauteurIMG_Shield)
-    Img_Shield2 = love.graphics.newQuad(140, 0, 130, 128, largueurIMG_Shield, hauteurIMG_Shield)
-    Img_Shield3 = love.graphics.newQuad(280, 0, 133, 128, largueurIMG_Shield, hauteurIMG_Shield)
+    Img_Shield1 = love.graphics.newQuad(0, 0, 128, 128, largueurIMG_Shield, hauteurIMG_Shield)
+    Img_Shield2 = love.graphics.newQuad(140, 0, 128, 128, largueurIMG_Shield, hauteurIMG_Shield)
+    Img_Shield3 = love.graphics.newQuad(280, 0, 128, 128, largueurIMG_Shield, hauteurIMG_Shield)
 
     IMG_HighScore = love.graphics.newImage("Images/HighScore.png")
 
     Icon_Shield = love.graphics.newImage("Images/Loot_Shield.png")
-    
 
     font = love.graphics.newFont(18)
 end
@@ -133,8 +132,8 @@ function GUI.Draw()
                 0,
                 1,
                 1,
-                largeurImg_Player,
-                hauteurImg_Player
+                largueurIMG_Shield / 6,
+                hauteurIMG_Shield / 2
             )
         elseif Shield_Timer >= Shield_Duration * 0.3 and Shield_Timer <= Shield_Duration * 0.7 then
             love.graphics.draw(
@@ -145,8 +144,8 @@ function GUI.Draw()
                 0,
                 1,
                 1,
-                largeurImg_Player,
-                hauteurImg_Player
+                largueurIMG_Shield / 6,
+                hauteurIMG_Shield / 2
             )
         elseif Shield_Timer <= Shield_Duration * 0.3 then
             love.graphics.draw(
@@ -157,8 +156,8 @@ function GUI.Draw()
                 0,
                 1,
                 1,
-                largeurImg_Player,
-                hauteurImg_Player
+                largueurIMG_Shield / 6,
+                hauteurIMG_Shield / 2
             )
             love.graphics.setColor(1, 1, 1, 1)
         end
@@ -191,6 +190,8 @@ function GUI.Draw()
     love.graphics.setFont(font)
     love.graphics.print(tostring(Player_Score), lScreen - 100, 20)
     love.graphics.draw(IMG_HighScore, lScreen - 400, 20, 0, 1 / 2, 1 / 2)
+    love.graphics.circle("line", Player.x, Player.y, largueurIMG_Shield / 6)
+    love.graphics.circle("fill", Player.x, Player.y, 1)
 end
 
 return GUI

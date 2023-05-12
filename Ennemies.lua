@@ -25,7 +25,11 @@ ET_TANK_E.SHOOT = "SHOOT"
 ET_TANK_E.COL_PLAYER = "COLLISION_P"
 ET_TANK_E.COL_ENNEMY = "COLLISION_E"
 ET_TANK_E.COL_LAYERS = "COLLISION_L"
+ET_TANK_E.COL_ECRAN = "COLLISION_ECRAN"
+
 ET_TANK_E.REPOSITION = "REPOSITION"
+ET_TANK_E.SEEK = "SEEK"
+
 ET_TANK_E.ETAT_DEAD = "DEAD"
 
 -- ETAT TOURS
@@ -115,9 +119,11 @@ function Ennemis.Etats(dt)
             elseif t.etat == ET_TANK_E.MOVE then
                 local oldtx = t.x
                 local oldty = t.y
+                t.angle = math.angle(t.x, t.y, Player.x, Player.y)
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
+                -- COLLISIONS AVEC LES LAYERS
                 local nbligne = #list_Layers.background / TILE_WIDTH
                 local nbcol = TILE_HEIGHT
                 local l, c
@@ -146,7 +152,7 @@ function Ennemis.Etats(dt)
                         end
                     end
                 end
-
+                -- COLLISIONS ENTRE ENNEMIS
                 for k, v in ipairs(list_Ennemis) do
                     local oldvx = v.x
                     local oldvy = v.y
@@ -161,7 +167,22 @@ function Ennemis.Etats(dt)
                         end
                     end
                 end
+                -- COLLISIONS AVEC L'ECRAN
+                if t.x + largeurImg_tank_E / 2 >= lScreen then
+                    t.x = lScreen - largeurImg_tank_E / 2
+                end
 
+                if t.x - largeurImg_tank_E / 2 <= 0 then
+                    t.x = largeurImg_tank_E / 2
+                end
+
+                if t.y + hauteurImg_tank_E / 2 >= hScreen then
+                    t.y = hScreen - hauteurImg_tank_E / 2
+                end
+
+                if t.y - hauteurImg_tank_E / 2 <= 0 then
+                    t.y = hauteurImg_tank_E / 2
+                end
                 if t.dist <= chase_Dist then
                     t.etat = ET_TANK_E.CHASE
                     oldangle = t.angle
@@ -231,7 +252,6 @@ function Ennemis.Etats(dt)
                     t.etat = ET_TANK_E.SHOOT
                 end
             elseif t.etat == ET_TANK_E.SHOOT then
-                --
                 local oldtx = t.x
                 local oldty = t.y
 
@@ -294,23 +314,44 @@ function Ennemis.Etats(dt)
                 end
             elseif t.etat == ET_TANK_E.COL_LAYERS then
                 t.etat = ET_TANK_E.REPOSITION
+            elseif t.etat == ET_TANK_E.COL_ENNEMY then
+                t.etat = ET_TANK_E.REPOSITION
+            elseif t.etat == ET_TANK_E.COL_ECRAN then
+                t.etat = ET_TANK_E.REPOSITION
             elseif t.etat == ET_TANK_E.REPOSITION then
-                OldAngle = t.angle
                 t.TimerReloc = t.TimerReloc + dt
-                t.angle = math.pi + 1
                 if t.TimerReloc <= t.Relocation then
-                    t.x = t.x + t.vitesse * math.cos(t.angle) * dt
-                    t.y = t.y + t.vitesse * math.sin(t.angle) * dt
+                    t.x = t.x - t.vitesse * math.cos(t.angle) * dt
+                    t.y = t.y - t.vitesse * math.sin(t.angle) * dt
+                    oldAngle = t.angle
                 elseif t.TimerReloc >= t.Relocation then
-                    t.angle = math.angle(t.x, t.y, Player.x, Player.y)
+                    t.TimerReloc = 0
+                    t.etat = ET_TANK_E.SEEK
+                end
+                if t.x + largeurImg_tank_E / 2 >= lScreen then
+                    t.x = lScreen - largeurImg_tank_E / 2
+                end
+
+                if t.x - largeurImg_tank_E / 2 <= 0 then
+                    t.x = largeurImg_tank_E / 2
+                end
+
+                if t.y + hauteurImg_tank_E / 2 >= hScreen then
+                    t.y = hScreen - hauteurImg_tank_E / 2
+                end
+
+                if t.y - hauteurImg_tank_E / 2 <= 0 then
+                    t.y = hauteurImg_tank_E / 2
+                end
+            elseif t.etat == ET_TANK_E.SEEK then
+                t.TimerReloc = t.TimerReloc + dt
+
+                if t.TimerReloc <= t.Relocation then
+                    t.angle = math.pi / 2
+                elseif t.TimerReloc >= t.Relocation then
                     t.TimerReloc = 0
                     t.etat = ET_TANK_E.MOVE
                 end
-            elseif t.etat == ET_TANK_E.COL_ENNEMY then
-                t.angle = math.pi
-                t.x = t.x + t.vitesse * math.cos(t.angle) * dt
-                t.y = t.y + t.vitesse * math.sin(t.angle) * dt
-                t.etat = ET_TANK_E.MOVE
             elseif t.etat == ET_TANK_E.COL_PLAYER then
                 t.angle = math.angle(t.x, t.y, Player.x, Player.y)
                 t.Timer_Shoot = t.Timer_Shoot + dt
@@ -350,7 +391,7 @@ function Ennemis.Etats(dt)
                 t.Shoot = true
                 t.angle = math.angle(t.x, t.y, Player.x, Player.y)
                 t.Timer_Shoot = t.Timer_Shoot - dt
-                if t.Timer_Shoot < 0 then
+                if t.Timer_Shoot <= 0 then
                     Weapons.CreerObus(LaserTower, t.x, t.y, t.angle, 500)
                     t.Timer_Shoot = t.SpeedShoot
                 elseif t.dist > rayon_Shoot then
@@ -384,9 +425,9 @@ function Ennemis.IsHit()
                             if dice >= 0 and dice <= 3 then
                                 Loot.CreerLoot("SHIELD", t.x, t.y)
                             elseif dice >= 4 and dice <= 5 then
-                                Loot.CreerLoot("SMALL", t.x, t.y)
+                                Loot.CreerLoot("SHIELD", t.x, t.y)
                             elseif dice >= 6 and dice <= 7 then
-                                Loot.CreerLoot("BIG", t.x, t.y)
+                                Loot.CreerLoot("SHIELD", t.x, t.y)
                             end
                             GUI.AddScore()
                             table.remove(list_Ennemis, nt)
@@ -402,9 +443,9 @@ function Ennemis.IsHit()
                             if dice >= 0 and dice <= 3 then
                                 Loot.CreerLoot("SHIELD", t.x, t.y)
                             elseif dice >= 4 and dice <= 5 then
-                                Loot.CreerLoot("SMALL", t.x, t.y)
+                                Loot.CreerLoot("SHIELD", t.x, t.y)
                             elseif dice >= 6 and dice <= 7 then
-                                Loot.CreerLoot("BIG", t.x, t.y)
+                                Loot.CreerLoot("SHIELD", t.x, t.y)
                             end
                             GUI.AddScore()
                             table.remove(list_Ennemis, nt)
@@ -436,7 +477,7 @@ function Ennemis.Update(dt)
     timer_Spawn = timer_Spawn - dt
     if timer_Spawn <= 0 then
         pX = 100
-        pY = love.math.random(100, 1000)
+        pY = love.math.random(100, 800)
 
         Ennemis.CreerEnnemy(
             Ennemis_Types.TANK,
@@ -474,9 +515,9 @@ function Ennemis.Draw()
     for n = 1, #list_Ennemis do
         local t = list_Ennemis[n]
         if t.nom == Ennemis_Types.TANK then
-            love.graphics.print(tostring(t.etat), t.x, t.y + 100)
+            love.graphics.print(tostring(t.etat), t.x, t.y)
             -- love.graphics.print(tostring(t.Dice), t.x, t.y + 100)
-            love.graphics.print(tostring(t.TimerReloc), t.x, t.y + 200)
+            --love.graphics.print(tostring(t.TimerReloc), t.x, t.y + 200)
             love.graphics.draw(Img_tank_E, t.x, t.y, t.angle, 1, 1, largeurImg_tank_E / 2, hauteurImg_tank_E / 2)
         elseif t.nom == Ennemis_Types.TOWER then
             if t.Detection == false then
