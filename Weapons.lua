@@ -1,9 +1,9 @@
 Weapons = {}
 
-ObusHero = "HERO"
-ObusEnnemis = "ENNEMY"
-
-
+NomObus = {}
+NomObus.Hero = "HERO"
+NomObus.Ennemis = "ENNEMY"
+NomObus.LaserTower = "LASER"
 
 W_Types = {}
 W_Types.Basic = "CANON"
@@ -130,10 +130,19 @@ function Weapons.Draw()
     end
 
     for k, v in ipairs(listObus) do
-        if v.nom == ObusHero or v.nom == ObusEnnemis then 
+        if v.nom == NomObus.Hero or v.nom == NomObus.Ennemis then
             love.graphics.draw(Img_Obus, v.x, v.y, v.angle, 1 / 2, 1 / 2, largeurImg_Obus / 2, hauteurImg_Obus / 2)
-        elseif v.nom == LaserTower then 
-            love.graphics.draw(Img_Laser, v.x, v.y, v.angle, 1 / 2, 1 / 2, largeurImg_Obus / 2, hauteurImg_Obus / 2)
+        elseif v.nom == NomObus.LaserTower then
+            love.graphics.draw(
+                Img_Laser,
+                v.x - largeurImg_Tower / 3,
+                v.y,
+                v.angle,
+                1 / 2,
+                1 / 2,
+                largeurImg_Tower / 2,
+                largeurImg_Tower / 2
+            )
         end
     end
 end

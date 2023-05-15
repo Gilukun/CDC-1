@@ -60,7 +60,7 @@ function Hero.IsHit()
     local no
     for no = #listObus, 1, -1 do
         local o = listObus[no]
-        if o.nom == ObusEnnemis or o.nom == LaserTower then
+        if o.nom == NomObus.Ennemis or o.nom == NomObus.LaserTower then
             local dist = math.dist(Player.x, Player.y, o.x, o.y)
             if Shield_ON == false then
                 if dist < largeurImg_Player / 2 then
@@ -99,16 +99,25 @@ function Hero.Etats(dt)
         end
 
         for k, v in ipairs(list_Ennemis) do
-            if v.nom == Ennemis_Types.TANK then
-                if math.dist(Player.x, Player.y, v.x, v.y) < largeurImg_Player / 1.5 then
+            if v.nom == Nom_Ennemis.TANK then
+                if math.dist(Player.x, Player.y, v.x, v.y) < largeurImg_Player then
                     Player.x = oldx
                     Player.y = oldy
                 end
-            elseif v.nom == Ennemis_Types.TOWER then
+            elseif v.nom == Nom_Ennemis.TOWER then
                 if math.dist(Player.x, Player.y, v.x - largeurImg_Tower / 3, v.y) < largeurImg_Player / 1.5 then
                     Player.x = oldx
                     Player.y = oldy
                 end
+            end
+        end
+
+        for z = #PrisonerSpawn, 1, -1 do
+            local spawn = PrisonerSpawn[z]
+            if math.dist(Player.x, Player.y, spawn.x, spawn.y) < largeurImg_Player / 1.5 then
+                prisoner.saved = true
+                AddPrisonersScore()
+                table.remove(PrisonerSpawn, z)
             end
         end
 
@@ -159,17 +168,12 @@ function Hero.Canon()
     angle_Canon = math.angle(Player.x, Player.y, mousex, mousey)
 end
 
-function Hero.MouseShootCanon()
-    function love.mousepressed(x, y, button)
-        if WeaponTypes == W_Types.Basic then
-            if button == 1 then
-                Weapons.CreerObus(ObusHero, Player.x, Player.y, angle_Canon, 500)
-            end
-        end
-        if WeaponTypes == W_Types.Heavy then
-            if button == 1 then
-                Weapons.CreerObus(ObusHero, Player.x, Player.y, angle_Canon, 1000)
-            end
+function love.mousepressed(x, y, button)
+    if WeaponTypes == W_Types.Basic then
+        if button == 1 then
+            Sd_SHOOT:stop()
+            Sd_SHOOT:play()
+            Weapons.CreerObus(NomObus.Hero, Player.x, Player.y, angle_Canon, 500)
         end
     end
 end
@@ -195,16 +199,12 @@ function Hero.Move(dt)
 
     Hero.IsHit()
     Hero.Canon()
-    Hero.MouseShootCanon()
 end
 
 function Hero.Draw()
-    for k, v in ipairs(listObus) do
-        love.graphics.draw(Img_Obus, v.x, v.y, v.angle, 1 / 2, 1 / 2, largeurImg_Obus / 2, hauteurImg_Obus / 2)
-    end
     love.graphics.draw(Img_Player, Player.x, Player.y, Player.angle, 1, 1, largeurImg_Player / 2, hauteurImg_Player / 2)
     love.graphics.draw(Img_Canon, Player.x, Player.y, angle_Canon, 1, 1, largeurImg_Canon / 2, hauteurImg_Canon / 2)
-    love.graphics.print(tostring(Player.etat), Player.x, Player.y)
+    --love.graphics.print(tostring(Player.etat), Player.x, Player.y)
 end
 
 return Hero

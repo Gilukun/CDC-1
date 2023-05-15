@@ -1,10 +1,14 @@
 GUI = {}
 
-local Player_Score = 0
-local Player_LifeInit = 100
-local Player_life = Player_LifeInit
-local AddScore = 100
-local RemoveLife = 10
+function GUI.AddPlayerData()
+    Player_Score = 0
+    Player_LifeInit = 100
+    Player_life = Player_LifeInit
+    AddScore = 100
+    RemoveLife = 10
+    Prisoner = 0
+    bonus = 500
+end
 
 local Player_lifeContour = {}
 Player_lifeContour.x = 10
@@ -34,8 +38,15 @@ EMIActive.y = 44
 EMIActive.Width = 100
 EMIActive.Height = 10
 
+function GUI.Start()
+    GUI.AddPlayerData()
+end
+
 function GUI.AddScore()
     Player_Score = Player_Score + AddScore
+    if Player.etat == ETAT_PLAYER.DEAD then
+        Player_Score = 0
+    end
 end
 
 function GUI.AddLife()
@@ -66,9 +77,17 @@ function GUI.RemoveHeroLife(dt)
     if Player_life > 0 then
         Player_life = Player_life - RemoveLife
     elseif Player_life <= 0 then
+        Sd_DEAD:play()
         G_State = GameState.GameOver
         Player.etat = ETAT_PLAYER.DEAD
         Player_life = Player_LifeInit
+    end
+end
+
+function AddPrisonersScore()
+    Prisoner = Prisoner + 100
+    if Prisoner >= 300 then
+        Player_Score = Player_Score + bonus
     end
 end
 
@@ -182,16 +201,20 @@ function GUI.Draw()
     end
 
     for k, v in ipairs(list_Ennemis) do
-        love.graphics.setColor(love.math.colorFromBytes(231, 50, 36))
-        love.graphics.rectangle("fill", v.x - largeurImg_tank_E / 2, v.y - hauteurImg_tank_E / 2, v.life * 10, 4)
-        love.graphics.setColor(1, 1, 1)
+        if v.vom == Nom_Ennemis.TANK then
+            love.graphics.setColor(love.math.colorFromBytes(231, 50, 36))
+            love.graphics.rectangle("fill", v.x - largeurImg_tank_E / 2, v.y - hauteurImg_tank_E / 2, v.life, 4)
+            love.graphics.setColor(1, 1, 1)
+        elseif v.nom == Nom_Ennemis.TOWER then
+            love.graphics.setColor(love.math.colorFromBytes(231, 50, 36))
+            love.graphics.rectangle("fill", v.x - largeurImg_Tower / 2, v.y - largeurImg_Tower / 2, v.life, 4)
+            love.graphics.setColor(1, 1, 1)
+        end
     end
 
     love.graphics.setFont(font)
     love.graphics.print(tostring(Player_Score), lScreen - 100, 20)
-    love.graphics.draw(IMG_HighScore, lScreen - 400, 20, 0, 1 / 2, 1 / 2)
-    love.graphics.circle("line", Player.x, Player.y, largueurIMG_Shield / 6)
-    love.graphics.circle("fill", Player.x, Player.y, 1)
+    love.graphics.print(tostring(Prisoner), lScreen - 200, 20)
 end
 
 return GUI

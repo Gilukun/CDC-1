@@ -42,6 +42,7 @@ G_State = GameState.Menu
 function love.load()
     love.window.setMode(1024, 1024)
     Menu.Load()
+
     Pause.Load()
     Cartes.Load()
     Sounds.Load()
@@ -61,13 +62,13 @@ function UpdateLevel1(dt)
     Cartes.Update(dt)
 
     Player.Move(dt)
-    Player.MouseShootCanon()
 
     Ennemy.Update(dt)
 
     Weapons.Obus(dt)
     Weapons.EMI(dt)
     Weapons.Shield(dt)
+    Loot.Update(dt)
 end
 
 function UpdatePause()
@@ -86,9 +87,13 @@ end
 function love.update(dt)
     if G_State == GameState.Menu then
         UpdateMenu(dt)
+        Sd_Menu:play()
     elseif G_State == GameState.level1 then
         UpdateLevel1(dt)
+        Sd_Lvl1:play()
     elseif G_State == GameState.GameOver then
+        Sd_Lvl1:stop()
+        Sd_GAMEOVER:play()
         UpdateGameOver(dt)
     end
 end
@@ -146,6 +151,8 @@ function love.keypressed(key)
             Ennemy.Start()
             Weapons.Start()
             Loot.Start()
+            GUI.Start()
+            Sd_Menu:stop()
             G_State = GameState.level1
         end
     elseif G_State == GameState.level1 then
@@ -178,8 +185,10 @@ function love.keypressed(key)
             G_State = GameState.level1
         end
     elseif G_State == GameState.GameOver then
+        Sd_Lvl1:stop()
         if key == "return" then
             G_State = GameState.Menu
+            Sd_GAMEOVER:stop()
         end
     end
 end
