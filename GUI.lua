@@ -51,11 +51,11 @@ end
 
 function GUI.AddLife()
     for k, v in ipairs(list_Loot) do
-        if v.nom == "SMALL" then
+        if v.nom == TypeLoot.AddLifeSmall then
             if Player_life < Player_LifeInit then
                 Player_life = Player_life + 5
             end
-        elseif v.nom == "BIG" then
+        elseif v.nom == TypeLoot.AddLifeBig then
             if Player_life < Player_LifeInit then
                 Player_life = Player_life + 10
             end
@@ -65,7 +65,7 @@ end
 
 function GUI.AddShield()
     for k, v in ipairs(list_Loot) do
-        if v.nom == "SHIELD" then
+        if v.nom == TypeLoot.Shield then
             if ShieldActiveWidth < ShieldActiveWidthInit then
                 ShieldActiveWidth = ShieldActiveWidth + 10
             end

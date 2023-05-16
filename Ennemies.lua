@@ -59,9 +59,9 @@ zone2Spawn[2] = {
 
 -- bas gauche
 zone2Spawn[3] = {
-    x = 200,
+    x = 500,
     y = 900,
-    angle = 2 * math.pi
+    angle = math.pi * 1.5
 }
 
 zone2Spawn[4] = {
@@ -144,6 +144,7 @@ function Ennemis.Etats(dt)
             elseif t.etat == ET_TANK_E.MOVE then
                 local oldtx = t.x
                 local oldty = t.y
+                -- t.angle = math.angle(t.x, t.y, Player.x, Player.y)
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
@@ -168,7 +169,7 @@ function Ennemis.Etats(dt)
                                     TILE_HEIGHT
                                 ) == true
                              then
-                                Collision = true
+                                --Collision = true
                                 t.x = oldtx
                                 t.y = oldty
                                 t.etat = ET_TANK_E.REPOSITION
@@ -341,8 +342,8 @@ function Ennemis.Etats(dt)
                     local col_Ennemy_Dist = math.dist(v.x, v.y, t.x, t.y)
                     if v ~= t then
                         if col_Ennemy_Dist < largeurImg_tank_E then
-                            v.x = oldvx
-                            v.y = oldvy
+                            -- v.x = oldvx
+                            -- v.y = oldvy
                             t.x = oldtx
                             t.y = oldty
                             t.etat = ET_TANK_E.REPOSITION
@@ -375,7 +376,6 @@ function Ennemis.Etats(dt)
                 if t.TimerReloc <= t.Relocation then
                     t.x = t.x - t.vitesse * math.cos(t.angle) * dt
                     t.y = t.y - t.vitesse * math.sin(t.angle) * dt
-                    oldAngle = t.angle
                 elseif t.TimerReloc >= t.Relocation then
                     t.TimerReloc = 0
                     t.etat = ET_TANK_E.SEEK
@@ -403,7 +403,7 @@ function Ennemis.Etats(dt)
                 t.TimerReloc = t.TimerReloc + dt
 
                 if t.TimerReloc >= t.Relocation then
-                    t.angle = t.angle + 50 * dt
+                    t.angle = t.angle + (math.pi * 1.5 * dt) * 50
                 end
 
                 if t.TimerReloc <= t.Relocation then
@@ -483,11 +483,11 @@ function Ennemis.IsHit()
                         if t.life == 0 then
                             local dice = love.math.random(0, 10)
                             if dice >= 0 and dice <= 3 then
-                                Loot.CreerLoot("SHIELD", t.x, t.y)
+                                Loot.CreerLoot(TypeLoot.AddLifeBig, t.x, t.y)
                             elseif dice >= 4 and dice <= 5 then
-                                Loot.CreerLoot("SHIELD", t.x, t.y)
+                                Loot.CreerLoot(TypeLoot.AddLifeBig, t.x, t.y)
                             elseif dice >= 6 and dice <= 7 then
-                                Loot.CreerLoot("SHIELD", t.x, t.y)
+                                Loot.CreerLoot(TypeLoot.AddLifeSmall, t.x, t.y)
                             end
                             GUI.AddScore()
                             table.remove(list_Ennemis, nt)
@@ -501,11 +501,11 @@ function Ennemis.IsHit()
                         if t.life == 0 then
                             local dice = love.math.random(0, 10)
                             if dice >= 0 and dice <= 3 then
-                                Loot.CreerLoot("SHIELD", t.x, t.y)
+                                Loot.CreerLoot(TypeLoot.Shield, t.x, t.y)
                             elseif dice >= 4 and dice <= 5 then
-                                Loot.CreerLoot("SHIELD", t.x, t.y)
+                                Loot.CreerLoot(TypeLoot.AddLifeSmall, t.x, t.y)
                             elseif dice >= 6 and dice <= 7 then
-                                Loot.CreerLoot("SHIELD", t.x, t.y)
+                                Loot.CreerLoot(TypeLoot.AddLifeBig, t.x, t.y)
                             end
                             GUI.AddScore()
                             table.remove(list_Ennemis, nt)
@@ -541,7 +541,7 @@ function Ennemis.Update(dt)
         pY = zone2Spawn[diceZoneSpawn].y
         pAngle = zone2Spawn[diceZoneSpawn].angle
 
-        Ennemis.CreerEnnemy(Nom_Ennemis.TANK, pX, pY, 100, pAngle, 5, ET_TANK_E.IDLE, 0, 0, nil, 0, 0, 0.5, 0, 0.4)
+        Ennemis.CreerEnnemy(Nom_Ennemis.TANK, pX, pY, 100, pAngle, 5, ET_TANK_E.IDLE, 0, 0, nil, 0, 0, 0.5, 0, 0.1)
         timer_Spawn = Ennemis_Spawn
     end
 

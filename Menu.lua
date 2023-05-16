@@ -15,7 +15,10 @@ Layers = {
 
 function Menu.Load()
     Menu_Background = love.graphics.newImage("Images/MenuImg.png")
-    Img_enter = love.graphics.newImage("Images/StartButton.jpeg")
+    Img_title = love.graphics.newImage("Images/Tank You.png")
+    largeurImg_title = love.graphics.getWidth() / 2
+    hauteurImg_title = love.graphics.getHeight() / 2
+
     Img_Press_enter = love.graphics.newImage("Images/PressEntertxt.png")
 
     Tilesheet = love.graphics.newImage("Images/TileSet1.png")
@@ -63,12 +66,23 @@ function Menu.Draw()
     AfficheLayers(Layers.walls)
     AfficheLayers(Layers.decor)
 
+    love.graphics.draw(
+        Img_title,
+        love.graphics.getWidth() / 2,
+        love.graphics.getHeight() / 2,
+        0,
+        1,
+        1,
+        Img_title:getWidth() / 2,
+        Img_title:getHeight() / 2
+    )
+
     if pressStart == true then
         AfficheLayers(Layers.Animation)
         love.graphics.draw(
             Img_Press_enter,
             love.graphics.getWidth() / 2,
-            love.graphics.getHeight() / 2,
+            love.graphics.getHeight() / 2 + hauteurImg_title / 2,
             0,
             1,
             1,

@@ -2,16 +2,16 @@ Loot = {}
 
 missile = 0
 
-list_TypeLoot = {}
-list_TypeLoot.AddLifeSmall = "LIFE+"
-list_TypeLoot.AddLifeSmall = "LIFE++"
-list_TypeLoot.Shiel = "SHIELD"
-list_TypeLoot.IEM = "LIFE++"
+TypeLoot = {}
+TypeLoot.AddLifeSmall = "LIFE+"
+TypeLoot.AddLifeBig = "LIFE++"
+TypeLoot.Shield = "SHIELD"
+TypeLoot.IEM = "LIFE++"
 
 PrisonerSpawn = {}
 function CreerSpawn()
     PrisonerSpawn[1] = {
-        x = 300,
+        x = 500,
         y = 100
     }
     PrisonerSpawn[2] = {
@@ -19,12 +19,12 @@ function CreerSpawn()
         y = 500
     }
     PrisonerSpawn[3] = {
-        x = 700,
-        y = 900
+        x = 500,
+        y = 700
     }
     PrisonerSpawn[4] = {
         x = 900,
-        y = 250
+        y = 500
     }
     PrisonerSpawn[5] = {
         x = 500,
@@ -58,6 +58,8 @@ function Loot.Load()
     Img_LootShield = love.graphics.newImage("Images/Loot_Shield.png")
 
     prisoner.image = love.graphics.newImage("Images/Prisoner.png")
+    largeurPrisoner = prisoner.image:getWidth() / 2
+    hauteurPrisoner = prisoner.image:getHeight()
     prisoner.frames[1] = love.graphics.newQuad(0, 0, 25, 31, prisoner.image:getWidth(), prisoner.image:getHeight())
     prisoner.frames[2] = love.graphics.newQuad(25, 0, 25, 31, prisoner.image:getWidth(), prisoner.image:getHeight())
 end
@@ -71,14 +73,14 @@ end
 
 function Loot.Draw()
     for k, v in ipairs(list_Loot) do
-        if v.nom == "SMALL" then
+        if v.nom == TypeLoot.AddLifeSmall then
             love.graphics.draw(Img_LootS, v.x, v.y)
         end
-        if v.nom == "BIG" then
+        if v.nom == TypeLoot.AddLifeBig then
             love.graphics.draw(Img_LootL, v.x, v.y)
         end
 
-        if v.nom == "SHIELD" then
+        if v.nom == TypeLoot.Shield then
             love.graphics.draw(Img_LootShield, v.x, v.y)
         end
     end
@@ -87,11 +89,13 @@ function Loot.Draw()
         local spwan = PrisonerSpawn[z]
         local frameArrondie = math.floor(prisoner.frame)
         love.graphics.draw(prisoner.image, prisoner.frames[frameArrondie], spwan.x, spwan.y)
-        love.graphics.draw(prisoner.image, prisoner.frames[frameArrondie], spwan.x, spwan.y)
-        love.graphics.draw(prisoner.image, prisoner.frames[frameArrondie], spwan.x, spwan.y)
-        love.graphics.draw(prisoner.image, prisoner.frames[frameArrondie], spwan.x, spwan.y)
-        love.graphics.draw(prisoner.image, prisoner.frames[frameArrondie], spwan.x, spwan.y)
     end
 end
 
+function Loot.GameWin()
+    if #PrisonerSpawn == 0 then
+        Sd_Lvl1:stop()
+        G_State = GameState.WIN
+    end
+end
 return Loot

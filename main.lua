@@ -26,6 +26,7 @@ local Loot = require("Loot")
 local Pause = require("Pause")
 local GameOver = require("GameOver")
 local Sounds = require("Sounds")
+local Victoire = require("Win")
 
 -- ETATS DU JEU
 GameState = {}
@@ -36,6 +37,7 @@ GameState.Pause = "PAUSE"
 GameState.Inventaire = "INVENTAIRE"
 GameState.GameOver = "GAMEOVER"
 GameState.Quit = "QUIT"
+GameState.WIN = "WIN"
 
 G_State = GameState.Menu
 
@@ -52,6 +54,7 @@ function love.load()
     Loot.Load()
     GUI.Load()
     GameOver.Load()
+    Victoire.Load()
 end
 
 function UpdateMenu(dt)
@@ -69,6 +72,7 @@ function UpdateLevel1(dt)
     Weapons.EMI(dt)
     Weapons.Shield(dt)
     Loot.Update(dt)
+    Loot.GameWin()
 end
 
 function UpdatePause()
@@ -115,6 +119,10 @@ function DrawInventaire()
     love.graphics.print("INVENTAIRE", lScreen / 2, hScreen / 2)
 end
 
+function DrawWIN()
+    Victoire.Draw()
+end
+
 function DrawBoss()
 end
 
@@ -141,6 +149,8 @@ function love.draw()
     elseif G_State == GameState.GameOver then
         DrawLevel1()
         DrawGameOver()
+    elseif G_State == GameState.WIN then
+        DrawWIN()
     end
 end
 
@@ -189,6 +199,11 @@ function love.keypressed(key)
         if key == "return" then
             G_State = GameState.Menu
             Sd_GAMEOVER:stop()
+        end
+    elseif G_State == GameState.WIN then
+        Sd_Lvl1:stop()
+        if key == "return" then
+            G_State = GameState.Menu
         end
     end
 end

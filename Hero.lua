@@ -114,7 +114,10 @@ function Hero.Etats(dt)
 
         for z = #PrisonerSpawn, 1, -1 do
             local spawn = PrisonerSpawn[z]
-            if math.dist(Player.x, Player.y, spawn.x, spawn.y) < largeurImg_Player / 1.5 then
+            if
+                math.dist(Player.x, Player.y, spawn.x + largeurPrisoner, spawn.y + hauteurPrisoner) <
+                    largeurImg_Player / 1.5
+             then
                 prisoner.saved = true
                 AddPrisonersScore()
                 table.remove(PrisonerSpawn, z)
@@ -168,16 +171,6 @@ function Hero.Canon()
     angle_Canon = math.angle(Player.x, Player.y, mousex, mousey)
 end
 
-function love.mousepressed(x, y, button)
-    if WeaponTypes == W_Types.Basic then
-        if button == 1 then
-            Sd_SHOOT:stop()
-            Sd_SHOOT:play()
-            Weapons.CreerObus(NomObus.Hero, Player.x, Player.y, angle_Canon, 500)
-        end
-    end
-end
-
 function Hero.Move(dt)
     Hero.Etats(dt)
 
@@ -205,6 +198,16 @@ function Hero.Draw()
     love.graphics.draw(Img_Player, Player.x, Player.y, Player.angle, 1, 1, largeurImg_Player / 2, hauteurImg_Player / 2)
     love.graphics.draw(Img_Canon, Player.x, Player.y, angle_Canon, 1, 1, largeurImg_Canon / 2, hauteurImg_Canon / 2)
     --love.graphics.print(tostring(Player.etat), Player.x, Player.y)
+end
+
+function love.mousepressed(x, y, button)
+    if WeaponTypes == W_Types.Basic then
+        if button == 1 then
+            Weapons.CreerObus(NomObus.Hero, Player.x, Player.y, angle_Canon, 500)
+            Sd_SHOOT:stop()
+            Sd_SHOOT:play()
+        end
+    end
 end
 
 return Hero
