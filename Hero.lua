@@ -56,6 +56,18 @@ function Hero.Load()
     Hero.Start()
 end
 
+function Hero.Shoot()
+    function love.mousepressed(x, y, button)
+        if WeaponTypes == W_Types.Basic then
+            if button == 1 then
+                Weapons.CreerObus(NomObus.Hero, Player.x, Player.y, angle_Canon, 500)
+                Sd_SHOOT:stop()
+                Sd_SHOOT:play()
+            end
+        end
+    end
+end
+
 function Hero.IsHit(dt)
     local no
     for no = #listObus, 1, -1 do
@@ -198,16 +210,6 @@ function Hero.Draw()
     love.graphics.draw(Img_Player, Player.x, Player.y, Player.angle, 1, 1, largeurImg_Player / 2, hauteurImg_Player / 2)
     love.graphics.draw(Img_Canon, Player.x, Player.y, angle_Canon, 1, 1, largeurImg_Canon / 2, hauteurImg_Canon / 2)
     --love.graphics.print(tostring(Player.etat), Player.x, Player.y)
-end
-
-function love.mousepressed(x, y, button)
-    if WeaponTypes == W_Types.Basic then
-        if button == 1 then
-            Weapons.CreerObus(NomObus.Hero, Player.x, Player.y, angle_Canon, 500)
-            Sd_SHOOT:stop()
-            Sd_SHOOT:play()
-        end
-    end
 end
 
 return Hero

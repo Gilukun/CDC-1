@@ -143,7 +143,7 @@ function Weapons.EMI(dt)
 end
 
 list_Dead = {}
-function Kill(pX, pY)
+function Weapons.Kill(pX, pY)
     local Dead = {}
     Dead.x = pX
     Dead.y = pY

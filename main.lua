@@ -42,6 +42,9 @@ GameState.WIN = "WIN"
 
 G_State = GameState.Menu
 
+local backtomenu = 20
+local timerbacktomenu = backtomenu
+
 function love.load()
     love.window.setMode(1024, 1024)
     Menu.Load()
@@ -94,7 +97,9 @@ function love.update(dt)
     if G_State == GameState.Menu then
         UpdateMenu(dt)
         Sd_Menu:play()
+        Sd_WIN:stop()
     elseif G_State == GameState.level1 then
+        Player.Shoot()
         UpdateLevel1(dt)
         Sd_Lvl1:play()
     elseif G_State == GameState.GameOver then
@@ -104,6 +109,10 @@ function love.update(dt)
     elseif G_State == GameState.WIN then
         Sd_Lvl1:stop()
         Sd_WIN:play()
+        timerbacktomenu = timerbacktomenu - dt
+        if timerbacktomenu <= 0 then
+            G_State = GameState.Menu
+        end
     end
 end
 
