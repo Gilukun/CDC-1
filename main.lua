@@ -27,6 +27,7 @@ local Pause = require("Pause")
 local GameOver = require("GameOver")
 local Sounds = require("Sounds")
 local Victoire = require("Win")
+local Commandes = require("Commandes")
 
 -- ETATS DU JEU
 GameState = {}
@@ -34,7 +35,7 @@ GameState.Menu = "MENU"
 GameState.level1 = "LEVEL1"
 GameState.Boss = "BOSS"
 GameState.Pause = "PAUSE"
-GameState.Inventaire = "INVENTAIRE"
+GameState.Commandes = "Commandes"
 GameState.GameOver = "GAMEOVER"
 GameState.Quit = "QUIT"
 GameState.WIN = "WIN"
@@ -44,7 +45,6 @@ G_State = GameState.Menu
 function love.load()
     love.window.setMode(1024, 1024)
     Menu.Load()
-
     Pause.Load()
     Cartes.Load()
     Sounds.Load()
@@ -55,6 +55,7 @@ function love.load()
     GUI.Load()
     GameOver.Load()
     Victoire.Load()
+    Commandes.Load()
 end
 
 function UpdateMenu(dt)
@@ -66,11 +67,12 @@ function UpdateLevel1(dt)
 
     Player.Move(dt)
 
-    Ennemy.Update(dt)
-
     Weapons.Obus(dt)
     Weapons.EMI(dt)
+    Ennemy.Update(dt)
+
     Weapons.Shield(dt)
+    Weapons.Update(dt)
     Loot.Update(dt)
     Loot.GameWin()
 end
@@ -81,7 +83,7 @@ end
 function UpdateBoss()
 end
 
-function UpdateInventaire()
+function UpdateCommandes()
 end
 
 function UpdateGameOver(dt)
@@ -99,6 +101,9 @@ function love.update(dt)
         Sd_Lvl1:stop()
         Sd_GAMEOVER:play()
         UpdateGameOver(dt)
+    elseif G_State == GameState.WIN then
+        Sd_Lvl1:stop()
+        Sd_WIN:play()
     end
 end
 
@@ -115,8 +120,8 @@ function DrawLevel1()
     GUI.Draw()
 end
 
-function DrawInventaire()
-    love.graphics.print("INVENTAIRE", lScreen / 2, hScreen / 2)
+function DrawCommandes()
+    Commandes.Draw()
 end
 
 function DrawWIN()
@@ -144,8 +149,8 @@ function love.draw()
         DrawPause()
     elseif G_State == GameState.Boss then
         DrawLevel1()
-    elseif G_State == GameState.Inventaire then
-        DrawInventaire()
+    elseif G_State == GameState.Commandes then
+        DrawCommandes()
     elseif G_State == GameState.GameOver then
         DrawLevel1()
         DrawGameOver()
@@ -170,8 +175,8 @@ function love.keypressed(key)
             G_State = GameState.Pause
         end
 
-        if key == "i" then
-            G_State = GameState.Inventaire
+        if key == "c" then
+            G_State = GameState.Commandes
         end
 
         if key == "t" then
@@ -184,14 +189,15 @@ function love.keypressed(key)
             end
         end
         if key == "escape" then
+            Sd_Lvl1:stop()
             G_State = GameState.Menu
         end
     elseif G_State == GameState.Pause then
         if key == "p" then
             G_State = GameState.level1
         end
-    elseif G_State == GameState.Inventaire then
-        if key == "i" then
+    elseif G_State == GameState.Commandes then
+        if key == "c" then
             G_State = GameState.level1
         end
     elseif G_State == GameState.GameOver then
@@ -201,9 +207,9 @@ function love.keypressed(key)
             Sd_GAMEOVER:stop()
         end
     elseif G_State == GameState.WIN then
-        Sd_Lvl1:stop()
         if key == "return" then
             G_State = GameState.Menu
+            Sd_WIN:stop()
         end
     end
 end

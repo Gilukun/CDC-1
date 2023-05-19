@@ -59,7 +59,7 @@ zone2Spawn[2] = {
 
 -- bas gauche
 zone2Spawn[3] = {
-    x = 500,
+    x = 600,
     y = 900,
     angle = math.pi * 1.5
 }
@@ -118,10 +118,45 @@ function Ennemis.Start()
         tank_E.SpeedShoot = pSpeedShoot
         tank_E.TimerReloc = pTimerReloc
         tank_E.Relocation = pReloc
+        tank_E.isHit = false
         table.insert(list_Ennemis, tank_E)
     end
-    Ennemis.CreerEnnemy(Nom_Ennemis.TOWER, 200, 500, nil, 0, 20, TOWER_E.IDLE, 0, 0, false, false, 0, 0.5, nil, nil)
-    Ennemis.CreerEnnemy(Nom_Ennemis.TOWER, 900, 500, nil, 0, 20, TOWER_E.IDLE, 0, 0, false, false, 0, 0.5, nil, nil)
+    Ennemis.CreerEnnemy(
+        Nom_Ennemis.TOWER,
+        200,
+        500,
+        nil,
+        0,
+        20,
+        TOWER_E.IDLE,
+        0,
+        0,
+        false,
+        false,
+        0,
+        0.5,
+        nil,
+        nil,
+        false
+    )
+    Ennemis.CreerEnnemy(
+        Nom_Ennemis.TOWER,
+        900,
+        500,
+        nil,
+        0,
+        20,
+        TOWER_E.IDLE,
+        0,
+        0,
+        false,
+        false,
+        0,
+        0.5,
+        nil,
+        nil,
+        false
+    )
 end
 
 -- TIMER
@@ -136,7 +171,7 @@ function Ennemis.Etats(dt)
         if t.nom == Nom_Ennemis.TANK then
             chase_Dist = 200
             shoot_Dist = 150
-            col_Player_Dist = 90
+            col_Player_Dist = largeurImg_Player
             t.dist = math.dist(t.x, t.y, Player.x, Player.y)
 
             if t.etat == ET_TANK_E.IDLE then
@@ -216,7 +251,7 @@ function Ennemis.Etats(dt)
                     t.etat = ET_TANK_E.CHASE
                     oldangle = t.angle
                 end
-
+                -- COLLISIONS AVEC LE JOUEUR
                 if t.dist <= col_Player_Dist then
                     t.etat = ET_TANK_E.COL_PLAYER
                 end
@@ -478,9 +513,13 @@ function Ennemis.IsHit()
                 if t.nom == Nom_Ennemis.TANK then
                     local dist = math.dist(t.x, t.y, o.x, o.y)
                     if dist < largeurImg_tank_E / 2 then
+                        SFX_HIT_ENNEMY:stop()
+                        SFX_HIT_ENNEMY:play()
                         table.remove(listObus, no)
+                        CreerExplosion(t.x, t.y)
+
                         t.life = t.life - 1
-                        if t.life == 0 then
+                        if t.life <= 0 then
                             local dice = love.math.random(0, 10)
                             if dice >= 0 and dice <= 3 then
                                 Loot.CreerLoot(TypeLoot.AddLifeBig, t.x, t.y)
@@ -489,14 +528,19 @@ function Ennemis.IsHit()
                             elseif dice >= 6 and dice <= 7 then
                                 Loot.CreerLoot(TypeLoot.AddLifeSmall, t.x, t.y)
                             end
+                            SFX_DEAD_ENNEMY:stop()
+                            SFX_DEAD_ENNEMY:play()
                             GUI.AddScore()
                             table.remove(list_Ennemis, nt)
+                            Kill(t.x, t.y)
                         end
                     end
                 elseif t.nom == Nom_Ennemis.TOWER then
                     local dist = math.dist(t.x, t.y, o.x, o.y)
                     if dist < largeurImg_Tower / 2 then
                         t.life = t.life - 1
+                        SFX_HIT_ENNEMY:stop()
+                        SFX_HIT_ENNEMY:play()
                         table.remove(listObus, no)
                         if t.life == 0 then
                             local dice = love.math.random(0, 10)
@@ -541,7 +585,24 @@ function Ennemis.Update(dt)
         pY = zone2Spawn[diceZoneSpawn].y
         pAngle = zone2Spawn[diceZoneSpawn].angle
 
-        Ennemis.CreerEnnemy(Nom_Ennemis.TANK, pX, pY, 100, pAngle, 5, ET_TANK_E.IDLE, 0, 0, nil, 0, 0, 0.5, 0, 0.1)
+        Ennemis.CreerEnnemy(
+            Nom_Ennemis.TANK,
+            pX,
+            pY,
+            100,
+            pAngle,
+            5,
+            ET_TANK_E.IDLE,
+            0,
+            0,
+            nil,
+            0,
+            0,
+            0.5,
+            0,
+            0.1,
+            false
+        )
         timer_Spawn = Ennemis_Spawn
     end
 
@@ -561,7 +622,7 @@ function Ennemis.Draw()
     for n = 1, #list_Ennemis do
         local t = list_Ennemis[n]
         if t.nom == Nom_Ennemis.TANK then
-            --love.graphics.print(tostring(t.etat), t.x, t.y)
+            love.graphics.print(tostring(t.isHit), t.x, t.y)
             --love.graphics.print(tostring(t.dice), t.x, t.y + 100)
             --love.graphics.print(tostring(t.TimerReloc), t.x, t.y + 200)
             love.graphics.draw(Img_tank_E, t.x, t.y, t.angle, 1, 1, largeurImg_tank_E / 2, hauteurImg_tank_E / 2)
@@ -575,6 +636,11 @@ function Ennemis.Draw()
                 love.graphics.draw(Img_Tower, Img_Tower3, t.x, t.y, 0, 1, 1, largeurImg_Tower / 2, hauteurImg_Tower / 2)
             end
         --love.graphics.circle("fill", t.x - largeurImg_Tower / 3, t.y, 4)
+        end
+        for k, o in ipairs(listObus) do
+            if t.isHit == true then
+                love.graphics.draw(Img_Hit, o.x, o.y, 0, 1, 1, Img_Hit:getWidth() / 2, Img_Hit:getHeight() / 2)
+            end
         end
     end
     --love.graphics.rectangle("fill", 200, 900, 10, 10)

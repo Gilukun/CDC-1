@@ -56,7 +56,7 @@ function Hero.Load()
     Hero.Start()
 end
 
-function Hero.IsHit()
+function Hero.IsHit(dt)
     local no
     for no = #listObus, 1, -1 do
         local o = listObus[no]
@@ -65,6 +65,7 @@ function Hero.IsHit()
             if Shield_ON == false then
                 if dist < largeurImg_Player / 2 then
                     table.remove(listObus, no)
+                    CreerExplosion(Player.x, Player.y)
                     GUI.RemoveHeroLife(dt)
                 end
             end
@@ -114,12 +115,11 @@ function Hero.Etats(dt)
 
         for z = #PrisonerSpawn, 1, -1 do
             local spawn = PrisonerSpawn[z]
-            if
-                math.dist(Player.x, Player.y, spawn.x + largeurPrisoner, spawn.y + hauteurPrisoner) <
-                    largeurImg_Player / 1.5
-             then
+            if math.dist(Player.x, Player.y, spawn.x, spawn.y) < largeurImg_Player / 1.5 then
                 prisoner.saved = true
                 AddPrisonersScore()
+                SFX_PRISONER_SAVED:stop()
+                SFX_PRISONER_SAVED:play()
                 table.remove(PrisonerSpawn, z)
             end
         end
@@ -190,7 +190,7 @@ function Hero.Move(dt)
         Player.y = hauteurImg_Player / 2
     end
 
-    Hero.IsHit()
+    Hero.IsHit(dt)
     Hero.Canon()
 end
 

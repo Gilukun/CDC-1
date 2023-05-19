@@ -58,7 +58,7 @@ function Loot.Load()
     Img_LootShield = love.graphics.newImage("Images/Loot_Shield.png")
 
     prisoner.image = love.graphics.newImage("Images/Prisoner.png")
-    largeurPrisoner = prisoner.image:getWidth() / 2
+    largeurPrisoner = prisoner.image:getWidth()
     hauteurPrisoner = prisoner.image:getHeight()
     prisoner.frames[1] = love.graphics.newQuad(0, 0, 25, 31, prisoner.image:getWidth(), prisoner.image:getHeight())
     prisoner.frames[2] = love.graphics.newQuad(25, 0, 25, 31, prisoner.image:getWidth(), prisoner.image:getHeight())
@@ -85,10 +85,24 @@ function Loot.Draw()
         end
     end
 
+    for k, p in ipairs(PrisonerSpawn) do
+        love.graphics.circle("line", p.x, p.y, largeurPrisoner, 20)
+    end
+
     for z = #PrisonerSpawn, 1, -1 do
         local spwan = PrisonerSpawn[z]
         local frameArrondie = math.floor(prisoner.frame)
-        love.graphics.draw(prisoner.image, prisoner.frames[frameArrondie], spwan.x, spwan.y)
+        love.graphics.draw(
+            prisoner.image,
+            prisoner.frames[frameArrondie],
+            spwan.x,
+            spwan.y,
+            0,
+            1,
+            1,
+            largeurPrisoner / 4,
+            hauteurPrisoner / 2
+        )
     end
 end
 
