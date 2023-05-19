@@ -13,7 +13,7 @@ local Carte = require("Maps")
 -- ETATS PLAYER
 ETAT_PLAYER = {}
 ETAT_PLAYER.IDLE = "IDLE"
-ETAT_PLAYER.ALIVE = "ALIVE"
+ETAT_PLAYER.MOVE = "MOVE"
 ETAT_PLAYER.DEAD = "DEAD"
 ETAT_PLAYER.COLLISIONE = "COL_E"
 ETAT_PLAYER.COLLISIONLAYER = "COL_L"
@@ -56,18 +56,6 @@ function Hero.Load()
     Hero.Start()
 end
 
-function Hero.Shoot()
-    function love.mousepressed(x, y, button)
-        if WeaponTypes == W_Types.Basic then
-            if button == 1 then
-                Weapons.CreerObus(NomObus.Hero, Player.x, Player.y, angle_Canon, 500)
-                Sd_SHOOT:stop()
-                Sd_SHOOT:play()
-            end
-        end
-    end
-end
-
 function Hero.IsHit(dt)
     local no
     for no = #listObus, 1, -1 do
@@ -92,8 +80,8 @@ end
 
 function Hero.Etats(dt)
     if Player.etat == ETAT_PLAYER.IDLE then
-        Player.etat = ETAT_PLAYER.ALIVE
-    elseif Player.etat == ETAT_PLAYER.ALIVE then
+        Player.etat = ETAT_PLAYER.MOVE
+    elseif Player.etat == ETAT_PLAYER.MOVE then
         oldx = Player.x
         oldy = Player.y
         if love.keyboard.isDown("z") then
@@ -167,8 +155,18 @@ function Hero.Etats(dt)
         for n = #list_Loot, 1, -1 do
             local l = list_Loot[n]
             if math.dist(Player.x, Player.y, l.x, l.y) < largeurImg_Player then
-                GUI.AddLife()
-                GUI.AddShield()
+                if l.nom == TypeLoot.AddLifeSmall then
+                    GUI.AddLife()
+                    SFX_HEALTH:play()
+                end
+                if l.nom == TypeLoot.AddLifeBig then
+                    GUI.AddLife()
+                    SFX_HEALTH:play()
+                end
+                if l.nom == TypeLoot.Shield then
+                    GUI.AddShield()
+                    SFX_SHIELD_LOOT:play()
+                end
                 table.remove(list_Loot, n)
             end
         end
@@ -206,10 +204,19 @@ function Hero.Move(dt)
     Hero.Canon()
 end
 
+function love.mousepressed(x, y, button)
+    if WeaponTypes == W_Types.Basic then
+        if button == 1 then
+            Weapons.CreerObus(NomObus.Hero, Player.x, Player.y, angle_Canon, 500, 0.6)
+            Sd_SHOOT:stop()
+            Sd_SHOOT:play()
+        end
+    end
+end
+
 function Hero.Draw()
     love.graphics.draw(Img_Player, Player.x, Player.y, Player.angle, 1, 1, largeurImg_Player / 2, hauteurImg_Player / 2)
     love.graphics.draw(Img_Canon, Player.x, Player.y, angle_Canon, 1, 1, largeurImg_Canon / 2, hauteurImg_Canon / 2)
-    --love.graphics.print(tostring(Player.etat), Player.x, Player.y)
 end
 
 return Hero

@@ -98,12 +98,9 @@ function GUI.Load()
     Img_Shield1 = love.graphics.newQuad(0, 0, 128, 128, largueurIMG_Shield, hauteurIMG_Shield)
     Img_Shield2 = love.graphics.newQuad(140, 0, 128, 128, largueurIMG_Shield, hauteurIMG_Shield)
     Img_Shield3 = love.graphics.newQuad(280, 0, 128, 128, largueurIMG_Shield, hauteurIMG_Shield)
-
-    IMG_HighScore = love.graphics.newImage("Images/HighScore.png")
-
     Icon_Shield = love.graphics.newImage("Images/Loot_Shield.png")
 
-    font = love.graphics.newFont(18)
+    font = love.graphics.newFont(20)
 end
 
 function GUI.Draw()
@@ -207,7 +204,7 @@ function GUI.Draw()
             love.graphics.setColor(1, 1, 1)
         elseif v.nom == Nom_Ennemis.TOWER then
             love.graphics.setColor(love.math.colorFromBytes(231, 50, 36))
-            love.graphics.rectangle("fill", v.x - largeurImg_Tower / 2, v.y - largeurImg_Tower / 2, v.life, 4)
+            love.graphics.rectangle("fill", v.x - largeurImg_Tower / 2, v.y - largeurImg_Tower / 2, v.life * 2, 4)
             love.graphics.setColor(1, 1, 1)
         end
     end

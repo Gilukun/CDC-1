@@ -5,7 +5,6 @@ local timer = flash
 local flashGameOver = true
 
 function GameOver.Load()
-    Img_GameOverBck = love.graphics.newImage("Images/GameOverbck.png")
     Img_GameOverTop = love.graphics.newImage("Images/GameOver.png")
 end
 

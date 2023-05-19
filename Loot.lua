@@ -85,10 +85,6 @@ function Loot.Draw()
         end
     end
 
-    for k, p in ipairs(PrisonerSpawn) do
-        love.graphics.circle("line", p.x, p.y, largeurPrisoner, 20)
-    end
-
     for z = #PrisonerSpawn, 1, -1 do
         local spwan = PrisonerSpawn[z]
         local frameArrondie = math.floor(prisoner.frame)

@@ -54,14 +54,14 @@ function CreerExplosion(pX, pY)
     Boum.vie = 0.2
     table.insert(list_Explosion, Boum)
 end
-function Weapons.CreerObus(pNom, pX, pY, pAngle, pVitesse)
+function Weapons.CreerObus(pNom, pX, pY, pAngle, pVitesse, pLife)
     local Obus = {}
     Obus.nom = pNom
     Obus.x = pX
     Obus.y = pY
     Obus.angle = pAngle
     Obus.vitesse = pVitesse
-    Obus.life = 0.8
+    Obus.life = pLife
     table.insert(listObus, Obus)
 end
 
@@ -210,8 +210,8 @@ function Weapons.Draw()
                 v.angle,
                 1 / 2,
                 1 / 2,
-                largeurImg_Tower / 2,
-                largeurImg_Tower / 2
+                largeurImg_Laser / 2,
+                largeurImg_Laser / 2
             )
         end
     end

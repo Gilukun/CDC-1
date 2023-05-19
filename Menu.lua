@@ -1,11 +1,13 @@
 Menu = {}
 
 local carte = require("Menu_Data")
+
+-- Timer pour que "Press Start" clignote
 local flash = 2
 local timer = flash
-
 local pressStart = true
 
+-- Liste de layers utilisés pour le menu
 Layers = {
     background = carte.layers[1].data,
     walls = carte.layers[2].data,

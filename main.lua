@@ -61,6 +61,7 @@ function love.load()
     Commandes.Load()
 end
 
+-- SECTION UPDATES
 function UpdateMenu(dt)
     Menu.Update(dt)
 end
@@ -93,13 +94,13 @@ function UpdateGameOver(dt)
     GameOver.Update(dt)
 end
 
+-- UPDATE GENERAL
 function love.update(dt)
     if G_State == GameState.Menu then
         UpdateMenu(dt)
         Sd_Menu:play()
         Sd_WIN:stop()
     elseif G_State == GameState.level1 then
-        Player.Shoot()
         UpdateLevel1(dt)
         Sd_Lvl1:play()
     elseif G_State == GameState.GameOver then
@@ -115,6 +116,8 @@ function love.update(dt)
         end
     end
 end
+
+-- SECTION DRAW
 
 function DrawMenu()
     Menu.Draw()
@@ -168,9 +171,13 @@ function love.draw()
     end
 end
 
+-- SECTION ACTION/CLAVIER
 function love.keypressed(key)
+    -- actions possible sur le menu du jeu
     if G_State == GameState.Menu then
+        -- actions possible pendant le premier niveau
         if key == "return" then
+            -- initialisation du niveau 1
             Player.Start()
             Ennemy.Start()
             Weapons.Start()
@@ -179,7 +186,15 @@ function love.keypressed(key)
             Sd_Menu:stop()
             G_State = GameState.level1
         end
+        -- ajustement du volume general
+        if key == "u" then
+            Sounds.LevelUp()
+        end
+        if key == "i" then
+            Sounds.LevelDown()
+        end
     elseif G_State == GameState.level1 then
+        -- actions possible dans le menu "Pause"
         if key == "p" then
             G_State = GameState.Pause
         end
@@ -187,10 +202,11 @@ function love.keypressed(key)
         if key == "c" then
             G_State = GameState.Commandes
         end
-
+        -- activation de l'IEM
         if key == "t" then
             Weapons.Type(W_Style.ATTACK)
         end
+        -- activation du Bouclier
         if ShieldActiveWidth >= 50 then
             if key == "b" then
                 Weapons.Type(W_Style.SHIELD)
@@ -201,24 +217,57 @@ function love.keypressed(key)
             Sd_Lvl1:stop()
             G_State = GameState.Menu
         end
+        if key == "u" then
+            Sounds.LevelUp()
+        end
+        if key == "i" then
+            Sounds.LevelDown()
+        end
     elseif G_State == GameState.Pause then
+        -- actions possible dans le menu "Commandes"
         if key == "p" then
             G_State = GameState.level1
         end
+        if key == "u" then
+            Sounds.LevelUp()
+        end
+        if key == "i" then
+            Sounds.LevelDown()
+        end
     elseif G_State == GameState.Commandes then
+        -- actions possibles sur la page de "Game Over"
         if key == "c" then
             G_State = GameState.level1
         end
+        if key == "u" then
+            Sounds.LevelUp()
+        end
+        if key == "i" then
+            Sounds.LevelDown()
+        end
     elseif G_State == GameState.GameOver then
+        -- action possibles sur la page de "Victoire"
         Sd_Lvl1:stop()
         if key == "return" then
             G_State = GameState.Menu
             Sd_GAMEOVER:stop()
         end
+        if key == "u" then
+            Sounds.LevelUp()
+        end
+        if key == "i" then
+            Sounds.LevelDown()
+        end
     elseif G_State == GameState.WIN then
         if key == "return" then
             G_State = GameState.Menu
             Sd_WIN:stop()
+        end
+        if key == "u" then
+            Sounds.LevelUp()
+        end
+        if key == "i" then
+            Sounds.LevelDown()
         end
     end
 end
