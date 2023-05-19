@@ -94,42 +94,8 @@ function Ennemis.Start()
     nEnnemy = 0
 
     -- 2 TOURS SPAWN DES QUE LE JEU COMMENCE
-    Ennemis.CreerEnnemy(
-        Nom_Ennemis.TOWER,
-        200,
-        500,
-        nil,
-        0,
-        20,
-        TOWER_E.IDLE,
-        0,
-        0,
-        false,
-        false,
-        0,
-        0.5,
-        nil,
-        nil,
-        false
-    )
-    Ennemis.CreerEnnemy(
-        Nom_Ennemis.TOWER,
-        900,
-        500,
-        nil,
-        0,
-        20,
-        TOWER_E.IDLE,
-        0,
-        0,
-        false,
-        false,
-        0,
-        0.5,
-        nil,
-        nil,
-        false
-    )
+    Ennemis.CreerEnnemy(Nom_Ennemis.TOWER, 200, 500, nil, 0, 20, TOWER_E.IDLE, 0, false, false, 0, 0.5, nil, nil, false)
+    Ennemis.CreerEnnemy(Nom_Ennemis.TOWER, 900, 500, nil, 0, 20, TOWER_E.IDLE, 0, false, false, 0, 0.5, nil, nil, false)
 end
 
 function Ennemis.CreerEnnemy(
@@ -141,7 +107,6 @@ function Ennemis.CreerEnnemy(
     pLife,
     pEtat,
     pDistance,
-    pDice,
     pDectection,
     pShoot,
     pTimer,
@@ -157,7 +122,6 @@ function Ennemis.CreerEnnemy(
     tank_E.life = pLife
     tank_E.etat = pEtat
     tank_E.dist = pDistance
-    tank_E.Dice = pDice
     tank_E.Detection = pDectection
     tank_E.Shoot = pShoot
     tank_E.Timer_Shoot = pTimer
@@ -167,16 +131,17 @@ function Ennemis.CreerEnnemy(
     tank_E.alpha = 0
     table.insert(list_Ennemis, tank_E)
 end
--- TIMER
+-- TIMER DE SPANW DES ENNEMIS
 local Ennemis_Spawn = 2
 local timer_Spawn = Ennemis_Spawn
 
--- MACHINE A ETATS
+-- MACHINE A ETATS DES ENNEMIS
 function Ennemis.Etats(dt)
     local n
     for n = #list_Ennemis, 1, -1 do
         local t = list_Ennemis[n]
         if t.nom == Nom_Ennemis.TANK then
+            -- ETATS DES TOURS
             -- ETATS DES TOURS
             chase_Dist = 200
             shoot_Dist = 150
@@ -214,7 +179,6 @@ function Ennemis.Etats(dt)
                                     TILE_HEIGHT
                                 ) == true
                              then
-                                --Collision = true
                                 t.x = oldtx
                                 t.y = oldty
                                 t.etat = ET_TANK_E.REPOSITION
@@ -277,9 +241,9 @@ function Ennemis.Etats(dt)
                 end
             elseif t.etat == ET_TANK_E.CHASE then
                 -- L'ENNEMI ATTAQUE LE JOUEUR
+                -- L'ENNEMI POURSUIT LE JOUEUR
                 local oldtx = t.x
                 local oldty = t.y
-
                 t.angle = math.angle(t.x, t.y, Player.x, Player.y)
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
@@ -347,7 +311,7 @@ function Ennemis.Etats(dt)
                     t.etat = ET_TANK_E.SHOOT
                 end
             elseif t.etat == ET_TANK_E.SHOOT then
-                -- REPOSITIONNEMENT DU TANK ENNEMY APRES CHAQUE COLLISIONS
+                -- REPOSITIONNEMENT DU TANK ENNEMI APRES CHAQUE COLLISIONS
                 local oldtx = t.x
                 local oldty = t.y
 
@@ -407,7 +371,7 @@ function Ennemis.Etats(dt)
                         t.etat = ET_TANK_E.REPOSITION
                     end
                 end
-
+                -- l'ennemi tir
                 t.Timer_Shoot = t.Timer_Shoot + dt
                 if t.Timer_Shoot > t.SpeedShoot then
                     Weapons.CreerObus(NomObus.Ennemis, t.x, t.y, t.angle, 500, 0.7)
@@ -420,8 +384,11 @@ function Ennemis.Etats(dt)
                     t.etat = ET_TANK_E.COL_PLAYER
                 end
             elseif t.etat == ET_TANK_E.REPOSITION then
+                -- L'ENNEMI CHERCHE UNE NOUVELLE DIRECTION
+                -- le tank est entré en collision. Il t.relocation temps pour reculer
                 t.TimerReloc = t.TimerReloc + dt
                 if t.TimerReloc <= t.Relocation then
+                    -- une fois t.relocation atteint il se met à chercher une nouvelle direction
                     t.x = t.x - t.vitesse * math.cos(t.angle) * dt
                     t.y = t.y - t.vitesse * math.sin(t.angle) * dt
                 elseif t.TimerReloc >= t.Relocation then
@@ -448,18 +415,21 @@ function Ennemis.Etats(dt)
                     t.etat = ET_TANK_E.REPOSITION
                 end
             elseif t.etat == ET_TANK_E.SEEK then
+                -- L'ENNMI ENTRE EN CONTACT AVEC LE JOUEUR
+                -- l'ennemi va ajouter un angle qui équivaut à un angle droit (math.pi * 1.5) à son angle actuel
                 t.TimerReloc = t.TimerReloc + dt
-
                 if t.TimerReloc >= t.Relocation then
                     t.angle = t.angle + (math.pi * 1.5 * dt) * 50
                 end
 
+                -- a la fin du timer il se dirige vers le nouvel angle
                 if t.TimerReloc <= t.Relocation then
                 elseif t.TimerReloc >= t.Relocation then
                     t.TimerReloc = 0
                     t.etat = ET_TANK_E.MOVE
                 end
             elseif t.etat == ET_TANK_E.COL_PLAYER then
+                -- il n'avance plus et s'oriente simplement pour tirer
                 t.angle = math.angle(t.x, t.y, Player.x, Player.y)
                 t.Timer_Shoot = t.Timer_Shoot + dt
 
@@ -478,20 +448,22 @@ function Ennemis.Etats(dt)
             t.dist = math.dist(t.x, t.y, Player.x, Player.y)
 
             if t.etat == TOWER_E.IDLE then
+                -- LA TOUR PASSE EN JOUEUR DETECTE
+                -- en état IDLE la tour scan pour savoir si le joueur est à portée de detection
                 if t.dist < rayon_Detection then
                     t.etat = TOWER_E.PLAYER_DETECTED
                     t.Detection = true
                 end
             elseif t.etat == TOWER_E.PLAYER_DETECTED then
+                -- LA TOUR PASSE EN MODE TIR
+                -- si le joueur s'approche à porté de tir, la tour passe en etat SHOOT. Sinon elle repasse en état IDLE
                 if t.dist < rayon_Shoot then
                     t.Detection = false
                     t.etat = TOWER_E.SHOOT
-                    t.Shoot = true
                 end
 
                 if t.dist > rayon_Detection then
                     t.Detection = false
-                    t.Shoot = false
                     t.etat = TOWER_E.IDLE
                 end
             elseif t.etat == TOWER_E.SHOOT then
@@ -523,7 +495,9 @@ function Ennemis.IsHit()
         if o.nom == NomObus.Hero then
             for nt = #list_Ennemis, 1, -1 do
                 local t = list_Ennemis[nt]
+                -- partie si l'ennemi est un TANK
                 if t.nom == Nom_Ennemis.TANK then
+                    -- partie si l'ennemi est une TOUR
                     local dist = math.dist(t.x, t.y, o.x, o.y)
                     if dist < largeurImg_tank_E / 2 then
                         SFX_HIT_ENNEMY:stop()
@@ -592,10 +566,12 @@ end
 
 function Ennemis.Update(dt)
     timer_Spawn = timer_Spawn - dt
+    -- je fais spwaner les ennemis aléatoirement sur les zones de spwan
     local diceZoneSpawn = math.random(1, #zone2Spawn)
     if timer_Spawn <= 0 then
-        nEnnemy = nEnnemy + 1
+        nEnnemy = nEnnemy + 1 -- je compte le nombre d'ennemi à l'écran
         if nEnnemy <= nEnnemyMax then
+            -- lorsque le nombre d'ennemi atteint la limite que j'ai choisi je reset mon timer et j'arrête les spawn
             pX = zone2Spawn[diceZoneSpawn].x
             pY = zone2Spawn[diceZoneSpawn].y
             pAngle = zone2Spawn[diceZoneSpawn].angle
@@ -608,7 +584,6 @@ function Ennemis.Update(dt)
                 pAngle,
                 5,
                 ET_TANK_E.IDLE,
-                0,
                 0,
                 nil,
                 0,
@@ -625,16 +600,14 @@ function Ennemis.Update(dt)
         end
     end
 
+    -- UPDATE DES ETATS
     Ennemis.Etats(dt)
 
-    for n = #list_Ennemis, 1, -1 do
-        local t = list_Ennemis[n]
-        if t.x > lScreen then
-            table.remove(list_Ennemis, n)
-        end
-    end
+    -- UPDATE DES HITS
     Ennemis.IsHit()
     Ennemis.IsHitHeavy()
+
+    -- UPDATE DE L'ALPHA DES TANK (apparition progressive)
     for k, e in ipairs(list_Ennemis) do
         if e.nom == Nom_Ennemis.TANK then
             if e.alpha <= 1 then
