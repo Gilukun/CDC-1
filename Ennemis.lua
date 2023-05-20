@@ -90,42 +90,8 @@ function Ennemis.Start()
     nEnnemy = 0
 
     -- 2 TOURS SPAWN DES QUE LE JEU COMMENCE
-    Ennemis.CreerEnnemy(
-        Nom_Ennemis.TOWER,
-        200,
-        500,
-        nil,
-        0,
-        20,
-        TOWER_E.IDLE,
-        0,
-        false,
-        false,
-        0,
-        0.5,
-        nil,
-        nil,
-        false,
-        5
-    )
-    Ennemis.CreerEnnemy(
-        Nom_Ennemis.TOWER,
-        900,
-        500,
-        nil,
-        0,
-        20,
-        TOWER_E.IDLE,
-        0,
-        false,
-        false,
-        0,
-        0.5,
-        nil,
-        nil,
-        false,
-        5
-    )
+    Ennemis.CreerEnnemy(Nom_Ennemis.TOWER, 200, 500, nil, 0, 20, TOWER_E.IDLE, 0, false, false, 0, 0.5, nil, nil, false)
+    Ennemis.CreerEnnemy(Nom_Ennemis.TOWER, 900, 500, nil, 0, 20, TOWER_E.IDLE, 0, false, false, 0, 0.5, nil, nil, false)
 end
 
 function Ennemis.CreerEnnemy(
@@ -159,7 +125,6 @@ function Ennemis.CreerEnnemy(
     tank_E.TimerReloc = pTimerReloc
     tank_E.Relocation = pReloc
     tank_E.alpha = 0
-    tank_E.damage = 0
     table.insert(list_Ennemis, tank_E)
 end
 -- TIMER DE SPANW DES ENNEMIS
@@ -621,8 +586,7 @@ function Ennemis.Update(dt)
                 0.5,
                 0,
                 0.1,
-                false,
-                10
+                false
             )
             timer_Spawn = Ennemis_Spawn
         elseif nEnnemy >= nEnnemyMax then
