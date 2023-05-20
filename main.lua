@@ -19,7 +19,7 @@ end
 local Menu = require("Menu")
 local Cartes = require("maps")
 local Player = require("Hero")
-local Ennemy = require("Ennemies")
+local Ennemy = require("Ennemis")
 local Weapons = require("Weapons")
 local GUI = require("GUI")
 local Loot = require("Loot")
