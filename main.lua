@@ -272,5 +272,8 @@ function love.keypressed(key)
     end
 end
 
-function love.mouse.setVisible()
+function love.mousepressed(x, y, button)
+    if G_State == GameState.level1 then
+        Player.mousepressed(x, y, button)
+    end
 end

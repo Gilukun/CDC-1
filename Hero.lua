@@ -204,7 +204,7 @@ function Hero.Move(dt)
     Hero.Canon()
 end
 
-function love.mousepressed(x, y, button)
+function Hero.mousepressed(x, y, button)
     if WeaponTypes == W_Types.Basic then
         if button == 1 then
             Weapons.CreerObus(NomObus.Hero, Player.x, Player.y, angle_Canon, 500, 0.6)
