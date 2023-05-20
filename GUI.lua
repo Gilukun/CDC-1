@@ -40,6 +40,8 @@ EMIActive.Height = 10
 
 function GUI.Start()
     GUI.AddPlayerData()
+    Player_life = Player_LifeInit
+    ShieldActiveWidth = 0
 end
 
 function GUI.AddScore()
@@ -76,11 +78,10 @@ end
 function GUI.RemoveHeroLife(dt)
     if Player_life > 0 then
         Player_life = Player_life - RemoveLife
-    elseif Player_life <= 0 then
+    elseif Player_life <= 0.5 then
         Sd_DEAD:play()
         G_State = GameState.GameOver
         Player.etat = ETAT_PLAYER.DEAD
-        Player_life = Player_LifeInit
     end
 end
 
