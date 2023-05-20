@@ -72,7 +72,7 @@ local nEnnemy = 0
 local nEnnemyMax = 10
 
 function Ennemis.Load()
-    Img_tank_E = love.graphics.newImage("Images/Badtank.png")
+    Img_tank_E = love.graphics.newImage("Images/BadTank.png")
     largeurImg_tank_E = Img_tank_E:getWidth()
     hauteurImg_tank_E = Img_tank_E:getHeight()
 
@@ -82,10 +82,6 @@ function Ennemis.Load()
     Img_Tower1 = love.graphics.newQuad(0, 0, 27, 66, largeurImg_Tower, hauteurImg_Tower)
     Img_Tower2 = love.graphics.newQuad(27, 0, 27, 66, largeurImg_Tower, hauteurImg_Tower)
     Img_Tower3 = love.graphics.newQuad(54, 0, 27, 66, largeurImg_Tower, hauteurImg_Tower)
-
-    Img_Spawn = love.graphics.newImage("Images/Spawn.png")
-    largeurImg_Spawn = Img_Spawn:getWidth()
-    hauteurImg_Spawn = Img_Spawn:getHeight()
 end
 
 -- FONCTION INITIALISATION
@@ -151,6 +147,7 @@ function Ennemis.Etats(dt)
             if t.etat == ET_TANK_E.IDLE then
                 t.etat = ET_TANK_E.MOVE
             elseif t.etat == ET_TANK_E.MOVE then
+                -- L'ENNEMI ATTAQUE LE JOUEUR
                 -- L'ENNEMY POURSUIS LE JOUEUR
                 local oldtx = t.x
                 local oldty = t.y
@@ -240,7 +237,6 @@ function Ennemis.Etats(dt)
                     end
                 end
             elseif t.etat == ET_TANK_E.CHASE then
-                -- L'ENNEMI ATTAQUE LE JOUEUR
                 -- L'ENNEMI POURSUIT LE JOUEUR
                 local oldtx = t.x
                 local oldty = t.y
@@ -311,7 +307,6 @@ function Ennemis.Etats(dt)
                     t.etat = ET_TANK_E.SHOOT
                 end
             elseif t.etat == ET_TANK_E.SHOOT then
-                -- REPOSITIONNEMENT DU TANK ENNEMI APRES CHAQUE COLLISIONS
                 local oldtx = t.x
                 local oldty = t.y
 
@@ -354,8 +349,8 @@ function Ennemis.Etats(dt)
                     local col_Ennemy_Dist = math.dist(v.x, v.y, t.x, t.y)
                     if v ~= t then
                         if col_Ennemy_Dist < largeurImg_tank_E then
-                            -- v.x = oldvx
-                            -- v.y = oldvy
+                            v.x = oldvx
+                            v.y = oldvy
                             t.x = oldtx
                             t.y = oldty
                             t.etat = ET_TANK_E.REPOSITION
@@ -388,13 +383,13 @@ function Ennemis.Etats(dt)
                 -- le tank est entré en collision. Il t.relocation temps pour reculer
                 t.TimerReloc = t.TimerReloc + dt
                 if t.TimerReloc <= t.Relocation then
-                    -- une fois t.relocation atteint il se met à chercher une nouvelle direction
                     t.x = t.x - t.vitesse * math.cos(t.angle) * dt
                     t.y = t.y - t.vitesse * math.sin(t.angle) * dt
                 elseif t.TimerReloc >= t.Relocation then
                     t.TimerReloc = 0
                     t.etat = ET_TANK_E.SEEK
                 end
+
                 if t.x + largeurImg_tank_E / 2 >= lScreen then
                     t.x = lScreen - largeurImg_tank_E / 2
                     t.etat = ET_TANK_E.REPOSITION
@@ -602,7 +597,6 @@ function Ennemis.Update(dt)
 
     -- UPDATE DES ETATS
     Ennemis.Etats(dt)
-
     -- UPDATE DES HITS
     Ennemis.IsHit()
     Ennemis.IsHitHeavy()

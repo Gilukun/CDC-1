@@ -8,7 +8,7 @@ Hero = {}
 local Weapons = require("Weapons")
 local GUI = require("GUI")
 local loot = require("Loot")
-local Carte = require("Maps")
+local Carte = require("maps")
 
 -- ETATS PLAYER
 ETAT_PLAYER = {}

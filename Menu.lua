@@ -6,7 +6,6 @@ local carte = require("Menu_Data")
 local flash = 2
 local timer = flash
 local pressStart = true
-
 -- Liste de layers utilisés pour le menu
 Layers = {
     background = carte.layers[1].data,
@@ -16,7 +15,6 @@ Layers = {
 }
 
 function Menu.Load()
-    Menu_Background = love.graphics.newImage("Images/MenuImg.png")
     Img_title = love.graphics.newImage("Images/Tank You.png")
     largeurImg_title = love.graphics.getWidth() / 2
     hauteurImg_title = love.graphics.getHeight() / 2

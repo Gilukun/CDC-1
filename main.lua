@@ -17,7 +17,7 @@ function CheckCollision(x1, y1, w1, h1, x2, y2, w2, h2)
 end
 
 local Menu = require("Menu")
-local Cartes = require("Maps")
+local Cartes = require("maps")
 local Player = require("Hero")
 local Ennemy = require("Ennemies")
 local Weapons = require("Weapons")

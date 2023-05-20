@@ -31,7 +31,7 @@ Shield_ON = false
 
 function Weapons.Load()
     Sd_Shield = love.audio.newSource("Sounds/Shield.wav", "static")
-    Img_Laser = love.graphics.newImage("Images/Vortex.png")
+    Img_Laser = love.graphics.newImage("Images/vortex.png")
     largeurImg_Laser = Img_Laser:getWidth()
     hauteurImg_Laser = Img_Laser:getHeight()
     Img_Hit = love.graphics.newImage("Images/Hit.png")
