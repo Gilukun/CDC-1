@@ -104,6 +104,19 @@ function GUI.Load()
     font = love.graphics.newFont(20)
 end
 
+local largeurGrid = 32
+local HauteurGrid = 38
+
+local nb_ligne = math.ceil(1024 / largeurGrid)
+local nb_col = math.ceil(1024 / HauteurGrid)
+local grid = {}
+for l = 1, nb_ligne do
+    grid[l] = {}
+    for c = 1, nb_col do
+        grid[l][c] = ((l - 1) * nb_col + c)
+    end
+end
+
 function GUI.Draw()
     local ratio_Life = Player_life / Player_LifeInit
     love.graphics.setColor(love.math.colorFromBytes(255, 18, 0))
@@ -210,9 +223,70 @@ function GUI.Draw()
         end
     end
 
-    love.graphics.setFont(font)
-    love.graphics.print(tostring(Player_Score), lScreen - 100, 20)
-    love.graphics.print(tostring(Prisoner), lScreen - 200, 20)
+    --love.graphics.setFont(font)
+
+    for l = 1, nb_ligne do
+        for c = 1, nb_col do
+            if grid[l][c] == 676 then
+                love.graphics.setColor(1, 1, 1, 0.6)
+                love.graphics.draw(
+                    prisoner.image,
+                    prisoner.frames[1],
+                    (l - 1) * largeurGrid + largeurPrisoner / 3,
+                    (c - 1) * HauteurGrid + hauteurPrisoner / 2,
+                    0,
+                    1,
+                    1,
+                    largeurPrisoner / 3,
+                    hauteurPrisoner / 2
+                )
+                love.graphics.setColor(1, 1, 1, 1)
+            end
+            if grid[l][c] == 703 then
+                local font = love.graphics.getFont()
+                local largeurPScore = font:getWidth(tostring(Prisoners))
+                local hauteurPScore = font:getHeight(tostring(Prisoner))
+                love.graphics.print(
+                    tostring(Prisoner),
+                    (l - 1) * largeurGrid + largeurGrid / 2,
+                    (c - 1) * HauteurGrid + HauteurGrid / 2,
+                    O,
+                    1,
+                    1,
+                    largeurPScore / 2,
+                    hauteurPScore / 2
+                )
+            end
+            if grid[l][c] == 757 then
+                love.graphics.setColor(1, 1, 1, 0.9)
+                love.graphics.draw(Img_tank_E, (l - 1) * largeurGrid, (c - 1) * HauteurGrid, 0, 0.8, 0.8)
+                love.graphics.setColor(1, 1, 1, 1)
+            end
+            if grid[l][c] == 811 then
+                local font = love.graphics.getFont()
+                local largeurScore = font:getWidth(tostring(Player_Score))
+                local hauteurScore = font:getHeight(tostring(Player_Score))
+                love.graphics.setColor(1, 1, 1, 0.9)
+                love.graphics.print(
+                    tostring(Player_Score),
+                    (l - 1) * largeurGrid + largeurGrid / 2,
+                    (c - 1) * HauteurGrid + HauteurGrid / 2,
+                    0,
+                    1,
+                    1,
+                    largeurScore / 2,
+                    hauteurScore / 2
+                )
+                love.graphics.setColor(1, 1, 1, 1)
+            end
+        end
+    end
+    for l = 1, nb_ligne do
+        for c = 1, nb_col do
+            --love.graphics.print(tostring(grid[l][c]), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            -- love.graphics.rectangle("line", (l - 1) * largeurGrid, (c - 1) * HauteurGrid, largeurGrid, HauteurGrid)
+        end
+    end
 end
 
 return GUI

@@ -14,6 +14,8 @@ Layers = {
     Animation = carte.layers[4].data
 }
 
+local tile = {}
+
 function Menu.Load()
     Img_title = love.graphics.newImage("Images/Tank You.png")
     largeurImg_title = love.graphics.getWidth() / 2
@@ -24,6 +26,20 @@ function Menu.Load()
     Tilesheet = love.graphics.newImage("Images/TileSet1.png")
     Largeurtilesheet = Tilesheet:getWidth()
     HauteurTilesheet = Tilesheet:getHeight()
+
+    KeyboardSheet = love.graphics.newImage("Images/Keyboards.png")
+    LargeurKeyboardSheet = KeyboardSheet:getWidth()
+    HauteurKeyboardSheet = KeyboardSheet:getHeight()
+    Key_Z = love.graphics.newQuad(280, 38, 34, 38, LargeurKeyboardSheet, HauteurKeyboardSheet)
+    Key_Q = love.graphics.newQuad(560, 0, 34, 38, LargeurKeyboardSheet, HauteurKeyboardSheet)
+    Key_S = love.graphics.newQuad(34, 38, 34, 38, LargeurKeyboardSheet, HauteurKeyboardSheet)
+    Key_D = love.graphics.newQuad(103, 0, 34, 38, LargeurKeyboardSheet, HauteurKeyboardSheet)
+    Key_C = love.graphics.newQuad(68, 0, 34, 38, LargeurKeyboardSheet, HauteurKeyboardSheet)
+    Key_V = love.graphics.newQuad(138, 38, 34, 38, LargeurKeyboardSheet, HauteurKeyboardSheet)
+    Key_B = love.graphics.newQuad(34, 0, 34, 38, LargeurKeyboardSheet, HauteurKeyboardSheet)
+    Key_U = love.graphics.newQuad(103, 38, 34, 38, LargeurKeyboardSheet, HauteurKeyboardSheet)
+    Key_I = love.graphics.newQuad(280, 0, 34, 38, LargeurKeyboardSheet, HauteurKeyboardSheet)
+    Mouse = love.graphics.newImage("Images/Mouse.png")
 
     local nbcol = Largeurtilesheet / TILE_HEIGHT
     local nbline = HauteurTilesheet / TILE_WIDTH
@@ -44,6 +60,18 @@ function Menu.Load()
             )
             id = id + 1
         end
+    end
+end
+local largeurGrid = 32
+local HauteurGrid = 38
+
+local nb_ligne = math.ceil(1024 / largeurGrid)
+local nb_col = math.ceil(1024 / HauteurGrid)
+local grid = {}
+for l = 1, nb_ligne do
+    grid[l] = {}
+    for c = 1, nb_col do
+        grid[l][c] = ((l - 1) * nb_col + c)
     end
 end
 
@@ -90,6 +118,78 @@ function Menu.Draw()
             Img_Press_enter:getHeight() / 2
         )
         love.graphics.setColor(1, 1, 1)
+    end
+
+    for l = 1, nb_ligne do
+        for c = 1, nb_col do
+            if grid[l][c] == 239 then
+                love.graphics.draw(KeyboardSheet, Key_Z, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 240 then
+                love.graphics.print(tostring("Avancer"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+
+            if grid[l][c] == 186 then
+                love.graphics.draw(KeyboardSheet, Key_Q, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 187 then
+                love.graphics.print(tostring("Gauche"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 241 then
+                love.graphics.draw(KeyboardSheet, Key_S, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 242 then
+                love.graphics.print(tostring("Reculer"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 294 then
+                love.graphics.draw(KeyboardSheet, Key_D, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 295 then
+                love.graphics.print(tostring("Droite"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 429 then
+                love.graphics.draw(KeyboardSheet, Key_V, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 430 then
+                love.graphics.print(tostring("IEM"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 483 then
+                love.graphics.draw(KeyboardSheet, Key_C, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 484 then
+                love.graphics.print(tostring("Commandes"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 564 then
+                love.graphics.draw(KeyboardSheet, Key_B, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 565 then
+                love.graphics.print(tostring("Bouclier"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 645 then
+                love.graphics.draw(KeyboardSheet, Key_U, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 646 then
+                love.graphics.print(tostring("Volume +"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 699 then
+                love.graphics.draw(KeyboardSheet, Key_I, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 700 then
+                love.graphics.print(tostring("Volume -"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 780 then
+                love.graphics.draw(Mouse, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == 781 then
+                love.graphics.print(tostring("Tirer"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+        end
+    end
+
+    for l = 1, nb_ligne do
+        for c = 1, nb_col do
+            -- love.graphics.print(tostring(grid[l][c]), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+        end
     end
 end
 

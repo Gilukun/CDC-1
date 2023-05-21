@@ -137,8 +137,6 @@ function Ennemis.Etats(dt)
     for n = #list_Ennemis, 1, -1 do
         local t = list_Ennemis[n]
         if t.nom == Nom_Ennemis.TANK then
-            -- ETATS DES TOURS
-            -- ETATS DES TOURS
             chase_Dist = 200
             shoot_Dist = 150
             col_Player_Dist = largeurImg_Player
@@ -147,11 +145,8 @@ function Ennemis.Etats(dt)
             if t.etat == ET_TANK_E.IDLE then
                 t.etat = ET_TANK_E.MOVE
             elseif t.etat == ET_TANK_E.MOVE then
-                -- L'ENNEMI ATTAQUE LE JOUEUR
-                -- L'ENNEMY POURSUIS LE JOUEUR
                 local oldtx = t.x
                 local oldty = t.y
-                -- t.angle = math.angle(t.x, t.y, Player.x, Player.y)
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
@@ -627,11 +622,6 @@ function Ennemis.Draw()
             end
             if t.Shoot == true then
                 love.graphics.draw(Img_Tower, Img_Tower3, t.x, t.y, 0, 1, 1, largeurImg_Tower / 2, hauteurImg_Tower / 2)
-            end
-        end
-        for k, o in ipairs(listObus) do
-            if t.isHit == true then
-                love.graphics.draw(Img_Hit, o.x, o.y, 0, 1, 1, Img_Hit:getWidth() / 2, Img_Hit:getHeight() / 2)
             end
         end
     end
