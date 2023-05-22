@@ -34,21 +34,18 @@ TOWER_E.SHOOT = "SHOOT"
 
 -- ZONES DE SPAWN
 local zone2Spawn = {}
--- haut gauche
 zone2Spawn[1] = {
     x = 400,
     y = 100,
     angle = math.pi / 2
 }
 
--- haut droite
 zone2Spawn[2] = {
     x = 900,
     y = 350,
     angle = math.pi
 }
 
--- bas gauche
 zone2Spawn[3] = {
     x = 600,
     y = 900,
@@ -61,6 +58,7 @@ zone2Spawn[4] = {
     angle = math.pi * 1.5
 }
 
+-- Variable de limite de spawn des tanks ennemis
 local nEnnemy = 0
 local nEnnemyMax = 10
 
@@ -77,16 +75,7 @@ function Ennemis.Load()
     Img_Tower3 = love.graphics.newQuad(54, 0, 27, 66, largeurImg_Tower, hauteurImg_Tower)
 end
 
--- FONCTION INITIALISATION
-function Ennemis.Start()
-    list_Ennemis = {}
-    nEnnemy = 0
-
-    -- 2 TOURS SPAWN DES QUE LE JEU COMMENCE
-    Ennemis.CreerEnnemy(Nom_Ennemis.TOWER, 200, 500, nil, 0, 20, TOWER_E.IDLE, 0, false, false, 0, 0.5, nil, nil, false)
-    Ennemis.CreerEnnemy(Nom_Ennemis.TOWER, 900, 500, nil, 0, 20, TOWER_E.IDLE, 0, false, false, 0, 0.5, nil, nil, false)
-end
-
+-- FONCTION CREATION DES ENNEMIS
 function Ennemis.CreerEnnemy(
     pNom,
     pX,
@@ -120,6 +109,17 @@ function Ennemis.CreerEnnemy(
     tank_E.alpha = 0
     table.insert(list_Ennemis, tank_E)
 end
+
+-- FONCTION INITIALISATION
+function Ennemis.Start()
+    list_Ennemis = {}
+    nEnnemy = 0
+
+    -- 2 TOURS SPAWN DES QUE LE JEU COMMENCE
+    Ennemis.CreerEnnemy(Nom_Ennemis.TOWER, 200, 500, nil, 0, 20, TOWER_E.IDLE, 0, false, false, 0, 0.5, nil, nil, false)
+    Ennemis.CreerEnnemy(Nom_Ennemis.TOWER, 900, 500, nil, 0, 20, TOWER_E.IDLE, 0, false, false, 0, 0.5, nil, nil, false)
+end
+
 -- TIMER DE SPANW DES ENNEMIS
 local Ennemis_Spawn = 2
 local timer_Spawn = Ennemis_Spawn
@@ -136,8 +136,10 @@ function Ennemis.Etats(dt)
             t.dist = math.dist(t.x, t.y, Player.x, Player.y)
 
             if t.etat == ET_TANK_E.IDLE then
+                -- L'ENNMI SE DEPLACE
                 t.etat = ET_TANK_E.MOVE
             elseif t.etat == ET_TANK_E.MOVE then
+                -- L'ENNEMI POURSUIT LE JOUEUR
                 local oldtx = t.x
                 local oldty = t.y
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
@@ -232,7 +234,6 @@ function Ennemis.Etats(dt)
                     t.etat = ET_TANK_E.SHOOT
                 end
             elseif t.etat == ET_TANK_E.CHASE then
-                -- L'ENNEMI POURSUIT LE JOUEUR
                 local oldtx = t.x
                 local oldty = t.y
                 t.angle = math.angle(t.x, t.y, Player.x, Player.y)
@@ -296,7 +297,7 @@ function Ennemis.Etats(dt)
                     t.etat = ET_TANK_E.SHOOT
                 end
 
-                -- LE JOUEUR EST HORS DE PORTEE
+                -- LE JOUEUR EST HORS DE PORTEE DE POURSUITE
                 if t.dist >= chase_Dist then
                     t.etat = ET_TANK_E.MOVE
                     t.angle = oldangle
@@ -361,7 +362,7 @@ function Ennemis.Etats(dt)
                         t.etat = ET_TANK_E.REPOSITION
                     end
                 end
-                -- l'ennemi tir
+                -- L'ENNEMI TIR
                 t.Timer_Shoot = t.Timer_Shoot + dt
                 if t.Timer_Shoot > t.SpeedShoot then
                     Weapons.CreerObus(NomObus.Ennemis, t.x, t.y, t.angle, 500, 0.7)
@@ -374,17 +375,18 @@ function Ennemis.Etats(dt)
                     t.etat = ET_TANK_E.COL_PLAYER
                 end
             elseif t.etat == ET_TANK_E.REPOSITION then
-                -- L'ENNEMI CHERCHE UNE NOUVELLE DIRECTION
+                -- L'ENNEMI SE REPOSITIONNE
                 -- le tank est entré en collision. Il t.relocation temps pour reculer
                 t.TimerReloc = t.TimerReloc + dt
                 if t.TimerReloc <= t.Relocation then
                     t.x = t.x - t.vitesse * math.cos(t.angle) * dt
                     t.y = t.y - t.vitesse * math.sin(t.angle) * dt
                 elseif t.TimerReloc >= t.Relocation then
+                    -- il fois qu'il a reculé il passe en état "SEEK" pour changer d'angle
                     t.TimerReloc = 0
                     t.etat = ET_TANK_E.SEEK
                 end
-
+                -- SI L'ENNMI ENTRE EN COLISSION AVEC L'ECRAN LORS DU REPOSITIONNEMENT IL RECULE A NOUVEAU
                 if t.x + largeurImg_tank_E / 2 >= lScreen then
                     t.x = lScreen - largeurImg_tank_E / 2
                     t.etat = ET_TANK_E.REPOSITION
@@ -405,7 +407,6 @@ function Ennemis.Etats(dt)
                     t.etat = ET_TANK_E.REPOSITION
                 end
             elseif t.etat == ET_TANK_E.SEEK then
-                -- L'ENNMI ENTRE EN CONTACT AVEC LE JOUEUR
                 -- l'ennemi va ajouter un angle qui équivaut à un angle droit (math.pi * 1.5) à son angle actuel
                 t.TimerReloc = t.TimerReloc + dt
                 if t.TimerReloc >= t.Relocation then
@@ -437,14 +438,12 @@ function Ennemis.Etats(dt)
             t.dist = math.dist(t.x, t.y, Player.x, Player.y)
 
             if t.etat == TOWER_E.IDLE then
-                -- LA TOUR PASSE EN JOUEUR DETECTE
                 -- en état IDLE la tour scan pour savoir si le joueur est à portée de detection
                 if t.dist < rayon_Detection then
                     t.etat = TOWER_E.PLAYER_DETECTED
                     t.Detection = true
                 end
             elseif t.etat == TOWER_E.PLAYER_DETECTED then
-                -- LA TOUR PASSE EN MODE TIR
                 -- si le joueur s'approche à porté de tir, la tour passe en etat SHOOT. Sinon elle repasse en état IDLE
                 if t.dist < rayon_Shoot then
                     t.Detection = false
@@ -512,7 +511,7 @@ function Ennemis.IsHit()
                         end
                     end
                 elseif t.nom == Nom_Ennemis.TOWER then
-                    local dist = math.dist(t.x, t.y, o.x, o.y)
+                    local dist = math.dist((t.x - largeurImg_Tower / 3), t.y, o.x, o.y)
                     if dist < largeurImg_Tower / 2 then
                         t.life = t.life - 1
                         SFX_HIT_ENNEMY:stop()

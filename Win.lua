@@ -4,7 +4,7 @@ function Win.Load()
     Img_bck = love.graphics.newImage("Images/CommandeBck.png")
     largeurImg_bck = Img_bck:getWidth()
     hauteurImg_bck = Img_bck:getHeight()
-    Img_WIN = love.graphics.newImage("Images/WIN.png")
+    Img_WIN = love.graphics.newImage("Images/Victory.png")
 end
 
 function Win.Update(dt)
