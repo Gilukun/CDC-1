@@ -33,7 +33,6 @@ local Commandes = require("Commandes")
 GameState = {}
 GameState.Menu = "MENU"
 GameState.level1 = "LEVEL1"
-GameState.Boss = "BOSS"
 GameState.Pause = "PAUSE"
 GameState.Commandes = "Commandes"
 GameState.GameOver = "GAMEOVER"
@@ -82,9 +81,6 @@ function UpdateLevel1(dt)
 end
 
 function UpdatePause()
-end
-
-function UpdateBoss()
 end
 
 function UpdateCommandes()
@@ -138,9 +134,6 @@ end
 
 function DrawWIN()
     Victoire.Draw()
-end
-
-function DrawBoss()
 end
 
 function DrawGameOver()
@@ -203,7 +196,7 @@ function love.keypressed(key)
             G_State = GameState.Commandes
         end
         -- activation de l'IEM
-        if key == "t" then
+        if key == "v" then
             Weapons.Type(W_Style.ATTACK)
         end
         -- activation du Bouclier

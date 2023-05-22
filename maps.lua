@@ -35,16 +35,6 @@ local flash3 = 1.5
 local timer3 = flash3
 local flashDecor3 = true
 
-local keys = {}
-function GetKeys(list)
-  for k, v in pairs(list) do
-    keys[#keys + 1] = k
-  end
-  return keys
-end
-
-GetKeys(list_Layers)
-
 function Maps.Load()
   Tilesheet = love.graphics.newImage("Images/TileSet1.png")
   Largeurtilesheet = Tilesheet:getWidth()
@@ -93,36 +83,6 @@ function AfficheLayers(Layer)
       local tuile = Layer[((l - 1) * TILE_WIDTH) + c]
       if tuile > 0 then
         love.graphics.draw(Tilesheet, TileTextures[tuile], (c - 1) * TILE_WIDTH, (l - 1) * TILE_HEIGHT)
-      end
-    end
-  end
-end
-
-function CollisionLayer(Layer, pX, pY)
-  Collision = false
-  local nbligne = #Layer / TILE_WIDTH
-  local nbcol = TILE_HEIGHT
-  local l, c
-  for l = nbligne, 1, -1 do
-    for c = 1, nbcol do
-      local tuile = Layer[((l - 1) * TILE_HEIGHT) + c]
-      if tuile > 0 then
-        if
-          CheckCollision(
-            pX,
-            pY,
-            largeurImg_Player,
-            hauteurImg_Player,
-            (c - 1) * TILE_WIDTH,
-            (l - 1) * TILE_HEIGHT,
-            TILE_WIDTH,
-            TILE_HEIGHT
-          ) == true
-         then
-          Collision = true
-          pX = oldx
-          pY = oldy
-        end
       end
     end
   end

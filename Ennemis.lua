@@ -23,21 +23,14 @@ ET_TANK_E.MOVE = "MOVE"
 ET_TANK_E.CHASE = "CHASE"
 ET_TANK_E.SHOOT = "SHOOT"
 ET_TANK_E.COL_PLAYER = "COLLISION_P"
-ET_TANK_E.COL_ENNEMY = "COLLISION_E"
-ET_TANK_E.COL_LAYERS = "COLLISION_L"
-ET_TANK_E.COL_ECRAN = "COLLISION_ECRAN"
 ET_TANK_E.REPOSITION = "REPOSITION"
 ET_TANK_E.SEEK = "SEEK"
-ET_TANK_E.ETAT_DEAD = "DEAD"
 
 -- ETAT TOURS
 local TOWER_E = {}
 TOWER_E.IDLE = "IDLE"
 TOWER_E.PLAYER_DETECTED = "DETECTED"
 TOWER_E.SHOOT = "SHOOT"
-TOWER_E.COL_PLAYER = "COLLISIONP"
-TOWER_E.COL_ENNEMY = "COLLISIONE"
-TOWER_E.ETAT_DEAD = "DEAD"
 
 -- ZONES DE SPAWN
 local zone2Spawn = {}
@@ -213,10 +206,7 @@ function Ennemis.Etats(dt)
                     t.y = hauteurImg_tank_E / 2
                     t.etat = ET_TANK_E.REPOSITION
                 end
-                if t.dist <= chase_Dist then
-                    t.etat = ET_TANK_E.CHASE
-                    oldangle = t.angle
-                end
+
                 -- COLLISIONS AVEC LE JOUEUR
                 if t.dist <= col_Player_Dist then
                     t.etat = ET_TANK_E.COL_PLAYER
@@ -230,6 +220,16 @@ function Ennemis.Etats(dt)
                         t.y = oldty
                         t.etat = ET_TANK_E.REPOSITION
                     end
+                end
+                -- LE JOUEUR EST A PORTEE DE POURSUITE
+                if t.dist <= chase_Dist then
+                    t.etat = ET_TANK_E.CHASE
+                    oldangle = t.angle
+                end
+
+                -- LE JOUEUR EST A PORTEE DE TIR
+                if t.dist <= shoot_Dist then
+                    t.etat = ET_TANK_E.SHOOT
                 end
             elseif t.etat == ET_TANK_E.CHASE then
                 -- L'ENNEMI POURSUIT LE JOUEUR
@@ -291,15 +291,15 @@ function Ennemis.Etats(dt)
                         t.etat = ET_TANK_E.REPOSITION
                     end
                 end
+                -- LE JOUEUR EST A PORTEE DE TIR
+                if t.dist <= shoot_Dist then
+                    t.etat = ET_TANK_E.SHOOT
+                end
+
                 -- LE JOUEUR EST HORS DE PORTEE
                 if t.dist >= chase_Dist then
                     t.etat = ET_TANK_E.MOVE
                     t.angle = oldangle
-                end
-
-                -- LE JOUEUR EST A PORTEE DE TIR
-                if t.dist <= shoot_Dist then
-                    t.etat = ET_TANK_E.SHOOT
                 end
             elseif t.etat == ET_TANK_E.SHOOT then
                 local oldtx = t.x
@@ -412,7 +412,6 @@ function Ennemis.Etats(dt)
                     t.angle = t.angle + (math.pi * 1.5 * dt) * 50
                 end
 
-                -- a la fin du timer il se dirige vers le nouvel angle
                 if t.TimerReloc <= t.Relocation then
                 elseif t.TimerReloc >= t.Relocation then
                     t.TimerReloc = 0

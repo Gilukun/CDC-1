@@ -6,7 +6,7 @@ TypeLoot = {}
 TypeLoot.AddLifeSmall = "LIFE+"
 TypeLoot.AddLifeBig = "LIFE++"
 TypeLoot.Shield = "SHIELD"
-TypeLoot.IEM = "LIFE++"
+TypeLoot.IEM = "IEM"
 
 PrisonerSpawn = {}
 function CreerSpawn()

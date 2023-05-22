@@ -27,7 +27,7 @@ function Menu.Load()
     Largeurtilesheet = Tilesheet:getWidth()
     HauteurTilesheet = Tilesheet:getHeight()
 
-    KeyboardSheet = love.graphics.newImage("Images/Keyboards.png")
+    KeyboardSheet = love.graphics.newImage("Images/keyboards.png")
     LargeurKeyboardSheet = KeyboardSheet:getWidth()
     HauteurKeyboardSheet = KeyboardSheet:getHeight()
     Key_Z = love.graphics.newQuad(280, 38, 34, 38, LargeurKeyboardSheet, HauteurKeyboardSheet)
