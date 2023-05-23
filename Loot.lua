@@ -9,7 +9,7 @@ TypeLoot.Shield = "SHIELD"
 TypeLoot.IEM = "IEM"
 
 PrisonerSpawn = {}
-function CreerSpawn()
+function CreerPrisonerSpawn()
     PrisonerSpawn[1] = {
         x = 500,
         y = 100
@@ -34,7 +34,7 @@ end
 
 function Loot.Start()
     list_Loot = {}
-    CreerSpawn()
+    CreerPrisonerSpawn()
 end
 
 function Loot.CreerLoot(pNom, pX, pY)

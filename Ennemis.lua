@@ -483,17 +483,14 @@ function Ennemis.IsHit()
         if o.nom == NomObus.Hero then
             for nt = #list_Ennemis, 1, -1 do
                 local t = list_Ennemis[nt]
-                -- partie si l'ennemi est un TANK
                 if t.nom == Nom_Ennemis.TANK then
-                    -- partie si l'ennemi est une TOUR
                     local dist = math.dist(t.x, t.y, o.x, o.y)
                     if dist < largeurImg_tank_E / 2 then
+                        t.life = t.life - 1
                         SFX_HIT_ENNEMY:stop()
                         SFX_HIT_ENNEMY:play()
                         table.remove(listObus, no)
                         CreerExplosion(t.x, t.y)
-
-                        t.life = t.life - 1
                         if t.life <= 0 then
                             local dice = love.math.random(0, 10)
                             if dice >= 0 and dice <= 3 then
@@ -506,8 +503,8 @@ function Ennemis.IsHit()
                             SFX_DEAD_ENNEMY:stop()
                             SFX_DEAD_ENNEMY:play()
                             GUI.AddScore()
-                            table.remove(list_Ennemis, nt)
                             Weapons.Kill(t.x, t.y)
+                            table.remove(list_Ennemis, nt)
                         end
                     end
                 elseif t.nom == Nom_Ennemis.TOWER then
@@ -607,7 +604,6 @@ end
 function Ennemis.Draw()
     for n = 1, #list_Ennemis do
         local t = list_Ennemis[n]
-
         if t.nom == Nom_Ennemis.TANK then
             love.graphics.setColor(1, 1, 1, t.alpha)
             love.graphics.draw(Img_tank_E, t.x, t.y, t.angle, 1, 1, largeurImg_tank_E / 2, hauteurImg_tank_E / 2)
