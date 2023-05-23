@@ -124,6 +124,14 @@ end
 local Ennemis_Spawn = 2
 local timer_Spawn = Ennemis_Spawn
 
+function CollisionsSpawn(pX, pY, pWidth, pHeight)
+    for k, v in ipairs(zone2Spawn) do
+        if CheckCollision(pX, pY, pWidth, pHeight, v.x, v.y, largeurImg_tank_E, hauteurImg_tank_E) then
+            return true
+        end
+    end
+end
+
 -- MACHINE A ETATS DES ENNEMIS
 function Ennemis.Etats(dt)
     local n
@@ -548,6 +556,15 @@ function Ennemis.Draw()
                 love.graphics.draw(Img_Tower, Img_Tower3, t.x, t.y, 0, 1, 1, largeurImg_Tower / 2, hauteurImg_Tower / 2)
             end
         end
+    end
+    for k, v in ipairs(zone2Spawn) do
+        --love.graphics.rectangle(
+        --"line",
+        --v.x - largeurImg_tank_E / 2,
+        --v.y - largeurImg_tank_E / 2,
+        --largeurImg_tank_E,
+        --hauteurImg_tank_E
+        -- )
     end
 end
 
