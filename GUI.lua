@@ -41,7 +41,7 @@ EMIActive.Height = 10
 function GUI.Start()
     GUI.AddPlayerData()
     Player_life = Player_LifeInit
-    ShieldActiveWidth = 100
+    ShieldActiveWidth = 0
 end
 
 function GUI.AddScore()

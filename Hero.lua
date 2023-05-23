@@ -124,32 +124,9 @@ function Hero.Etats(dt)
             end
         end
 
-        local nbligne = #list_Layers.background / TILE_WIDTH
-        local nbcol = TILE_HEIGHT
-        local l, c
-        Collision = false
-        for l = nbligne, 1, -1 do
-            for c = 1, nbcol do
-                local tuile = list_Layers.walls[((l - 1) * TILE_HEIGHT) + c]
-                if tuile > 0 then
-                    if
-                        CheckCollision(
-                            Player.x,
-                            Player.y,
-                            largeurImg_Player,
-                            hauteurImg_Player,
-                            c * TILE_WIDTH,
-                            l * TILE_HEIGHT,
-                            TILE_WIDTH,
-                            TILE_HEIGHT
-                        ) == true
-                     then
-                        Collision = true
-                        Player.x = oldx
-                        Player.y = oldy
-                    end
-                end
-            end
+        if CollisionsLayers(Player.x, Player.y, largeurImg_Player, hauteurImg_Player) == true then
+            Player.x = oldx
+            Player.y = oldy
         end
 
         for n = #list_Loot, 1, -1 do

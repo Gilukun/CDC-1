@@ -88,12 +88,28 @@ function AfficheLayers(Layer)
   end
 end
 
+function CollisionsLayers(pX, pY, pWidth, pHeight)
+  local nbligne = #list_Layers.walls / TILE_WIDTH
+  local nbcol = TILE_HEIGHT
+  local l, c
+  for l = nbligne, 1, -1 do
+    for c = 1, nbcol do
+      local tuile = list_Layers.walls[((l - 1) * TILE_HEIGHT) + c]
+      if tuile > 0 then
+        if CheckCollision(pX, pY, pWidth, pHeight, c * TILE_WIDTH, l * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT) then
+          return true
+        end
+      end
+    end
+  end
+end
+
 function Maps.draw()
   AfficheLayers(list_Layers.background)
   AfficheLayers(list_Layers.floor)
   AfficheLayers(list_Layers.walls)
   AfficheLayers(list_Layers.grass)
-  --AfficheLayers(list_Layers.trees)
+  AfficheLayers(list_Layers.trees)
   AfficheLayers(list_Layers.decor)
   -- local x = love.mouse.getX()
   ---local  y = love.mouse.getY()

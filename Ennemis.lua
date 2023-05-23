@@ -136,49 +136,26 @@ function Ennemis.Etats(dt)
             t.dist = math.dist(t.x, t.y, Player.x, Player.y)
 
             if t.etat == ET_TANK_E.IDLE then
-                -- L'ENNMI SE DEPLACE
                 t.etat = ET_TANK_E.MOVE
             elseif t.etat == ET_TANK_E.MOVE then
-                -- L'ENNEMI POURSUIT LE JOUEUR
                 local oldtx = t.x
                 local oldty = t.y
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
                 -- COLLISIONS AVEC LES LAYERS
-                local nbligne = #list_Layers.background / TILE_WIDTH
-                local nbcol = TILE_HEIGHT
-                local l, c
-                Collision = false
-                for l = nbligne, 1, -1 do
-                    for c = 1, nbcol do
-                        local tuile = list_Layers.walls[((l - 1) * TILE_HEIGHT) + c]
-                        if tuile > 0 then
-                            if
-                                CheckCollision(
-                                    t.x,
-                                    t.y,
-                                    largeurImg_Player,
-                                    hauteurImg_Player,
-                                    c * TILE_WIDTH,
-                                    l * TILE_HEIGHT,
-                                    TILE_WIDTH,
-                                    TILE_HEIGHT
-                                ) == true
-                             then
-                                t.x = oldtx
-                                t.y = oldty
-                                t.etat = ET_TANK_E.REPOSITION
-                            end
-                        end
-                    end
+                if CollisionsLayers(t.x, t.y, largeurImg_tank_E, hauteurImg_tank_E) == true then
+                    t.x = oldtx
+                    t.y = oldty
+                    t.etat = ET_TANK_E.REPOSITION
                 end
+
                 -- COLLISIONS ENTRE ENNEMIS
                 for k, v in ipairs(list_Ennemis) do
                     local oldvx = v.x
                     local oldvy = v.y
-                    local col_Ennemy_Dist = math.dist(v.x, v.y, t.x, t.y)
                     if v ~= t then
+                        col_Ennemy_Dist = math.dist(v.x, v.y, t.x, t.y)
                         if col_Ennemy_Dist < largeurImg_tank_E then
                             v.x = oldvx
                             v.y = oldvy
@@ -240,33 +217,10 @@ function Ennemis.Etats(dt)
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
-                local nbligne = #list_Layers.background / TILE_WIDTH
-                local nbcol = TILE_HEIGHT
-                local l, c
-                Collision = false
-                for l = nbligne, 1, -1 do
-                    for c = 1, nbcol do
-                        local tuile = list_Layers.walls[((l - 1) * TILE_HEIGHT) + c]
-                        if tuile > 0 then
-                            if
-                                CheckCollision(
-                                    t.x,
-                                    t.y,
-                                    largeurImg_Player,
-                                    hauteurImg_Player,
-                                    c * TILE_WIDTH,
-                                    l * TILE_HEIGHT,
-                                    TILE_WIDTH,
-                                    TILE_HEIGHT
-                                ) == true
-                             then
-                                Collision = true
-                                t.x = oldtx
-                                t.y = oldty
-                                t.etat = ET_TANK_E.REPOSITION
-                            end
-                        end
-                    end
+                if CollisionsLayers(t.x, t.y, largeurImg_tank_E, hauteurImg_tank_E) == true then
+                    t.x = oldtx
+                    t.y = oldty
+                    t.etat = ET_TANK_E.REPOSITION
                 end
 
                 for k, v in ipairs(list_Ennemis) do
@@ -310,33 +264,10 @@ function Ennemis.Etats(dt)
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
-                local nbligne = #list_Layers.background / TILE_WIDTH
-                local nbcol = TILE_HEIGHT
-                local l, c
-                Collision = false
-                for l = nbligne, 1, -1 do
-                    for c = 1, nbcol do
-                        local tuile = list_Layers.walls[((l - 1) * TILE_HEIGHT) + c]
-                        if tuile > 0 then
-                            if
-                                CheckCollision(
-                                    t.x,
-                                    t.y,
-                                    largeurImg_Player,
-                                    hauteurImg_Player,
-                                    c * TILE_WIDTH,
-                                    l * TILE_HEIGHT,
-                                    TILE_WIDTH,
-                                    TILE_HEIGHT
-                                ) == true
-                             then
-                                Collision = true
-                                t.x = oldtx
-                                t.y = oldty
-                                t.etat = ET_TANK_E.REPOSITION
-                            end
-                        end
-                    end
+                if CollisionsLayers(t.x, t.y, largeurImg_tank_E, hauteurImg_tank_E) == true then
+                    t.x = oldtx
+                    t.y = oldty
+                    t.etat = ET_TANK_E.REPOSITION
                 end
 
                 for k, v in ipairs(list_Ennemis) do
@@ -379,8 +310,23 @@ function Ennemis.Etats(dt)
                 -- le tank est entré en collision. Il t.relocation temps pour reculer
                 t.TimerReloc = t.TimerReloc + dt
                 if t.TimerReloc <= t.Relocation then
+                    local oldtx = t.x
+                    local oldty = t.y
                     t.x = t.x - t.vitesse * math.cos(t.angle) * dt
                     t.y = t.y - t.vitesse * math.sin(t.angle) * dt
+                    if CollisionsLayers(t.x, t.y, largeurImg_tank_E, hauteurImg_tank_E) == true then
+                        t.x = oldtx
+                        t.y = oldty
+                        t.etat = ET_TANK_E.REPOSITION
+                    end
+                    for z = #PrisonerSpawn, 1, -1 do
+                        local spawn = PrisonerSpawn[z]
+                        if math.dist(t.x, t.y, spawn.x, spawn.y) < largeurImg_tank_E then
+                            t.x = oldtx
+                            t.y = oldty
+                            t.etat = ET_TANK_E.REPOSITION
+                        end
+                    end
                 elseif t.TimerReloc >= t.Relocation then
                     -- il fois qu'il a reculé il passe en état "SEEK" pour changer d'angle
                     t.TimerReloc = 0
@@ -557,27 +503,11 @@ function Ennemis.Update(dt)
         nEnnemy = nEnnemy + 1 -- je compte le nombre d'ennemi à l'écran
         if nEnnemy <= nEnnemyMax then
             -- lorsque le nombre d'ennemi atteint la limite que j'ai choisi je reset mon timer et j'arrête les spawn
-            pX = zone2Spawn[diceZoneSpawn].x
-            pY = zone2Spawn[diceZoneSpawn].y
-            pAngle = zone2Spawn[diceZoneSpawn].angle
+            X = zone2Spawn[diceZoneSpawn].x
+            Y = zone2Spawn[diceZoneSpawn].y
+            Angle = zone2Spawn[diceZoneSpawn].angle
 
-            Ennemis.CreerEnnemy(
-                Nom_Ennemis.TANK,
-                pX,
-                pY,
-                100,
-                pAngle,
-                5,
-                ET_TANK_E.IDLE,
-                0,
-                nil,
-                0,
-                0,
-                0.5,
-                0,
-                0.1,
-                false
-            )
+            Ennemis.CreerEnnemy(Nom_Ennemis.TANK, X, Y, 100, Angle, 5, ET_TANK_E.IDLE, 0, nil, 0, 0, 0.5, 0, 0.1, false)
             timer_Spawn = Ennemis_Spawn
         elseif nEnnemy >= nEnnemyMax then
             nEnnemy = nEnnemyMax

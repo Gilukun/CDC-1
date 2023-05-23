@@ -89,6 +89,19 @@ function Menu.Update(dt)
     end
 end
 
+function AfficherKeys(pTile, pKey, pText)
+    for l = 1, nb_ligne do
+        for c = 1, nb_col do
+            if grid[l][c] == pTile then
+                love.graphics.draw(KeyboardSheet, pKey, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+            if grid[l][c] == pTile + 1 then
+                love.graphics.print(tostring(pText), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
+            end
+        end
+    end
+end
+
 function Menu.Draw()
     AfficheLayers(Layers.background)
     AfficheLayers(Layers.walls)
@@ -120,63 +133,18 @@ function Menu.Draw()
         love.graphics.setColor(1, 1, 1)
     end
 
+    AfficherKeys(239, Key_Z, "Avancer")
+    AfficherKeys(186, Key_Q, "Gauche")
+    AfficherKeys(241, Key_S, "Reculer")
+    AfficherKeys(294, Key_D, "Droite")
+    AfficherKeys(429, Key_V, "IEM")
+    AfficherKeys(483, Key_C, "Commandes")
+    AfficherKeys(564, Key_B, "Bouclier")
+    AfficherKeys(645, Key_U, "Volume +")
+    AfficherKeys(699, Key_I, "Volume -")
+
     for l = 1, nb_ligne do
         for c = 1, nb_col do
-            if grid[l][c] == 239 then
-                love.graphics.draw(KeyboardSheet, Key_Z, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 240 then
-                love.graphics.print(tostring("Avancer"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-
-            if grid[l][c] == 186 then
-                love.graphics.draw(KeyboardSheet, Key_Q, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 187 then
-                love.graphics.print(tostring("Gauche"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 241 then
-                love.graphics.draw(KeyboardSheet, Key_S, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 242 then
-                love.graphics.print(tostring("Reculer"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 294 then
-                love.graphics.draw(KeyboardSheet, Key_D, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 295 then
-                love.graphics.print(tostring("Droite"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 429 then
-                love.graphics.draw(KeyboardSheet, Key_V, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 430 then
-                love.graphics.print(tostring("IEM"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 483 then
-                love.graphics.draw(KeyboardSheet, Key_C, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 484 then
-                love.graphics.print(tostring("Commandes"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 564 then
-                love.graphics.draw(KeyboardSheet, Key_B, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 565 then
-                love.graphics.print(tostring("Bouclier"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 645 then
-                love.graphics.draw(KeyboardSheet, Key_U, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 646 then
-                love.graphics.print(tostring("Volume +"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 699 then
-                love.graphics.draw(KeyboardSheet, Key_I, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
-            if grid[l][c] == 700 then
-                love.graphics.print(tostring("Volume -"), (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
-            end
             if grid[l][c] == 780 then
                 love.graphics.draw(Mouse, (l - 1) * largeurGrid, (c - 1) * HauteurGrid)
             end
