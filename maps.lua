@@ -74,7 +74,7 @@ function Maps.Update(dt)
   end
 end
 
-function AfficheLayers(Layer)
+function Maps.AfficheLayers(Layer)
   local nbligne = #Layer / TILE_WIDTH
   local nbcol = TILE_HEIGHT
   local l, c
@@ -88,7 +88,7 @@ function AfficheLayers(Layer)
   end
 end
 
-function CollisionsLayers(pX, pY, pWidth, pHeight)
+function Maps.CollisionsLayers(pX, pY, pWidth, pHeight)
   local nbligne = #list_Layers.walls / TILE_WIDTH
   local nbcol = TILE_HEIGHT
   local l, c
@@ -102,15 +102,16 @@ function CollisionsLayers(pX, pY, pWidth, pHeight)
       end
     end
   end
+  return false
 end
 
-function Maps.draw()
-  AfficheLayers(list_Layers.background)
-  AfficheLayers(list_Layers.floor)
-  AfficheLayers(list_Layers.walls)
-  AfficheLayers(list_Layers.grass)
-  AfficheLayers(list_Layers.trees)
-  AfficheLayers(list_Layers.decor)
+function Maps.Draw()
+  Maps.AfficheLayers(list_Layers.background)
+  Maps.AfficheLayers(list_Layers.floor)
+  Maps.AfficheLayers(list_Layers.walls)
+  Maps.AfficheLayers(list_Layers.grass)
+  Maps.AfficheLayers(list_Layers.trees)
+  Maps.AfficheLayers(list_Layers.decor)
   -- local x = love.mouse.getX()
   ---local  y = love.mouse.getY()
   --- local col = math.floor(x / TILE_WIDTH) + 1

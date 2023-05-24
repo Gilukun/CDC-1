@@ -120,7 +120,7 @@ function DrawMenu()
 end
 
 function DrawLevel1()
-    Cartes.draw()
+    Cartes.Draw()
     Player.Draw()
     Ennemy.Draw()
     Loot.Draw()

@@ -1,13 +1,14 @@
 Menu = {}
 
 local carte = require("Menu_Data")
+local Maps = require("maps")
 
 -- Timer pour que "Press Start" clignote
 local flash = 2
 local timer = flash
 local pressStart = true
 -- Liste de layers utilisés pour le menu
-Layers = {
+local Layers = {
     background = carte.layers[1].data,
     walls = carte.layers[2].data,
     decor = carte.layers[3].data,
@@ -103,9 +104,9 @@ function AfficherKeys(pTile, pKey, pText)
 end
 
 function Menu.Draw()
-    AfficheLayers(Layers.background)
-    AfficheLayers(Layers.walls)
-    AfficheLayers(Layers.decor)
+    Maps.AfficheLayers(Layers.background)
+    Maps.AfficheLayers(Layers.walls)
+    Maps.AfficheLayers(Layers.decor)
 
     love.graphics.draw(
         Img_title,
@@ -119,7 +120,7 @@ function Menu.Draw()
     )
 
     if pressStart == true then
-        AfficheLayers(Layers.Animation)
+        Maps.AfficheLayers(Layers.Animation)
         love.graphics.draw(
             Img_Press_enter,
             love.graphics.getWidth() / 2,

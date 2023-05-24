@@ -46,7 +46,7 @@ end
 
 function GUI.AddScore()
     Player_Score = Player_Score + AddScore
-    if Player.etat == ETAT_PLAYER.DEAD then
+    if Hero.Player.etat == ETAT_PLAYER.DEAD then
         Player_Score = 0
     end
 end
@@ -81,7 +81,7 @@ function GUI.RemoveHeroLife(dt)
     elseif Player_life <= 0.5 then
         Sd_DEAD:play()
         G_State = GameState.GameOver
-        Player.etat = ETAT_PLAYER.DEAD
+        Hero.Player.etat = ETAT_PLAYER.DEAD
     end
 end
 
@@ -157,8 +157,8 @@ function GUI.Draw()
             love.graphics.draw(
                 IMG_Shield,
                 Img_Shield1,
-                Player.x,
-                Player.y,
+                Hero.Player.x,
+                Hero.Player.y,
                 0,
                 1,
                 1,
@@ -169,8 +169,8 @@ function GUI.Draw()
             love.graphics.draw(
                 IMG_Shield,
                 Img_Shield2,
-                Player.x,
-                Player.y,
+                Hero.Player.x,
+                Hero.Player.y,
                 0,
                 1,
                 1,
@@ -181,8 +181,8 @@ function GUI.Draw()
             love.graphics.draw(
                 IMG_Shield,
                 Img_Shield3,
-                Player.x,
-                Player.y,
+                Hero.Player.x,
+                Hero.Player.y,
                 0,
                 1,
                 1,

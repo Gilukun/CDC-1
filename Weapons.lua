@@ -47,7 +47,7 @@ function Weapons.Start()
     list_Explosion = {}
 end
 
-function CreerExplosion(pX, pY)
+function Weapons.CreerExplosion(pX, pY)
     local Boum = {}
     Boum.x = pX
     Boum.y = pY
@@ -101,7 +101,7 @@ function Weapons.Obus(dt)
                         ) == true
                      then
                         table.remove(listObus, n)
-                        CreerExplosion(o.x, o.y)
+                        Weapons.CreerExplosion(o.x, o.y)
                     end
                 end
             end
@@ -195,7 +195,7 @@ end
 function Weapons.Draw()
     if WeaponTypes == W_Types.Heavy then
         love.graphics.setColor(love.math.colorFromBytes(158, 26, 11, 100))
-        love.graphics.circle("fill", Player.x, Player.y, EMI_Radius_Init)
+        love.graphics.circle("fill", Hero.Player.x, Hero.Player.y, EMI_Radius_Init)
         love.graphics.setColor(1, 1, 1, 1)
     end
 

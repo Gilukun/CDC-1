@@ -9,7 +9,7 @@ local Weapons = require("Weapons")
 local TankJoueur = require("Hero")
 local GUI = require("GUI")
 local Loot = require("Loot")
-local Carte = require("maps")
+local Maps = require("maps")
 
 -- TYPES ENNEMIES
 Nom_Ennemis = {}
@@ -124,14 +124,6 @@ end
 local Ennemis_Spawn = 2
 local timer_Spawn = Ennemis_Spawn
 
-function CollisionsSpawn(pX, pY, pWidth, pHeight)
-    for k, v in ipairs(zone2Spawn) do
-        if CheckCollision(pX, pY, pWidth, pHeight, v.x, v.y, largeurImg_tank_E, hauteurImg_tank_E) then
-            return true
-        end
-    end
-end
-
 -- MACHINE A ETATS DES ENNEMIS
 function Ennemis.Etats(dt)
     local n
@@ -141,7 +133,7 @@ function Ennemis.Etats(dt)
             chase_Dist = 200
             shoot_Dist = 150
             col_Player_Dist = largeurImg_Player
-            t.dist = math.dist(t.x, t.y, Player.x, Player.y)
+            t.dist = math.dist(t.x, t.y, Hero.Player.x, Hero.Player.y)
 
             if t.etat == ET_TANK_E.IDLE then
                 t.etat = ET_TANK_E.MOVE
@@ -152,7 +144,7 @@ function Ennemis.Etats(dt)
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
                 -- COLLISIONS AVEC LES LAYERS
-                if CollisionsLayers(t.x, t.y, largeurImg_tank_E, hauteurImg_tank_E) == true then
+                if Maps.CollisionsLayers(t.x, t.y, largeurImg_tank_E, hauteurImg_tank_E) == true then
                     t.x = oldtx
                     t.y = oldty
                     t.etat = ET_TANK_E.REPOSITION
@@ -221,11 +213,11 @@ function Ennemis.Etats(dt)
             elseif t.etat == ET_TANK_E.CHASE then
                 local oldtx = t.x
                 local oldty = t.y
-                t.angle = math.angle(t.x, t.y, Player.x, Player.y)
+                t.angle = math.angle(t.x, t.y, Hero.Player.x, Hero.Player.y)
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
-                if CollisionsLayers(t.x, t.y, largeurImg_tank_E, hauteurImg_tank_E) == true then
+                if Maps.CollisionsLayers(t.x, t.y, largeurImg_tank_E, hauteurImg_tank_E) == true then
                     t.x = oldtx
                     t.y = oldty
                     t.etat = ET_TANK_E.REPOSITION
@@ -268,11 +260,11 @@ function Ennemis.Etats(dt)
                 local oldtx = t.x
                 local oldty = t.y
 
-                t.angle = math.angle(t.x, t.y, Player.x, Player.y)
+                t.angle = math.angle(t.x, t.y, Hero.Player.x, Hero.Player.y)
                 t.x = t.x + t.vitesse * math.cos(t.angle) * dt
                 t.y = t.y + t.vitesse * math.sin(t.angle) * dt
 
-                if CollisionsLayers(t.x, t.y, largeurImg_tank_E, hauteurImg_tank_E) == true then
+                if Maps.CollisionsLayers(t.x, t.y, largeurImg_tank_E, hauteurImg_tank_E) == true then
                     t.x = oldtx
                     t.y = oldty
                     t.etat = ET_TANK_E.REPOSITION
@@ -322,7 +314,7 @@ function Ennemis.Etats(dt)
                     local oldty = t.y
                     t.x = t.x - t.vitesse * math.cos(t.angle) * dt
                     t.y = t.y - t.vitesse * math.sin(t.angle) * dt
-                    if CollisionsLayers(t.x, t.y, largeurImg_tank_E, hauteurImg_tank_E) == true then
+                    if Maps.CollisionsLayers(t.x, t.y, largeurImg_tank_E, hauteurImg_tank_E) == true then
                         t.x = oldtx
                         t.y = oldty
                         t.etat = ET_TANK_E.REPOSITION
@@ -374,11 +366,13 @@ function Ennemis.Etats(dt)
                 end
             elseif t.etat == ET_TANK_E.COL_PLAYER then
                 -- il n'avance plus et s'oriente simplement pour tirer
-                t.angle = math.angle(t.x, t.y, Player.x, Player.y)
+                t.angle = math.angle(t.x, t.y, Hero.Player.x, Hero.Player.y)
                 t.Timer_Shoot = t.Timer_Shoot + dt
 
                 if t.Timer_Shoot > t.SpeedShoot then
                     Weapons.CreerObus(NomObus.Ennemis, t.x, t.y, t.angle, 500, 0.7)
+                    Sd_SHOOT:stop()
+                    Sd_SHOOT:play()
                     t.Timer_Shoot = 0
                 end
 
@@ -389,7 +383,7 @@ function Ennemis.Etats(dt)
         elseif t.nom == Nom_Ennemis.TOWER then
             local rayon_Detection = 250
             local rayon_Shoot = 200
-            t.dist = math.dist(t.x, t.y, Player.x, Player.y)
+            t.dist = math.dist(t.x, t.y, Hero.Player.x, Hero.Player.y)
 
             if t.etat == TOWER_E.IDLE then
                 -- en état IDLE la tour scan pour savoir si le joueur est à portée de detection
@@ -410,10 +404,11 @@ function Ennemis.Etats(dt)
                 end
             elseif t.etat == TOWER_E.SHOOT then
                 t.Shoot = true
-                t.angle = math.angle(t.x, t.y, Player.x, Player.y)
+                t.angle = math.angle(t.x, t.y, Hero.Player.x, Hero.Player.y)
                 t.Timer_Shoot = t.Timer_Shoot - dt
                 if t.Timer_Shoot <= 0 then
                     Weapons.CreerObus(NomObus.LaserTower, t.x, t.y, t.angle, 500, 0.5)
+                    Sd_TOWER:stop()
                     Sd_TOWER:play()
                     t.Timer_Shoot = t.SpeedShoot
                 elseif t.dist > rayon_Shoot then
@@ -444,7 +439,7 @@ function Ennemis.IsHit()
                         SFX_HIT_ENNEMY:stop()
                         SFX_HIT_ENNEMY:play()
                         table.remove(listObus, no)
-                        CreerExplosion(t.x, t.y)
+                        Weapons.CreerExplosion(t.x, t.y)
                         if t.life <= 0 then
                             local dice = love.math.random(0, 10)
                             if dice >= 0 and dice <= 3 then
@@ -492,7 +487,7 @@ function Ennemis.IsHitHeavy()
     for nt = #list_Ennemis, 1, -1 do
         local t = list_Ennemis[nt]
         local Impact_dist = EMI_Radius_Init
-        local Impact_dist = math.dist(t.x, t.y, Player.x, Player.y)
+        local Impact_dist = math.dist(t.x, t.y, Hero.Player.x, Hero.Player.y)
         if Impact_dist <= EMI_Radius_Init then
             t.life = t.life - 1
             if t.life == 0 then
